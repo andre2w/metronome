@@ -1,0 +1,255 @@
+<!doctype html>
+<html>
+  <head>
+    <!-- IMPORTANT: Set the character set to UTF-8. Otherwise you may get weird symbols on the score. -->
+    <meta charset="utf-8" />
+  </head>
+  <body>
+    <!-- Div where the scores will be output -->
+    <canvas id="output"></canvas>
+    <!-- <div id="output"></div> -->
+    <!-- Load library -->
+    <script src="https://cdn.jsdelivr.net/npm/vexflow@5.0.0-alpha.4/build/cjs/vexflow-core.js"></script>
+
+    <script>
+    /* global VexFlow */
+    const element = document.getElementById("output");
+    VexFlow.loadFonts('Bravura', 'Academico').then(() => {
+      VexFlow.setFonts('Bravura', 'Academico');
+      const { Factory, Flow } = VexFlow;
+      const vf = new Factory({
+        renderer: {
+          elementId: 'output',
+          width: 1000,
+          height: 200,
+          backend: VexFlow.Renderer.Backends.CANVAS,
+        },
+      });
+      const system = vf.System({ width: 400 });
+      const system2 = vf.System({ x: 400, width: 350 });
+      // const system = vf.System({ width: 400 });
+
+      // 36: "KICK", - 'f/4'
+      // 38: "SNARE (HEAD)", - 'c/5'
+      // 40: "SNARE  (RIM)", - 'c/5'
+      // 37: "SNARE X-Stick", - 'c/5'
+      // 48: "TOM 1", - 'e/5', - Tom close to floor tom
+      // 45: "TOM 2", - 'd/5', - Tom close to snare
+      // 43: "TOM 3", - 'a/4' - Floor tom
+      // 46: "HH OPEN (BOW)", - 'g/5/x2'
+      // 26: "HH OPEN (EDGE)", - 'g/5/x2'
+      // 42: "HH CLOSED (BOW)", - 'g/5/x2',
+      // 22: "HH CLOSED (EDGE)",- 'g/5/x2',
+      // 44: "HH PEDAL", - 'd/4/x2'
+      // 49: "CRASH 1 (BOW)", - 'f/5/x2'
+      // 55: "CRASH 1 (EDGE)", - 'f/5/x2'
+      // 57: "CRASH 2 (BOW)", - 'f/5/x2'
+      // 52: "CRASH 2 (EDGE)",- 'f/5/x2'
+      // 51: "RIDE (BOW)", -  `a/5/x2`,
+      // 59: "RIDE (EDGE)", -  `a/5/x2`,
+      // 53: "RIDE (BELL)", -  `a/5/x2`,
+      // const num = "5";
+      // const notes = [
+        // A quarter-note C.
+        // vf.StaveNote({ keys: [
+          // `e/${num}`,
+          // `g/${num}`,
+          // `b/${num}`,
+          // `d/${num}`,
+          // `f/${num}`,
+          // `a/${num}`,
+          // `c/${num}`
+          // 'e/5',
+          // 'a/4'
+        // ], duration: 'q' }),
+
+        // vf.StaveNote({ keys: [
+        //   'e/4',
+        // ], duration: 'q' }),
+        // vf.StaveNote({ keys: [
+        //   'g/4',
+        // ], duration: 'q' }),
+        // vf.StaveNote({ keys: [
+        //   'b/4',
+        // ], duration: 'q' }),
+        // vf.StaveNote({ keys: [
+        //   'd/4',
+        // ], duration: 'q' }),
+
+
+        // vf.StaveNote({ keys: [
+        //   'f/4',
+        // ], duration: 'q' }),
+        // vf.StaveNote({ keys: [
+        //   'a/4',
+        // ], duration: 'q' }),
+        // vf.StaveNote({ keys: [
+        //   'c/4',
+        // ], duration: 'q' }),
+
+
+        // A quarter-note D.
+        // vf.StaveNote({ keys: ['d/4'], duration: 'q' }),
+
+        // A quarter-note rest. Note that the key (b/4) specifies the vertical
+        // position of the rest.
+        // vf.StaveNote({ keys: ['b/4'], duration: 'qr' }),
+
+        // A C-Major chord.
+      //   vf.StaveNote({ keys: ['c/4', 'e/4', 'g/4'], duration: 'q' }),
+      // ];
+
+      // const voice = vf.Voice().addTickables(notes);
+
+      // system
+      //   .addStave({
+      //     voices: [voice],
+      //   })
+      //   .addClef('treble')
+      //   .addTimeSignature('4/4');
+
+      // vf.draw();
+
+      // console.log(VexFlow.Renderer);
+      // const renderer = new VexFlow.Renderer(element, VexFlow.Renderer.Backends.CANVAS);
+      // const context = renderer.getContext();
+
+      // renderer.resize(1000, 150);
+
+      // const notes = [
+      //   new VexFlow.StaveNote({ keys: ["d/4"], duration: "q" }),
+      //   new VexFlow.StaveNote({ keys: ["d/4"], duration: "q" }),
+      //   new VexFlow.StaveNote({ keys: ["d/4"], duration: "q" }),
+      //   new VexFlow.StaveNote({ keys: ["d/4"], duration: "q" }),
+      // ];
+      // const notes2 = [
+      //   new VexFlow.StaveNote({ keys: ["d/4"], duration: "q" }),
+      //   new VexFlow.StaveNote({ keys: ["d/4"], duration: "q" }),
+      //   new VexFlow.StaveNote({ keys: ["d/4"], duration: "q" }),
+      //   new VexFlow.StaveNote({ keys: ["d/4"], duration: "q" }),
+      // ];
+
+      // // VexFlow.Formatter.FormatAndDraw(context, stave, notes, {
+      // //   auto_beam: true,
+      // // });
+
+      // const voice = vf.Voice().addTickables(notes);
+      // const voice2 = vf.Voice().addTickables(notes2);
+
+      // system
+      //   .addStave({
+      //     voices: [voice],
+      //   })
+      //   .addClef('treble')
+      //   .addTimeSignature('4/4')
+
+      // const system2 = vf.System({ width: 400 });
+      // system2.addStave({
+      //   voices: [voice2]
+      // })
+
+
+      // vf.draw();
+
+
+      // const vf = new Factory({
+      //   renderer: { elementId: 'output', width: 1000, height: 200 },
+      // });
+
+      // const system = vf.System({ width: 400 });
+      // const system2 = vf.System({ x: 400, width: 350 });
+
+      const notes = [
+        vf.StaveNote({
+          keys: ['e/5'],
+          duration: '8',
+        }),
+        vf.StaveNote({
+          keys: ['e/5'],
+          duration: '8',
+        }),
+        vf.StaveNote({
+          keys: ['e/5'],
+          duration: '8',
+        }),
+        vf.StaveNote({
+          keys: ['e/5'],
+          duration: '8',
+        }),
+        vf.StaveNote({
+          keys: ['e/5'],
+          duration: '8',
+        }),
+        vf.StaveNote({
+          keys: ['e/5'],
+          duration: '8',
+        }),
+        vf.StaveNote({
+          keys: ['e/5'],
+          duration: '8',
+        }),
+        vf.StaveNote({
+          keys: ['e/5'],
+          duration: '8',
+        }),
+        // vf.StaveNote({
+        //   keys: ['e/5'],
+        //   duration: 'q',
+        // }),
+
+        // vf.StaveNote({
+        //   keys: ['e/4', 'd/5'],
+        //   duration: 'h',
+        // }),
+
+        // vf.StaveNote({
+        //   keys: ['c/5', 'e/5', 'g/5'],
+        //   duration: 'q',
+        // }),
+      ];
+
+      const notes2 = [
+        vf.StaveNote({
+          keys: ['e/5'],
+          duration: 'q',
+        }),
+
+        vf.StaveNote({
+          keys: ['e/4', 'd/5'],
+          duration: 'h',
+        }),
+
+        vf.StaveNote({
+          keys: ['c/5', 'e/5', 'g/5'],
+          duration: 'q',
+        }),
+      ];
+
+      console.log({ vf, notes } );
+      // const beams = VexFlow.Beam.generateBeams(notes);
+
+      const voice = vf.Voice().addTickables(notes);
+      const voice2 = vf.Voice().addTickables(notes2);
+
+      system
+        .addStave({
+          voices: [voice],
+        })
+        .addClef('treble')
+        .addTimeSignature('4/4');
+
+      system2
+        .addStave({
+          voices: [voice2],
+        });
+
+      vf.draw();
+      // beams.forEach((b) => {
+      //     b.setContext(context).draw();
+      // });
+
+
+    });
+    </script>
+  </body>
+</html>
