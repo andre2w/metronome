@@ -17,8 +17,8 @@ function App() {
 
   return (
     <main className='container'>
-      <div ref={canvasRef}></div>
-      <button onClick={() => draw(canvasRef.current)}></button>
+      <div style={{ backgroundColor: "wheat" }} ref={canvasRef}></div>
+      <button onClick={() => draw(score, canvasRef.current)}></button>
       <InputConfiguration selectedInput={selectedDevice} onSelect={(input) => setSelectedDevice(input)} />
       <Metronome input={selectedDevice} configuration={configuration} onChangeConfiguration={setConfiguration} score={score} />
       <SheetMaker notes={configuration.notes} score={score} setScore={setScore} />
