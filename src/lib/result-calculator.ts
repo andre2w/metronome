@@ -29,7 +29,7 @@ export function calculateResult({ ticks, notesPlayed, score, graceTime }: Calcul
     const start = timestamp - graceTime;
     const end = timestamp + graceTime;
 
-    const notesInTime: number[] = [];
+    const notesInTime: string[] = [];
 
     while (notesPlayedIndex < notesPlayed.length) {
       const note = notesPlayed[notesPlayedIndex];
