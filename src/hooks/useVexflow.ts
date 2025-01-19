@@ -1,6 +1,6 @@
 import { Flow } from "vexflow";
 import { Score, NOTES } from "../lib/types";
-import { useRef, useState } from "react";
+import { useRef } from "react";
 
 export interface UseVexflowProps {
   element: HTMLCanvasElement | null;
@@ -8,10 +8,6 @@ export interface UseVexflowProps {
 
 export function useVexflow() {
   const rendererRef = useRef<Flow.Renderer | undefined>();
-  // const [renderer, setRenderer] = useState<Flow.Renderer | undefined>();
-  // if (!renderer && element) {
-  //   setRenderer(new Flow.Renderer(element, Flow.Renderer.Backends.CANVAS));
-  // }
 
   const draw = (score: Score, element: HTMLDivElement | null) => {
     if (!element) {
@@ -23,23 +19,33 @@ export function useVexflow() {
     }
     const renderer = rendererRef.current;
 
-    renderer.resize(1000, 500);
+    const sheetWidth = element.getBoundingClientRect().width;
+    renderer.resize(sheetWidth, 500);
     const context = renderer.getContext();
     context.clear();
 
-    let x = 10;
-    const a = score.map((bars, staveIndex) => {
+    const positions = calculateWidthAndPosition({
+      sheetWidth: sheetWidth - 20,
+      staveCount: score.length,
+      staveHeight: 150,
+      staveWidth: 300,
+      startY: 10,
+      startX: 10
+    });
+    for (let i = 0; i < score.length; i++) {
+      const position = positions[i];
+      const stave = new Flow.Stave(position.x, position.y, position.width);
 
-      const stave = new Flow.Stave(x, 40, 400);
-      x += 400;
-      if (staveIndex === 0) {
+       if (i === 0) {
         stave.addClef("treble").addTimeSignature("4/4");
       }
+
+      const bars = score[i];
 
       const notes = [];
       const duration = String(bars.length);
       for (const bar of bars) {
-        if (bar.length) {
+        if (bar && bar.length) {
           const note = bar.map(part => NOTES[part]);
           notes.push(new Flow.StaveNote({ keys: note, duration }));
         } else {
@@ -47,82 +53,89 @@ export function useVexflow() {
         }
       }
 
-      // stave.setContext(context).draw();
-      return { stave, notes };
-    });
-
-    a.forEach(({ stave, notes }) => {
-          // Flow.Formatter.FormatAndDraw(context, stave, notes, {
-    //   auto_beam: true,
-    //   align_rests: true,
-    // });
       stave.setContext(context).draw();
       Flow.Formatter.FormatAndDraw(context, stave, notes, {
         auto_beam: true,
         align_rests: true,
       });
-    })
-
-    // renderer.resize(1000, 500);
-    // const context = renderer.getContext();
-    // context.clear();
-
-    // const stave = new Flow.Stave(10, 40, 400);
-    // stave.addClef("treble").addTimeSignature("4/4");
-    // stave.setContext(context).draw();
-
-
-    // const notes = [
-    //   new Flow.StaveNote({ keys: ["d/4"], duration: "8" }),
-    //   new Flow.StaveNote({ keys: ["d/4"], duration: "8" }),
-    //   new Flow.StaveNote({ keys: ["d/4"], duration: "8" }),
-    //   new Flow.StaveNote({ keys: ["d/4"], duration: "8" }),
-    // ];
-    // const stave2 = new Flow.Stave(410, 40, 400);
-    // stave2.setContext(context).draw();
-    // const notes2 = [
-    //   new Flow.StaveNote({ keys: ["d/4"], duration: "8" }),
-    //   new Flow.StaveNote({ keys: ["d/4"], duration: "8" }),
-    //   new Flow.StaveNote({ keys: ["d/4"], duration: "16" }),
-    //   new Flow.GhostNote({ duration: "16" }),
-    //   // new Flow.StaveNote({ keys: ["d/4"], duration: "16" }),
-    //   new Flow.StaveNote({ keys: ["d/4"], duration: "16" }),
-    //   new Flow.StaveNote({ keys: ["d/4"], duration: "16" }),
-    // ];
-
-    // const beam = new Flow.Beam(notes);
-    // Flow.Formatter.FormatAndDraw(context, stave, notes, {
-    //   auto_beam: true,
-    //   align_rests: true,
-    // });
-    // Flow.Formatter.FormatAndDraw(context, stave2, notes2, {
-    //   auto_beam: true,
-    //   align_rests: true,
-    // });
-    // beam.setContext(context).draw();
-    // for (const bar of score) {
-    //   const stave = new Flow.Stave(10, 40, 400);
-    //   stave.addClef("treble").addTimeSignature("4/4");
-
-    //   const notes: Flow.StaveNote[] = [];
-    //   for (const note of bar) {
-    //     notes.push(
-    //         new Flow.StaveNote({
-    //         keys: note?.map((n) => NOTES[n]) ?? ["c/4"],
-    //         duration: "8",
-    //         }),
-    //     );
-    //   }
-
-    //     const voice = new Flow.Voice({ num_beats: 4, beat_value: 4 });
-    //     voice.addTickables(notes);
-
-    //     new Flow.Formatter().joinVoices([voice]).format([voice], 350);
-
-    //     stave.setContext(context).draw();
-    //     voice.draw(context, stave);
-    // }
+    }
   };
 
   return { draw };
+}
+
+export interface CalculateWidthAndPositionProps {
+  sheetWidth: number;
+  staveWidth: number;
+  staveHeight: number;
+  staveCount: number;
+  startY?: number;
+  startX?: number;
+}
+export interface StavePosition {
+  x: number;
+  y: number; 
+  width: number;
+}
+export function calculateWidthAndPosition(props: CalculateWidthAndPositionProps): StavePosition[] {
+  if (props.staveCount < 1) {
+    return []
+  }
+
+  if (props.staveCount === 1) {
+    return [{ y: props.startY ?? 0, x: 0, width: props.sheetWidth }];
+  }
+
+  const lines: StavePosition[][] = [[]];
+  let x = props.startX ?? 0;
+
+  for (let i = 0; i < props.staveCount; i++) {
+    const lineWidth = lines.at(-1)?.reduce((total, stave) => total + stave.width , 0);
+    if (lineWidth && lineWidth + props.staveWidth > props.sheetWidth) {
+      const staveCount = lines.at(-1)!.length;
+      const width = Math.floor((props.sheetWidth - (props.startX ?? 0)) / staveCount);
+      const y = lines[lines.length - 1][0].y;
+      const fixedStaves = calculateWidthAndPosition({
+        sheetWidth: props.sheetWidth,
+        staveCount,
+        staveHeight: props.staveHeight,
+        staveWidth: width,
+        startY: y,
+        startX: props.startX
+      });
+      lines[lines.length - 1] = fixedStaves;     
+
+      lines.push([]);
+      x = props.startX ?? 0;
+    }
+ 
+    const line = lines.at(-1);
+    const y = (props.startY ?? 0) + (props.staveHeight * (lines.length - 1));
+    line?.push({ y, x, width: props.staveWidth });
+    x += props.staveWidth;
+  }
+
+  const lineWidth = lines.at(-1)?.reduce((total, stave) => total + stave.width , 0);
+  const staveCount = lines.at(-1)?.length;
+  if (lineWidth && staveCount && lineWidth < props.sheetWidth) {
+    const totalDifference = props.sheetWidth - lineWidth;
+    if (totalDifference <= 5) {
+      lines[lines.length - 1][lines[lines.length - 1].length - 1].width += totalDifference;
+    } else {
+      const width = Math.floor(props.sheetWidth / staveCount);
+      const y = lines[lines.length - 1][0].y;
+      const fixedStaves = calculateWidthAndPosition({
+        sheetWidth: props.sheetWidth,
+        staveCount,
+        staveHeight: props.staveHeight,
+        staveWidth: width,
+        startY: y,
+        startX: props.startX
+      });
+      lines[lines.length - 1] = fixedStaves;
+    }
+
+  }
+
+  return lines.flat();
 }

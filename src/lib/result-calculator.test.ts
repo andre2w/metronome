@@ -1,45 +1,45 @@
 import test from "node:test";
 import assert from "node:assert";
 import { NotePlayed, Score } from "./types";
-import { calculateResult } from "./result-calculator";
+import { calculateResult, CalculateResultProps } from "./result-calculator";
 
 test("calculate results for simple score with a single part being played", () => {
   const ticks = [10, 15, 20, 25, 30, 35, 40, 50];
-  const notesPlayed = [
-    { timestamp: 10, note: 100 },
-    { timestamp: 15, note: 100 },
-    { timestamp: 20, note: 100 },
-    { timestamp: 25, note: 100 },
-    { timestamp: 30, note: 100 },
-    { timestamp: 35, note: 100 },
-    { timestamp: 40, note: 100 },
-    { timestamp: 50, note: 100 },
+  const notesPlayed: NotePlayed[] = [
+    { timestamp: 10, note: "SNARE" },
+    { timestamp: 15, note: "SNARE" },
+    { timestamp: 20, note: "SNARE" },
+    { timestamp: 25, note: "SNARE" },
+    { timestamp: 30, note: "SNARE" },
+    { timestamp: 35, note: "SNARE" },
+    { timestamp: 40, note: "SNARE" },
+    { timestamp: 50, note: "SNARE" },
   ];
   const score: Score = [
-    [[100], [100], [100], [100]],
-    [[100], [100], [100], [100]]
+    [["SNARE"], ["SNARE"], ["SNARE"], ["SNARE"]],
+    [["SNARE"], ["SNARE"], ["SNARE"], ["SNARE"]]
   ];
 
   assert.deepStrictEqual(calculateResult({ ticks, notesPlayed, score, graceTime: 0 }), { missed: 0, right: 8 });
 });
 
-test("calculate results for simple scores with multiple parts being played", { only: true }, () => {
+test("calculate results for simple scores with multiple parts being played", () => {
   const ticks = [10, 15, 20, 25, 30, 35, 40, 50];
-  const notesPlayed = [
-    { timestamp: 10, note: 100 },
-    { timestamp: 10, note: 150 },
-    { timestamp: 15, note: 100 },
-    { timestamp: 20, note: 100 },
-    { timestamp: 25, note: 100 },
-    { timestamp: 30, note: 100 },
-    { timestamp: 30, note: 150 },
-    { timestamp: 35, note: 100 },
-    { timestamp: 40, note: 100 },
-    { timestamp: 50, note: 100 },
+  const notesPlayed: NotePlayed[] = [
+    { timestamp: 10, note: "SNARE" },
+    { timestamp: 10, note: "HIGH_HAT" },
+    { timestamp: 15, note: "SNARE" },
+    { timestamp: 20, note: "SNARE" },
+    { timestamp: 25, note: "SNARE" },
+    { timestamp: 30, note: "SNARE" },
+    { timestamp: 30, note: "HIGH_HAT" },
+    { timestamp: 35, note: "SNARE" },
+    { timestamp: 40, note: "SNARE" },
+    { timestamp: 50, note: "SNARE" },
   ];
   const score: Score = [
-    [[100, 150], [100], [100], [100]],
-    [[100, 150], [100], [100], [100]]
+    [["SNARE", "HIGH_HAT"], ["SNARE"], ["SNARE"], ["SNARE"]],
+    [["SNARE", "HIGH_HAT"], ["SNARE"], ["SNARE"], ["SNARE"]]
   ];
 
   assert.deepStrictEqual(calculateResult({ ticks, notesPlayed, score, graceTime: 0 }), { missed: 0, right: 8 });
@@ -47,20 +47,20 @@ test("calculate results for simple scores with multiple parts being played", { o
 
 test("counts as a miss if there's a missing part in the tick", () => {
   const ticks = [10, 15, 20, 25, 30, 35, 40, 50];
-  const notesPlayed = [
-    { timestamp: 10, note: 100 },
-    { timestamp: 15, note: 100 },
-    { timestamp: 20, note: 100 },
-    { timestamp: 25, note: 100 },
-    { timestamp: 30, note: 100 },
-    { timestamp: 30, note: 150 },
-    { timestamp: 35, note: 100 },
-    { timestamp: 40, note: 100 },
-    { timestamp: 50, note: 100 },
+  const notesPlayed: NotePlayed[] = [
+    { timestamp: 10, note: "SNARE" },
+    { timestamp: 15, note: "SNARE" },
+    { timestamp: 20, note: "SNARE" },
+    { timestamp: 25, note: "SNARE" },
+    { timestamp: 30, note: "SNARE" },
+    { timestamp: 30, note: "HIGH_HAT" },
+    { timestamp: 35, note: "SNARE" },
+    { timestamp: 40, note: "SNARE" },
+    { timestamp: 50, note: "SNARE" },
   ];
   const score: Score = [
-    [[100, 150], [100], [100], [100]],
-    [[100, 150], [100], [100], [100]]
+    [["SNARE", "HIGH_HAT"], ["SNARE"], ["SNARE"], ["SNARE"]],
+    [["SNARE", "HIGH_HAT"], ["SNARE"], ["SNARE"], ["SNARE"]]
   ];
 
   assert.deepStrictEqual(calculateResult({ ticks, notesPlayed, score, graceTime: 0 }), { missed: 1, right: 7 });
@@ -68,22 +68,22 @@ test("counts as a miss if there's a missing part in the tick", () => {
 
 test("counts as a miss if more parts are played during a tick", () => {
   const ticks = [10, 15, 20, 25, 30, 35, 40, 50];
-  const notesPlayed = [
-    { timestamp: 10, note: 100 },
-    { timestamp: 10, note: 150 },
-    { timestamp: 10, note: 200 },
-    { timestamp: 15, note: 100 },
-    { timestamp: 20, note: 100 },
-    { timestamp: 25, note: 100 },
-    { timestamp: 30, note: 100 },
-    { timestamp: 30, note: 150 },
-    { timestamp: 35, note: 100 },
-    { timestamp: 40, note: 100 },
-    { timestamp: 50, note: 100 },
+  const notesPlayed: NotePlayed[] = [
+    { timestamp: 10, note: "SNARE" },
+    { timestamp: 10, note: "HIGH_HAT" },
+    { timestamp: 10, note: "CRASH" },
+    { timestamp: 15, note: "SNARE" },
+    { timestamp: 20, note: "SNARE" },
+    { timestamp: 25, note: "SNARE" },
+    { timestamp: 30, note: "SNARE" },
+    { timestamp: 30, note: "HIGH_HAT" },
+    { timestamp: 35, note: "SNARE" },
+    { timestamp: 40, note: "SNARE" },
+    { timestamp: 50, note: "SNARE" },
   ];
   const score: Score = [
-    [[100, 150], [100], [100], [100]],
-    [[100, 150], [100], [100], [100]]
+    [["SNARE", "HIGH_HAT"], ["SNARE"], ["SNARE"], ["SNARE"]],
+    [["SNARE", "HIGH_HAT"], ["SNARE"], ["SNARE"], ["SNARE"]]
   ];
 
   assert.deepStrictEqual(calculateResult({ ticks, notesPlayed, score, graceTime: 0 }), { missed: 1, right: 7 });
@@ -91,21 +91,21 @@ test("counts as a miss if more parts are played during a tick", () => {
 
 test("group notes for a tick inside the grace time", () => {
   const ticks = [10, 20, 30, 40, 50, 60, 70, 80];
-  const notesPlayed = [
-    { timestamp: 9, note: 100 },
-    { timestamp: 12, note: 150 },
-    { timestamp: 20, note: 100 },
-    { timestamp: 30, note: 100 },
-    { timestamp: 40, note: 100 },
-    { timestamp: 49, note: 100 },
-    { timestamp: 51, note: 150 },
-    { timestamp: 60, note: 100 },
-    { timestamp: 70, note: 100 },
-    { timestamp: 80, note: 100 },
+  const notesPlayed: NotePlayed[] = [
+    { timestamp: 9, note: "SNARE" },
+    { timestamp: 12, note: "HIGH_HAT" },
+    { timestamp: 20, note: "SNARE" },
+    { timestamp: 30, note: "SNARE" },
+    { timestamp: 40, note: "SNARE" },
+    { timestamp: 49, note: "SNARE" },
+    { timestamp: 51, note: "HIGH_HAT" },
+    { timestamp: 60, note: "SNARE" },
+    { timestamp: 70, note: "SNARE" },
+    { timestamp: 80, note: "SNARE" },
   ];
   const score: Score = [
-    [[100, 150], [100], [100], [100]],
-    [[100, 150], [100], [100], [100]]
+    [["SNARE", "HIGH_HAT"], ["SNARE"], ["SNARE"], ["SNARE"]],
+    [["SNARE", "HIGH_HAT"], ["SNARE"], ["SNARE"], ["SNARE"]]
   ];
 
   assert.deepStrictEqual(calculateResult({ ticks, notesPlayed, score, graceTime: 2 }), { missed: 0, right: 8 });
@@ -113,20 +113,20 @@ test("group notes for a tick inside the grace time", () => {
 
 test("loops through the score when the number of ticks is greater than entire score", () => {
   const ticks = [10, 20, 30, 40, 50, 60, 70, 80];
-  const notesPlayed = [
-    { timestamp: 9, note: 100 },
-    { timestamp: 12, note: 150 },
-    { timestamp: 20, note: 100 },
-    { timestamp: 30, note: 100 },
-    { timestamp: 40, note: 100 },
-    { timestamp: 49, note: 100 },
-    { timestamp: 51, note: 150 },
-    { timestamp: 60, note: 100 },
-    { timestamp: 70, note: 100 },
-    { timestamp: 80, note: 100 },
+  const notesPlayed: NotePlayed[] = [
+    { timestamp: 9, note: "SNARE" },
+    { timestamp: 12, note: "HIGH_HAT" },
+    { timestamp: 20, note: "SNARE" },
+    { timestamp: 30, note: "SNARE" },
+    { timestamp: 40, note: "SNARE" },
+    { timestamp: 49, note: "SNARE" },
+    { timestamp: 51, note: "HIGH_HAT" },
+    { timestamp: 60, note: "SNARE" },
+    { timestamp: 70, note: "SNARE" },
+    { timestamp: 80, note: "SNARE" },
   ];
   const score: Score = [
-    [[100, 150], [100], [100], [100]]
+    [["SNARE", "HIGH_HAT"], ["SNARE"], ["SNARE"], ["SNARE"]]
   ];
 
   assert.deepStrictEqual(calculateResult({ ticks, notesPlayed, score, graceTime: 2 }), { missed: 0, right: 8 });
@@ -134,22 +134,22 @@ test("loops through the score when the number of ticks is greater than entire sc
 
 test("only counts ticks and ignore rest of score if not played entirely", () => {
   const ticks = [10, 20, 30, 40, 50, 60, 70, 80];
-  const notesPlayed = [
-    { timestamp: 9, note: 100 },
-    { timestamp: 12, note: 150 },
-    { timestamp: 20, note: 100 },
-    { timestamp: 30, note: 100 },
-    { timestamp: 40, note: 100 },
-    { timestamp: 49, note: 100 },
-    { timestamp: 51, note: 150 },
-    { timestamp: 60, note: 100 },
-    { timestamp: 70, note: 100 },
-    { timestamp: 80, note: 100 },
+  const notesPlayed: NotePlayed[] = [
+    { timestamp: 9, note: "SNARE" },
+    { timestamp: 12, note: "HIGH_HAT" },
+    { timestamp: 20, note: "SNARE" },
+    { timestamp: 30, note: "SNARE" },
+    { timestamp: 40, note: "SNARE" },
+    { timestamp: 49, note: "SNARE" },
+    { timestamp: 51, note: "HIGH_HAT" },
+    { timestamp: 60, note: "SNARE" },
+    { timestamp: 70, note: "SNARE" },
+    { timestamp: 80, note: "SNARE" },
   ];
   const score: Score = [
-    [[100, 150], [100], [100], [100]],
-    [[100, 150], [100], [100], [100]],
-    [[100, 150], [100], [100], [100]],
+    [["SNARE", "HIGH_HAT"], ["SNARE"], ["SNARE"], ["SNARE"]],
+    [["SNARE", "HIGH_HAT"], ["SNARE"], ["SNARE"], ["SNARE"]],
+    [["SNARE", "HIGH_HAT"], ["SNARE"], ["SNARE"], ["SNARE"]],
   ];
 
   assert.deepStrictEqual(calculateResult({ ticks, notesPlayed, score, graceTime: 2 }), { missed: 0, right: 8 });
@@ -160,19 +160,19 @@ test("calculates results when user start to play later", () => {
     10, 15, 20, 25, 30, 35, 40, 50,
     100, 101, 102, 103, 104, 105, 106, 107
   ];
-  const notesPlayed = [
-    { timestamp: 100, note: 100 },
-    { timestamp: 101, note: 100 },
-    { timestamp: 102, note: 100 },
-    { timestamp: 103, note: 100 },
-    { timestamp: 104, note: 100 },
-    { timestamp: 105, note: 100 },
-    { timestamp: 106, note: 100 },
-    { timestamp: 107, note: 100 },
+  const notesPlayed: NotePlayed[] = [
+    { timestamp: 100, note: "SNARE" },
+    { timestamp: 101, note: "SNARE" },
+    { timestamp: 102, note: "SNARE" },
+    { timestamp: 103, note: "SNARE" },
+    { timestamp: 104, note: "SNARE" },
+    { timestamp: 105, note: "SNARE" },
+    { timestamp: 106, note: "SNARE" },
+    { timestamp: 107, note: "SNARE" },
   ];
   const score: Score = [
-    [[100], [100], [100], [100]],
-    [[100], [100], [100], [100]]
+    [["SNARE"], ["SNARE"], ["SNARE"], ["SNARE"]],
+    [["SNARE"], ["SNARE"], ["SNARE"], ["SNARE"]]
   ];
 
   assert.deepStrictEqual(calculateResult({ ticks, notesPlayed, score, graceTime: 0 }), { missed: 8, right: 8 });
@@ -182,8 +182,8 @@ test("when no notes were played", () => {
   const ticks = [10, 15, 20, 25, 30, 35, 40, 50];
   const notesPlayed: NotePlayed[] = [];
   const score: Score = [
-    [[100], [100], [100], [100]],
-    [[100], [100], [100], [100]]
+    [["SNARE"], ["SNARE"], ["SNARE"], ["SNARE"]],
+    [["SNARE"], ["SNARE"], ["SNARE"], ["SNARE"]]
   ];
 
   assert.deepStrictEqual(calculateResult({ ticks, notesPlayed, score, graceTime: 0 }), { missed: 8, right: 0 });
@@ -198,7 +198,7 @@ test("when there is no score", () => {
 })
 
 test("real world example", { only: true }, () => {
-const props = {
+const props: CalculateResultProps = {
   ticks: [
     31710.5,
     32460,
@@ -222,78 +222,78 @@ const props = {
   notesPlayed: [
       {
         timestamp: 31941.600000023842,
-        note: 38
+        note: "SNARE",
       },
       {
         timestamp: 32581.600000023842,
-        note: 38
+        note: "SNARE",
       },
       {
         timestamp: 33231.60000002384,
-        note: 38
+        note: "SNARE",
       },
       {
         timestamp: 33921.5,
-        note: 38
+        note: "SNARE",
       },
       {
         timestamp: 34581.40000003576,
-        note: 38
+        note: "SNARE",
       },
       {
         timestamp: 35261.60000002384,
-        note: 38
+        note: "SNARE",
       },
       {
         timestamp: 36031.60000002384,
-        note: 38
+        note: "SNARE",
       },
       {
         timestamp: 36871.60000002384,
-        note: 38
+        note: "SNARE",
       },
       {
         timestamp: 37761.60000002384,
-        note: 38
+        note: "SNARE",
       },
       {
         timestamp: 38601.5,
-        note: 38
+        note: "SNARE",
       },
       {
         timestamp: 39371.5,
-        note: 38
+        note: "SNARE",
       },
       {
         timestamp: 40061.5,
-        note: 38
+        note: "SNARE",
       },
       {
         timestamp: 40751.40000003576,
-        note: 38
+        note: "SNARE",
       },
       {
         timestamp: 41441.5,
-        note: 38
+        note: "SNARE",
       },
       {
         timestamp: 42161.30000001192,
-        note: 38
+        note: "SNARE",
       },
       {
           timestamp: 43101.40000003576,
-          note: 38
+          note: "SNARE",
       },
       {
           timestamp: 43801.5,
-          note: 38
+          note: "SNARE",
       },
       {
           timestamp: 44511.5,
-          note: 38
+          note: "SNARE",
       }
   ],
-  score: [[[38], [38], [38], [38]]],
+  score: [[["SNARE"], ["SNARE"], ["SNARE"], ["SNARE"]]],
   graceTime: 100
 }
   const final = [];
