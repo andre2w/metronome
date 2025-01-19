@@ -1,6 +1,3 @@
-import { NotePlayed } from "../lib/types";
-import { calculateResult } from "./result-calculator";
-
 export interface ResultProps {
   right: number; 
   missed: number;

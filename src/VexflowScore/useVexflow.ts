@@ -20,10 +20,6 @@ export function useVexflow() {
     const renderer = rendererRef.current;
 
     const sheetWidth = element.getBoundingClientRect().width;
-    renderer.resize(sheetWidth, 500);
-    const context = renderer.getContext();
-    context.clear();
-
     const positions = calculateWidthAndPosition({
       sheetWidth: sheetWidth - 20,
       staveCount: score.length,
@@ -32,6 +28,12 @@ export function useVexflow() {
       startY: 10,
       startX: 10
     });
+    const height = positions.reduce((prev, curr) => Math.max(prev, curr.y + 150)  , 0);
+    renderer.resize(sheetWidth, height);
+    const context = renderer.getContext();
+    context.clear();
+
+
     for (let i = 0; i < score.length; i++) {
       const position = positions[i];
       const stave = new Flow.Stave(position.x, position.y, position.width);

@@ -40,9 +40,6 @@ export function Metronome({ className, input, configuration, onChangeConfigurati
           return newVal >= notes ? 0 : newVal;
         });
         setTicks(t => [...t, Date.now()]);
-        // this was to play a note in the drum but should play some sound
-        // in the browser
-        // output?.playNote(38);
       }, beatTime);
     }
 
