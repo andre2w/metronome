@@ -11,7 +11,7 @@ export function NotatorDropdown({ onSelect, selected, index }: NotatorDropdownPr
   return (
     <div style={{ display: "flex", flexDirection: "column"}}>
       {Object.keys(NOTES).map(note => {
-        return <Box width={"25px"} height={"25px"} style={{ border: "1px solid", background: `${selected?.includes(note as Note) ? "white" : ""}`, margin: "2px" }} onClick={() => {
+        return <Box width={"25px"} height={"25px"} style={{ border: "1px solid", background: `${selected?.includes(note as Note) ? "white" : ""}` }} onClick={() => {
           onSelect?.({ action: selected?.includes(note as Note) ? "remove" : "add", note: note as Note })
         }}></Box>
       })}
