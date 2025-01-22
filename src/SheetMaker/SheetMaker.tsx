@@ -1,6 +1,6 @@
 import { Dispatch, SetStateAction } from "react";
 import { NotatorDropdown, NotatorDropdownProps } from "./NotatorDropdown";
-import { Bar, Note, NOTES, Notes, Score } from "../lib/types";
+import { Bar, NOTES, Notes, Score } from "../lib/types";
 import { Button, Text } from "@radix-ui/themes";
 
 export interface SheetMakerProps {

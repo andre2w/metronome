@@ -1,4 +1,4 @@
-import { Box, Checkbox } from "@radix-ui/themes";
+import { Box } from "@radix-ui/themes";
 import { Notes, NOTES, Note } from "../lib/types";
 
 export interface NotatorDropdownProps {
@@ -7,7 +7,7 @@ export interface NotatorDropdownProps {
   index: number;
 };
 
-export function NotatorDropdown({ onSelect, selected, index }: NotatorDropdownProps) {
+export function NotatorDropdown({ onSelect, selected }: NotatorDropdownProps) {
   return (
     <div style={{ display: "flex", flexDirection: "column"}}>
       {Object.keys(NOTES).map(note => {
