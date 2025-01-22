@@ -7,6 +7,7 @@ import { SheetMaker } from './SheetMaker/SheetMaker';
 import { defaultMetronomeConfiguration, BaseMetronomeConfigurationProps } from './Metronome/configuration';
 import { Score } from './lib/types';
 import { VexflowScore } from './VexflowScore/VexflowScore';
+import { Theme } from '@radix-ui/themes';
 
 function App() {
   const [selectedDevice, setSelectedDevice] = useState<Input | undefined>();
@@ -14,12 +15,14 @@ function App() {
   const [score, setScore] = useState<Score>([]);
 
   return (
-    <main className='container'>
-      <InputConfiguration selectedInput={selectedDevice} onSelect={(input) => setSelectedDevice(input)} />
-      <Metronome input={selectedDevice} configuration={configuration} onChangeConfiguration={setConfiguration} score={score} />
-      {score.length ? <VexflowScore score={score}/> : null}
-      <SheetMaker notes={configuration.notes} score={score} setScore={setScore} />
-    </main>
+    <Theme appearance="dark" accentColor="indigo">
+      <main className='container'>
+        <InputConfiguration selectedInput={selectedDevice} onSelect={(input) => setSelectedDevice(input)} />
+        <Metronome input={selectedDevice} configuration={configuration} onChangeConfiguration={setConfiguration} score={score} />
+        {score.length ? <VexflowScore score={score}/> : null}
+        <SheetMaker notes={configuration.notes} score={score} setScore={setScore} />
+      </main>
+    </Theme>
   )
 }
 

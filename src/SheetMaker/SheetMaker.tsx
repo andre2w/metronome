@@ -1,6 +1,7 @@
 import { Dispatch, SetStateAction } from "react";
-import { NotatorDropdown } from "./NotatorDropdown";
-import { Notes, Score } from "../lib/types";
+import { NotatorDropdown, NotatorDropdownProps } from "./NotatorDropdown";
+import { Bar, Note, NOTES, Notes, Score } from "../lib/types";
+import { Button, Text } from "@radix-ui/themes";
 
 export interface SheetMakerProps {
   notes: number;
@@ -32,37 +33,62 @@ export function SheetMaker({ notes, score, setScore }: SheetMakerProps) {
           Add new line
         </button>
       </div>
-      <div style={{ display: "flex", flexDirection: "column", marginTop: "10px" }}>
-        {score.map((bars, scoreIndex) => {
-          return (<div style={{ display: "flex", width: "100%"}}>
-            {bars.map((notes, barIndex) => (
-              <NotatorDropdown
-                index={barIndex}
-                selected={notes}
-                onSelect={(note) => {
-                  setScore((oldScore) => {
-                    const newNote = oldScore[scoreIndex][barIndex]
-                      ? [...oldScore[scoreIndex][barIndex]]
-                      : [];
-                    const newNotation = [...oldScore[scoreIndex]];
-                    const newNotations = [...oldScore];
-                    newNotations[scoreIndex] = newNotation;
-                    newNotation[barIndex] = newNote;
-                    if (note.action === "add" && !newNote.includes(note.note)) {
-                      newNote.push(note.note);
-                    } else {
-                      const noteIndex = newNote.indexOf(note.note);
-                      if (noteIndex >= 0) {
-                        newNote.splice(noteIndex, 1);
-                      }
-                    }
-                    return newNotations;
-                  });
-                }}
-              />
-          ))}</div>);
+      <div style={{ display: "flex", flexDirection: "row", marginTop: "10px" }}>
+        <div style={{ alignSelf: "flex-end"}}>
+          <div>---</div>
+          {Object.keys(NOTES).map(note => <div style={{ height: "25px" }}>{note}</div>)}
+        </div>
+        {score.map((bar, scoreIndex) => {
+          return <Stave bar={bar} index={scoreIndex} 
+            onSelectNote={(barIndex, note) => {
+              setScore((oldScore) => {
+                const newNote = oldScore[scoreIndex][barIndex] ? [...oldScore[scoreIndex][barIndex]] : [];
+                const newNotation = [...oldScore[scoreIndex]];
+                const newNotations = [...oldScore];
+                newNotations[scoreIndex] = newNotation;
+                newNotation[barIndex] = newNote;
+                if (note.action === "add" && !newNote.includes(note.note)) {
+                  newNote.push(note.note);
+                } else {
+                  const noteIndex = newNote.indexOf(note.note);
+                  if (noteIndex >= 0) {
+                    newNote.splice(noteIndex, 1);
+                  }
+                }
+                return newNotations;
+              })}
+            }
+
+            onRemoveStave={() => {
+              setScore(oldScore => oldScore.toSpliced(scoreIndex, 1))
+            }}
+          />
         })}
       </div>
     </div>
   );
+}
+
+interface StaveProps {
+  bar: Bar;
+  index: number;
+  onSelectNote: (barIndex: number, note: Parameters<NonNullable<NotatorDropdownProps["onSelect"]>>[0]) => void;
+  onRemoveStave: () => void;
+}
+function Stave({ bar, index, onSelectNote, onRemoveStave }: StaveProps) {
+  const notes = bar.map((notes, noteIndex) => {
+    return <NotatorDropdown
+      index={index}
+      selected={notes}
+      onSelect={(note) => onSelectNote(noteIndex, note)}
+    />
+  });
+
+  return <div style={{ paddingRight: "5px"}}>
+      <div style={{ display: "flex", justifyContent: "center", borderBottom: "1px solid wheat"}}>
+        <Text>{index}</Text>
+        <Button onClick={onRemoveStave}>X</Button>
+      </div>
+      <div style={{ display: "flex"}}>{notes}</div>
+      </div>
 }
