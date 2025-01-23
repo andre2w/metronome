@@ -1,2 +1,3 @@
 node_modules/
 tsconfig.app.tsbuildinfo
+dist/
