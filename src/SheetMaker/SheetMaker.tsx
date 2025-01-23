@@ -19,7 +19,7 @@ export interface SheetMakerProps {
 export function SheetMaker({ notes, score, setScore }: SheetMakerProps) {
 
   return (
-    <div style={{ marginTop: "5px"}}>
+    <div style={{ marginTop: "auto", marginBottom: "15px", overflow: "scroll"}}>
       <div style={{ display: "flex"}}>
         <button
           onClick={() => {
@@ -35,7 +35,7 @@ export function SheetMaker({ notes, score, setScore }: SheetMakerProps) {
         </button>
       </div>
       <div style={{ display: "flex", flexDirection: "row", marginTop: "10px" }}>
-        <div style={{ alignSelf: "flex-end"}}>
+        <div style={{ alignSelf: "flex-end", position:"sticky", backgroundColor: "var(--accent-1)"}}>
           <div>---</div>
           {Object.keys(NOTES).map(note => <div style={{ height: "35px", boxSizing: "border-box", alignContent:"center", textAlign: "end", paddingRight: "5px" }}>{note}</div>)}
         </div>
