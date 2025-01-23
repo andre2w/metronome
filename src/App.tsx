@@ -16,12 +16,12 @@ function App() {
 
   return (
     <Theme appearance="dark" accentColor="indigo">
-      <main className='container'>
+      <div style={{ marginLeft: "50px", marginRight: "50px", marginBottom: "10px", display: "flex", flexDirection: "column" }}>
         <InputConfiguration selectedInput={selectedDevice} onSelect={(input) => setSelectedDevice(input)} />
         <Metronome input={selectedDevice} configuration={configuration} onChangeConfiguration={setConfiguration} score={score} />
         {score.length ? <VexflowScore score={score}/> : null}
         <SheetMaker notes={configuration.notes} score={score} setScore={setScore} />
-      </main>
+      </div>
     </Theme>
   )
 }

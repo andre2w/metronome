@@ -2,6 +2,7 @@ import { Dispatch, SetStateAction } from "react";
 import { NotatorDropdown, NotatorDropdownProps } from "./NotatorDropdown";
 import { Bar, NOTES, Notes, Score } from "../lib/types";
 import { Button, Text } from "@radix-ui/themes";
+import { Cross1Icon } from "@radix-ui/react-icons";
 
 export interface SheetMakerProps {
   notes: number;
@@ -18,7 +19,7 @@ export interface SheetMakerProps {
 export function SheetMaker({ notes, score, setScore }: SheetMakerProps) {
 
   return (
-    <div style={{ marginTop: "5px"}}>
+    <div style={{ marginTop: "auto", marginBottom: "15px", overflow: "scroll"}}>
       <div style={{ display: "flex"}}>
         <button
           onClick={() => {
@@ -34,19 +35,19 @@ export function SheetMaker({ notes, score, setScore }: SheetMakerProps) {
         </button>
       </div>
       <div style={{ display: "flex", flexDirection: "row", marginTop: "10px" }}>
-        <div style={{ alignSelf: "flex-end"}}>
+        <div style={{ alignSelf: "flex-end", position:"sticky", backgroundColor: "var(--accent-1)"}}>
           <div>---</div>
-          {Object.keys(NOTES).map(note => <div style={{ height: "25px" }}>{note}</div>)}
+          {Object.keys(NOTES).map(note => <div style={{ height: "35px", boxSizing: "border-box", alignContent:"center", textAlign: "end", paddingRight: "5px" }}>{note}</div>)}
         </div>
-        {score.map((bar, scoreIndex) => {
-          return <Stave bar={bar} index={scoreIndex} 
-            onSelectNote={(barIndex, note) => {
+        {score.map((bar, barIndex) => {
+          return <Stave bar={bar} index={barIndex} 
+            onSelectNote={(noteIndex, note) => {
               setScore((oldScore) => {
-                const newNote = oldScore[scoreIndex][barIndex] ? [...oldScore[scoreIndex][barIndex]] : [];
-                const newNotation = [...oldScore[scoreIndex]];
+                const newNote = oldScore[barIndex][noteIndex] ? [...oldScore[barIndex][noteIndex]] : [];
+                const newNotation = [...oldScore[barIndex]];
                 const newNotations = [...oldScore];
-                newNotations[scoreIndex] = newNotation;
-                newNotation[barIndex] = newNote;
+                newNotations[barIndex] = newNotation;
+                newNotation[noteIndex] = newNote;
                 if (note.action === "add" && !newNote.includes(note.note)) {
                   newNote.push(note.note);
                 } else {
@@ -60,13 +61,19 @@ export function SheetMaker({ notes, score, setScore }: SheetMakerProps) {
             }
 
             onRemoveStave={() => {
-              setScore(oldScore => oldScore.toSpliced(scoreIndex, 1))
+              setScore(oldScore => oldScore.toSpliced(barIndex, 1))
             }}
           />
         })}
       </div>
     </div>
   );
+}
+
+const counting: { [k: number]: string[] } = {
+  4: ["1", "2", "3", "4"],
+  8: ["1", "&", "2", "&", "3", "&", "4", "&"],
+  16: ["1", "e", "&", "a", "2", "e", "&", "a", "3", "e", "&", "a", "4", "e", "&", "a"]
 }
 
 interface StaveProps {
@@ -76,8 +83,12 @@ interface StaveProps {
   onRemoveStave: () => void;
 }
 function Stave({ bar, index, onSelectNote, onRemoveStave }: StaveProps) {
+  const tempoCounting = counting[bar.length];
+  console.log({ tempoCounting });
   const notes = bar.map((notes, noteIndex) => {
+    const noteCount = tempoCounting[noteIndex];
     return <NotatorDropdown
+      noteCount={noteCount}
       index={index}
       selected={notes}
       onSelect={(note) => onSelectNote(noteIndex, note)}
@@ -85,9 +96,9 @@ function Stave({ bar, index, onSelectNote, onRemoveStave }: StaveProps) {
   });
 
   return <div style={{ paddingRight: "5px"}}>
-      <div style={{ display: "flex", justifyContent: "center", borderBottom: "1px solid wheat"}}>
+      <div style={{ display: "flex", justifyContent: "center", borderBottom: "1px solid wheat", marginBottom: "5px"}}>
         <Text>{index}</Text>
-        <Button onClick={onRemoveStave}>X</Button>
+        <Button onClick={onRemoveStave} variant="ghost"><Cross1Icon /></Button>
       </div>
       <div style={{ display: "flex"}}>{notes}</div>
       </div>
