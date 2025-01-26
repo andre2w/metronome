@@ -25,6 +25,13 @@ export function Metronome({ className, input, configuration, onChangeConfigurati
   const [result, setResult] = useState<ResultProps | undefined>(undefined);
   const { score } = useScoreContext();
   const intervalRef = useRef<ReturnType<typeof setInterval> | undefined>();
+  const bigTick = useRef<HTMLAudioElement | undefined>();
+  const smallTick = useRef<HTMLAudioElement | undefined>();
+
+  useEffect(() => {
+    bigTick.current = new Audio("/metronome1Count.mp3");
+    smallTick.current = new Audio("/metronomeClick.mp3");
+  }, []);
 
   if (started && selected > configuration.notes) {
     setSelected(Math.floor(selected % configuration.notes));
@@ -34,9 +41,17 @@ export function Metronome({ className, input, configuration, onChangeConfigurati
     const { notes, beats } = configuration;
     const beatTime = calculateBeatTime(beats, notes);
     if (started) {
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+      }
       intervalRef.current = setInterval(() => {
         setSelected(val => {
           const newVal = val + 1;
+          if (newVal % (configuration.notes / 4 ) === 0) {
+            bigTick.current?.play(); 
+          } else {
+            smallTick.current?.play();
+          };
           return newVal >= notes ? 0 : newVal;
         });
         setTicks(t => [...t, Date.now()]);
