@@ -310,6 +310,5 @@ const props: CalculateResultProps = {
     final.push(match);
   }
 
-  console.log("FINAL", final);
-  console.log("calculated", calculateResult(props));
+  assert.deepStrictEqual(calculateResult(props), { missed: 9, right: 9 });
 });
