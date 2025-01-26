@@ -1,7 +1,6 @@
 import { Input } from "webmidi";
 import "./Metronome.css";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { MetronomeConfiguration } from "./MetronomeConfiguration";
 import { BaseMetronomeConfigurationProps } from "./configuration";
 import { Result, ResultProps } from "./Result";
 import { NotePlayed, Ticks } from "../lib/types";
@@ -9,15 +8,15 @@ import { calculateResult } from "../lib/result-calculator";
 import { calculateBeatTime } from "../lib/beat-time";
 import { mappings } from "../mappings/roland-td07";
 import { useScoreContext } from "../Score/ScoreProvider";
+import { Button } from "@radix-ui/themes";
 
 export interface MetronomeProps {
   configuration: BaseMetronomeConfigurationProps;
-  onChangeConfiguration: (configuration: BaseMetronomeConfigurationProps) => void;
   input?: Input;
   className?: string;
 }
 
-export function Metronome({ className, input, configuration, onChangeConfiguration }: MetronomeProps) {
+export function Metronome({ className, input, configuration }: MetronomeProps) {
   const [started, setStarted] = useState(false);
   const [selected, setSelected] = useState(0);
   const [played, setPlayed] = useState<NotePlayed[]>([]);
@@ -88,7 +87,7 @@ export function Metronome({ className, input, configuration, onChangeConfigurati
   }, [score, configuration.graceTime]);
 
   return <div className={className}>
-    <MetronomeConfiguration configuration={configuration} onChange={onChangeConfiguration} started={started} toggle={toggle} />
+    <Button onClick={() => toggle()}>{started ? "STOP": "START"}</Button>
     <div style={{ display: "flex", justifyContent: "space-evenly"}}>
       {Array.from({ length: configuration.notes }).map((_, index) => {
         return <div className={`${index % (configuration.notes / 4) === 0 ? "metronome-big" : "metronome-small"} ${started && index === selected ? "selected" : ""}`}></div>

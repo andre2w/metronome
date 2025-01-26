@@ -1,14 +1,12 @@
-import { Button, Flex, Select, Text, TextField } from "@radix-ui/themes";
+import { Flex, Select, Text, TextField } from "@radix-ui/themes";
 import { calculateBeatTime } from "../lib/beat-time";
 import { BaseMetronomeConfigurationProps } from "./configuration";
 
 interface MetronomeConfigurationProps {
   configuration: BaseMetronomeConfigurationProps;
-  started: boolean;
   onChange: (props: BaseMetronomeConfigurationProps) => void;
-  toggle: () => void;
 }
-export function MetronomeConfiguration({ configuration, started, onChange, toggle }: MetronomeConfigurationProps) {
+export function MetronomeConfiguration({ configuration, onChange }: MetronomeConfigurationProps) {
   const maxGraceTime = calculateBeatTime(configuration.beats, configuration.notes) - 2;
   if (configuration.graceTime > maxGraceTime) {
     onChange({ ...configuration, graceTime: maxGraceTime });
@@ -34,6 +32,5 @@ export function MetronomeConfiguration({ configuration, started, onChange, toggl
       <Text>Grace time</Text> 
       <TextField.Root type="number" value={configuration.graceTime} onChange={e => onChange({ ...configuration, graceTime: e.target.value ? Number(e.target.value) : 0 })} step={100} />
     </Flex>
-    <Button style={{ alignSelf:"flex-end"}} onClick={() => toggle()}>{started ? "Stop" : "Start" }</Button>
   </Flex>
 }

@@ -14,6 +14,7 @@ export interface StavePosition {
 }
 
 export function calculateWidthAndPosition(props: CalculateWidthAndPositionProps): StavePosition[] {
+  console.log(props);
   if (props.staveCount < 1) {
     return []
   }
@@ -25,22 +26,24 @@ export function calculateWidthAndPosition(props: CalculateWidthAndPositionProps)
   const lines: StavePosition[][] = [[]];
   let x = props.startX ?? 0;
 
+  function fixLastLine() {
+  const lineWidth = lines.at(-1)?.reduce((total, stave) => total + stave.width , 0);
+  const staveCount = lines.at(-1)?.length;
+  if (lineWidth && staveCount) {
+    const staveDifference = Math.floor((props.sheetWidth / staveCount));
+    let x = props.startX ?? 0;
+    for (let i = 0; i < lines[lines.length - 1].length; i++) {
+      lines[lines.length - 1][i].width = staveDifference;
+      lines[lines.length - 1][i].x = x;
+      x+= staveDifference;
+    }
+  }
+  }
+
   for (let i = 0; i < props.staveCount; i++) {
     const lineWidth = lines.at(-1)?.reduce((total, stave) => total + stave.width , 0);
     if (lineWidth && lineWidth + props.staveWidth > props.sheetWidth) {
-      const staveCount = lines.at(-1)!.length;
-      const width = Math.floor((props.sheetWidth - (props.startX ?? 0)) / staveCount);
-      const y = lines[lines.length - 1][0].y;
-      const fixedStaves = calculateWidthAndPosition({
-        sheetWidth: props.sheetWidth,
-        staveCount,
-        staveHeight: props.staveHeight,
-        staveWidth: width,
-        startY: y,
-        startX: props.startX
-      });
-      lines[lines.length - 1] = fixedStaves;     
-
+      fixLastLine();
       lines.push([]);
       x = props.startX ?? 0;
     }
@@ -51,27 +54,7 @@ export function calculateWidthAndPosition(props: CalculateWidthAndPositionProps)
     x += props.staveWidth;
   }
 
-  const lineWidth = lines.at(-1)?.reduce((total, stave) => total + stave.width , 0);
-  const staveCount = lines.at(-1)?.length;
-  if (lineWidth && staveCount && lineWidth < props.sheetWidth) {
-    const totalDifference = props.sheetWidth - lineWidth;
-    if (totalDifference <= 5) {
-      lines[lines.length - 1][lines[lines.length - 1].length - 1].width += totalDifference;
-    } else {
-      const width = Math.floor(props.sheetWidth / staveCount);
-      const y = lines[lines.length - 1][0].y;
-      const fixedStaves = calculateWidthAndPosition({
-        sheetWidth: props.sheetWidth,
-        staveCount,
-        staveHeight: props.staveHeight,
-        staveWidth: width,
-        startY: y,
-        startX: props.startX
-      });
-      lines[lines.length - 1] = fixedStaves;
-    }
-
-  }
+  fixLastLine();
 
   return lines.flat();
 }
