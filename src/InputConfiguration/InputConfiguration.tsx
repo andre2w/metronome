@@ -29,7 +29,7 @@ export function InputConfiguration({ selectedInput, onSelect }: InputConfigurati
     onSelect(input);
   }
 
-  return <Select.Root onValueChange={onChange} defaultValue={NO_INPUT_SELECTED} value={selectedInput?.name}>
+  return <Select.Root onValueChange={onChange} value={selectedInput?.id ?? NO_INPUT_SELECTED}>
     <Select.Trigger />
     <Select.Content>
       <Select.Item value={NO_INPUT_SELECTED}>Select a device</Select.Item>
