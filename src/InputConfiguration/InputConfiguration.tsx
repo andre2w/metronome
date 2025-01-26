@@ -1,7 +1,7 @@
 import { Input } from "webmidi";
 import { useWebMidi } from "../hooks/useWebMidi";
-import { ChangeEventHandler } from "react";
 import classes from "./InputConfiguration.module.scss";
+import { Button, Select } from "@radix-ui/themes";
 
 export const NO_INPUT_SELECTED = "NO_INPUT_SELECTED";
 
@@ -15,29 +15,25 @@ export function InputConfiguration({ selectedInput, onSelect }: InputConfigurati
 
   if (!webmidi) {
     return <div className={classes.enableMidi}>
-      <button onClick={() => enable()}>Enable WebMidi to start using the app</button>
+      <Button onClick={() => enable()}>Enable WebMidi to start using the app</Button>
       </div>;
   }
 
-  const onChange: ChangeEventHandler<HTMLSelectElement> = (e) => { 
-    const value = e.target.value;
-
+  const onChange = (value: string) => { 
     if (value === NO_INPUT_SELECTED) {
       onSelect(undefined);
       return;
     }
 
-    const input = webmidi.getInputById(e.target.value);
+    const input = webmidi.getInputById(value);
     onSelect(input);
   }
 
-  return <div className="grid">
-    <div>
-      Device:
-      <select onChange={onChange} value={selectedInput?.id ?? NO_INPUT_SELECTED}>
-        <option value={NO_INPUT_SELECTED}>Select a device</option>
-        {webmidi.inputs.map(input => <option value={input.id} key={input.id}>{input.manufacturer} {input.name}</option>)}
-      </select>
-    </div>
-  </div>
+  return <Select.Root onValueChange={onChange} defaultValue={NO_INPUT_SELECTED} value={selectedInput?.name}>
+    <Select.Trigger />
+    <Select.Content>
+      <Select.Item value={NO_INPUT_SELECTED}>Select a device</Select.Item>
+      {webmidi.inputs.map(input => <Select.Item value={input.id} key={input.id}>{input.manufacturer} {input.name}</Select.Item>)}
+    </Select.Content>
+  </Select.Root>
 }

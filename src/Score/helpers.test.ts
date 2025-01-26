@@ -48,5 +48,16 @@ suite("calculateHeightAndPosition", () => {
             calculateWidthAndPosition({ sheetWidth: 1450, staveCount: 3, staveHeight: 150, staveWidth: 300 }), 
             [{ width: 483, x: 0, y: 0 }, { width: 483, x: 483, y: 0 }, { width: 484, x: 966, y: 0 }]
         );
+    });
+
+    test("Recursive Here", () => {
+        assert.deepEqual(calculateWidthAndPosition({
+    "sheetWidth": 2407.33349609375,
+    "staveCount": 7,
+    "staveHeight": 150,
+    "staveWidth": 343,
+    "startY": 10,
+    "startX": 10
+}), {});
     })
 });

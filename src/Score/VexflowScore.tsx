@@ -17,6 +17,14 @@ export function VexflowScore({ score }: { score: Score }) {
 
         const element = divRef.current;
         const sheetWidth = element.getBoundingClientRect().width;
+        console.log({
+            sheetWidth: sheetWidth - 20,
+            staveCount: score.length,
+            staveHeight: 150,
+            staveWidth: 300,
+            startY: 10,
+            startX: 10
+        });
         const positions = calculateWidthAndPosition({
             sheetWidth: sheetWidth - 20,
             staveCount: score.length,
@@ -25,8 +33,7 @@ export function VexflowScore({ score }: { score: Score }) {
             startY: 10,
             startX: 10
         });
-        const height = Math.max(positions.reduce((prev, curr) => Math.max(prev, curr.y + 150)  , 0), 150);
-        // element.style.height = `${height}px`;
+        const height = positions.reduce((prev, curr) => Math.max(prev, curr.y + 150)  , 0);
 
         const renderer = rendererRef.current;
 
@@ -74,5 +81,5 @@ export function VexflowScore({ score }: { score: Score }) {
         }
     }, [score]);
 
-    return <div style={{ backgroundColor: "wheat", marginTop: "10px" }} ref={divRef}></div>;
+    return <div style={{ border: "1px solid var(--accent-9)", marginTop: "10px" }} ref={divRef}></div>;
 }

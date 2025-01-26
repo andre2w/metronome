@@ -1,9 +1,9 @@
 import { NotatorDropdown, NotatorDropdownProps } from "./NotatorDropdown";
 import { Bar, NOTES } from "../lib/types";
 import { Button, Text } from "@radix-ui/themes";
-import { Cross1Icon } from "@radix-ui/react-icons";
 import { useScoreContext } from "../Score/ScoreProvider";
 import { VexflowScore } from "../Score/VexflowScore";
+import { Cross1Icon } from "@radix-ui/react-icons";
 
 // see updateSheetMusic in GrooveScribe for abc notation
 // get32NoteArrayFromClickableUI
@@ -20,14 +20,14 @@ export function SheetMaker() {
     <VexflowScore score={score} />
     <div style={{ marginTop: "auto", marginBottom: "15px", overflow: "scroll"}}>
       <div style={{ display: "flex"}}>
-        <button
+        <Button
           onClick={addStave}
         >
           Add new line
-        </button>
+        </Button>
       </div>
       <div style={{ display: "flex", flexDirection: "row", marginTop: "10px" }}>
-        <div style={{ alignSelf: "flex-end", position:"sticky", backgroundColor: "var(--accent-1)"}}>
+        <div style={{ alignSelf: "flex-end", position:"sticky" }}>
           <div>---</div>
           {Object.keys(NOTES).map(note => <div style={{ height: "35px", boxSizing: "border-box", alignContent:"center", textAlign: "end", paddingRight: "5px" }}>{note}</div>)}
         </div>
