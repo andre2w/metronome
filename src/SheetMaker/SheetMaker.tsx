@@ -26,7 +26,7 @@ export function SheetMaker({ notes, score, setScore }: SheetMakerProps) {
             setScore((n) => {
               const newArr = Array.from<Notes>({
                 length: notes,
-              });
+              }).fill([]);
               return [...n, newArr];
             });
           }}

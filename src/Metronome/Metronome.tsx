@@ -1,6 +1,6 @@
 import { Input } from "webmidi";
 import "./Metronome.css";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { MetronomeConfiguration } from "./MetronomeConfiguration";
 import { BaseMetronomeConfigurationProps } from "./configuration";
 import { Result, ResultProps } from "./Result";
@@ -23,6 +23,7 @@ export function Metronome({ className, input, configuration, onChangeConfigurati
   const [played, setPlayed] = useState<NotePlayed[]>([]);
   const [ticks, setTicks] = useState<Ticks>([]);
   const [result, setResult] = useState<ResultProps | undefined>(undefined);
+  const intervalRef = useRef<any>();
 
   if (started && selected > configuration.notes) {
     setSelected(Math.floor(selected % configuration.notes));
@@ -30,11 +31,9 @@ export function Metronome({ className, input, configuration, onChangeConfigurati
 
   useEffect(() => {
     const { notes, beats } = configuration;
-    let interval: any;
     const beatTime = calculateBeatTime(beats, notes);
-    console.log(beatTime);
     if (started) {
-      interval = setInterval(() => {
+      intervalRef.current = setInterval(() => {
         setSelected(val => {
           const newVal = val + 1;
           return newVal >= notes ? 0 : newVal;
@@ -42,13 +41,7 @@ export function Metronome({ className, input, configuration, onChangeConfigurati
         setTicks(t => [...t, Date.now()]);
       }, beatTime);
     }
-
-    return () => {
-      if (interval) {
-        clearInterval(interval);
-      }
-    }
-  }, [started, configuration]);
+  }, [started, configuration, score]);
 
   useEffect(() => {
     if (input) {
@@ -61,10 +54,18 @@ export function Metronome({ className, input, configuration, onChangeConfigurati
     }
   }, [input, setPlayed]);
 
-  const toggle = () => {
+  const toggle = useCallback(() => {
+    console.log("Toggle", started);
     if (started) {
+      if (intervalRef.current) {
+        console.log("Will clear interval", started);
+        clearInterval(intervalRef.current);
+      }
+      console.log({
+        ticks, notesPlayed: played, score, graceTime: configuration.graceTime
+      });
       setResult(calculateResult({
-        ticks, notesPlayed: played, score, graceTime: 500
+        ticks, notesPlayed: played, score, graceTime: configuration.graceTime
       }));
     } else {
       setPlayed([]);
@@ -73,7 +74,7 @@ export function Metronome({ className, input, configuration, onChangeConfigurati
       setResult(undefined);
     }
     setStarted(v => !v);
-  };
+  }, [score, configuration.graceTime]);
 
   return <div className={className}>
     <MetronomeConfiguration configuration={configuration} onChange={onChangeConfiguration} started={started} toggle={toggle} />
