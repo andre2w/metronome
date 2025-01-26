@@ -25,7 +25,8 @@ export function VexflowScore({ score }: { score: Score }) {
             startY: 10,
             startX: 10
         });
-        const height = positions.reduce((prev, curr) => Math.max(prev, curr.y + 150)  , 0);
+        const height = Math.max(positions.reduce((prev, curr) => Math.max(prev, curr.y + 150)  , 0), 150);
+        // element.style.height = `${height}px`;
 
         const renderer = rendererRef.current;
 
