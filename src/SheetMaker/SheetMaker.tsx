@@ -1,14 +1,10 @@
-import { Dispatch, SetStateAction } from "react";
 import { NotatorDropdown, NotatorDropdownProps } from "./NotatorDropdown";
-import { Bar, NOTES, Notes, Score } from "../lib/types";
+import { Bar, NOTES } from "../lib/types";
 import { Button, Text } from "@radix-ui/themes";
 import { Cross1Icon } from "@radix-ui/react-icons";
+import { useScoreContext } from "../Score/ScoreProvider";
+import { VexflowScore } from "../Score/VexflowScore";
 
-export interface SheetMakerProps {
-  notes: number;
-  score: Score;
-  setScore: Dispatch<SetStateAction<Score>>;
-}
 // see updateSheetMusic in GrooveScribe for abc notation
 // get32NoteArrayFromClickableUI
 // Everything is 1/32 based, and it just keep spaces between
@@ -16,20 +12,16 @@ export interface SheetMakerProps {
 // Things inside square brackets are together like kick and snare at the same time
 // notations together outside the square brackets with the number is how to define the ligature
 // space means different groups of ligatures
-export function SheetMaker({ notes, score, setScore }: SheetMakerProps) {
+export function SheetMaker() {
+  const { addStave, score, toggleNote, removeStave } =useScoreContext();
 
   return (
+    <>
+    <VexflowScore score={score} />
     <div style={{ marginTop: "auto", marginBottom: "15px", overflow: "scroll"}}>
       <div style={{ display: "flex"}}>
         <button
-          onClick={() => {
-            setScore((n) => {
-              const newArr = Array.from<Notes>({
-                length: notes,
-              }).fill([]);
-              return [...n, newArr];
-            });
-          }}
+          onClick={addStave}
         >
           Add new line
         </button>
@@ -39,34 +31,15 @@ export function SheetMaker({ notes, score, setScore }: SheetMakerProps) {
           <div>---</div>
           {Object.keys(NOTES).map(note => <div style={{ height: "35px", boxSizing: "border-box", alignContent:"center", textAlign: "end", paddingRight: "5px" }}>{note}</div>)}
         </div>
-        {score.map((bar, barIndex) => {
-          return <Stave bar={bar} index={barIndex} 
-            onSelectNote={(noteIndex, note) => {
-              setScore((oldScore) => {
-                const newNote = oldScore[barIndex][noteIndex] ? [...oldScore[barIndex][noteIndex]] : [];
-                const newNotation = [...oldScore[barIndex]];
-                const newNotations = [...oldScore];
-                newNotations[barIndex] = newNotation;
-                newNotation[noteIndex] = newNote;
-                if (note.action === "add" && !newNote.includes(note.note)) {
-                  newNote.push(note.note);
-                } else {
-                  const noteIndex = newNote.indexOf(note.note);
-                  if (noteIndex >= 0) {
-                    newNote.splice(noteIndex, 1);
-                  }
-                }
-                return newNotations;
-              })}
-            }
-
-            onRemoveStave={() => {
-              setScore(oldScore => oldScore.toSpliced(barIndex, 1))
-            }}
+        {score.map((bar, staveIndex) => {
+          return <Stave bar={bar} index={staveIndex} 
+            onSelectNote={(staveNoteIndex, note) => { toggleNote({ staveIndex, staveNoteIndex, note: note.note }) }}
+            onRemoveStave={() => removeStave(staveIndex)}
           />
         })}
       </div>
     </div>
+</>
   );
 }
 
@@ -84,7 +57,6 @@ interface StaveProps {
 }
 function Stave({ bar, index, onSelectNote, onRemoveStave }: StaveProps) {
   const tempoCounting = counting[bar.length];
-  console.log({ tempoCounting });
   const notes = bar.map((notes, noteIndex) => {
     const noteCount = tempoCounting[noteIndex];
     return <NotatorDropdown

@@ -1,71 +1,3 @@
-import { Flow } from "vexflow";
-import { Score, NOTES } from "../lib/types";
-import { useRef } from "react";
-
-export interface UseVexflowProps {
-  element: HTMLCanvasElement | null;
-}
-
-export function useVexflow() {
-  const rendererRef = useRef<Flow.Renderer | undefined>();
-
-  const draw = (score: Score, element: HTMLDivElement | null) => {
-    if (!element) {
-      console.error("Element not present");
-      return;
-    }
-    if (!rendererRef.current) {
-      rendererRef.current = new Flow.Renderer(element, Flow.Renderer.Backends.SVG);
-    }
-    const renderer = rendererRef.current;
-
-    const sheetWidth = element.getBoundingClientRect().width;
-    const positions = calculateWidthAndPosition({
-      sheetWidth: sheetWidth - 20,
-      staveCount: score.length,
-      staveHeight: 150,
-      staveWidth: 300,
-      startY: 10,
-      startX: 10
-    });
-    const height = positions.reduce((prev, curr) => Math.max(prev, curr.y + 150)  , 0);
-    renderer.resize(sheetWidth, height);
-    const context = renderer.getContext();
-    context.clear();
-
-
-    for (let i = 0; i < score.length; i++) {
-      const position = positions[i];
-      const stave = new Flow.Stave(position.x, position.y, position.width);
-
-       if (i === 0) {
-        stave.addClef("treble").addTimeSignature("4/4");
-      }
-
-      const bars = score[i];
-
-      const notes = [];
-      const duration = String(bars.length);
-      for (const bar of bars) {
-        if (bar && bar.length) {
-          const note = bar.map(part => NOTES[part]);
-          notes.push(new Flow.StaveNote({ keys: note, duration }));
-        } else {
-          notes.push(new Flow.GhostNote({ duration }));
-        }
-      }
-
-      stave.setContext(context).draw();
-      Flow.Formatter.FormatAndDraw(context, stave, notes, {
-        auto_beam: true,
-        align_rests: true,
-      });
-    }
-  };
-
-  return { draw };
-}
-
 export interface CalculateWidthAndPositionProps {
   sheetWidth: number;
   staveWidth: number;
@@ -74,11 +6,13 @@ export interface CalculateWidthAndPositionProps {
   startY?: number;
   startX?: number;
 }
+
 export interface StavePosition {
   x: number;
   y: number; 
   width: number;
 }
+
 export function calculateWidthAndPosition(props: CalculateWidthAndPositionProps): StavePosition[] {
   if (props.staveCount < 1) {
     return []

@@ -1,6 +1,6 @@
 import { test, suite } from "node:test";
 import assert from "node:assert/strict";
-import { calculateWidthAndPosition } from "./useVexflow";
+import { calculateWidthAndPosition } from "./helpers";
 
 suite("calculateHeightAndPosition", () => {
     test("should return empty array in case there are no staves", () => {

@@ -4,26 +4,27 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { MetronomeConfiguration } from "./MetronomeConfiguration";
 import { BaseMetronomeConfigurationProps } from "./configuration";
 import { Result, ResultProps } from "./Result";
-import { NotePlayed, Score, Ticks } from "../lib/types";
+import { NotePlayed, Ticks } from "../lib/types";
 import { calculateResult } from "../lib/result-calculator";
 import { calculateBeatTime } from "../lib/beat-time";
 import { mappings } from "../mappings/roland-td07";
+import { useScoreContext } from "../Score/ScoreProvider";
 
 export interface MetronomeProps {
   configuration: BaseMetronomeConfigurationProps;
   onChangeConfiguration: (configuration: BaseMetronomeConfigurationProps) => void;
   input?: Input;
   className?: string;
-  score: Score;
 }
 
-export function Metronome({ className, input, configuration, onChangeConfiguration, score }: MetronomeProps) {
+export function Metronome({ className, input, configuration, onChangeConfiguration }: MetronomeProps) {
   const [started, setStarted] = useState(false);
   const [selected, setSelected] = useState(0);
   const [played, setPlayed] = useState<NotePlayed[]>([]);
   const [ticks, setTicks] = useState<Ticks>([]);
   const [result, setResult] = useState<ResultProps | undefined>(undefined);
-  const intervalRef = useRef<any>();
+  const { score } = useScoreContext();
+  const intervalRef = useRef<ReturnType<typeof setInterval> | undefined>();
 
   if (started && selected > configuration.notes) {
     setSelected(Math.floor(selected % configuration.notes));
@@ -55,15 +56,10 @@ export function Metronome({ className, input, configuration, onChangeConfigurati
   }, [input, setPlayed]);
 
   const toggle = useCallback(() => {
-    console.log("Toggle", started);
     if (started) {
       if (intervalRef.current) {
-        console.log("Will clear interval", started);
         clearInterval(intervalRef.current);
       }
-      console.log({
-        ticks, notesPlayed: played, score, graceTime: configuration.graceTime
-      });
       setResult(calculateResult({
         ticks, notesPlayed: played, score, graceTime: configuration.graceTime
       }));
