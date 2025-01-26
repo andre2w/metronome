@@ -40,11 +40,14 @@ export function Metronome({ className, input, configuration, onChangeConfigurati
   useEffect(() => {
     const { notes, beats } = configuration;
     const beatTime = calculateBeatTime(beats, notes);
-    if (started) {
-      if (intervalRef.current) {
-        clearInterval(intervalRef.current);
-      }
+    const oldInterval = intervalRef.current;
+    if (oldInterval) {
+      clearInterval(oldInterval);
+      intervalRef.current = undefined;
+    }
+    if (started) { 
       intervalRef.current = setInterval(() => {
+        console.log("Interval called");
         setSelected(val => {
           const newVal = val + 1;
           if (newVal % (configuration.notes / 4 ) === 0) {
@@ -72,9 +75,6 @@ export function Metronome({ className, input, configuration, onChangeConfigurati
 
   const toggle = useCallback(() => {
     if (started) {
-      if (intervalRef.current) {
-        clearInterval(intervalRef.current);
-      }
       setResult(calculateResult({
         ticks, notesPlayed: played, score, graceTime: configuration.graceTime
       }));

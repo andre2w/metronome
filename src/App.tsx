@@ -13,7 +13,7 @@ function App() {
   const [configuration, setConfiguration] = useState<BaseMetronomeConfigurationProps>(defaultMetronomeConfiguration);
 
   return (
-    <Theme appearance="dark" accentColor="indigo">
+    <Theme appearance="inherit" accentColor="indigo">
       <ScoreContextProvider notes={configuration.notes}>
         <div style={{ marginLeft: "50px", marginRight: "50px", marginBottom: "10px", display: "flex", flexDirection: "column" }}>
           <InputConfiguration selectedInput={selectedDevice} onSelect={(input) => setSelectedDevice(input)} />
