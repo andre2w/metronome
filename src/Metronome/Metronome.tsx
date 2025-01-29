@@ -1,6 +1,6 @@
-import { Input } from "webmidi";
+import { Input, NoteMessageEvent } from "webmidi";
 import "./Metronome.css";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { BaseMetronomeConfigurationProps } from "./configuration";
 import { Result, ResultProps } from "./Result";
 import { NotePlayed, Ticks } from "../lib/types";
@@ -18,23 +18,27 @@ export interface MetronomeProps {
 
 export function Metronome({ className, input, configuration }: MetronomeProps) {
   const [started, setStarted] = useState(false);
-  const [selected, setSelected] = useState(0);
-  const [played, setPlayed] = useState<NotePlayed[]>([]);
-  const [ticks, setTicks] = useState<Ticks>([]);
+  const selectedRef = useRef<number>(-1);
+  const notesPlayedRef = useRef<NotePlayed[]>([]);
+  const ticksRef = useRef<Ticks>([]);
   const [result, setResult] = useState<ResultProps | undefined>(undefined);
   const { score } = useScoreContext();
   const intervalRef = useRef<ReturnType<typeof setInterval> | undefined>();
   const bigTick = useRef<HTMLAudioElement | undefined>();
   const smallTick = useRef<HTMLAudioElement | undefined>();
+  const tickSymbolsRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     bigTick.current = new Audio("/metronome1Count.mp3");
-    smallTick.current = new Audio("/metronomeClick.mp3");
+    smallTick.current = new Audio("/metronomeClick.mp3");    
   }, []);
 
-  if (started && selected > configuration.notes) {
-    setSelected(Math.floor(selected % configuration.notes));
-  }
+  useEffect(() => {
+    if (started && selectedRef.current > configuration.notes) {
+      selectedRef.current = Math.floor(selectedRef.current % configuration.notes)
+    }
+  }, [configuration.notes])
+
 
   useEffect(() => {
     const { notes, beats } = configuration;
@@ -45,52 +49,63 @@ export function Metronome({ className, input, configuration }: MetronomeProps) {
       intervalRef.current = undefined;
     }
     if (started) { 
+        tickSymbolsRef.current?.children.item(selectedRef.current)?.classList.remove("selected");
+        selectedRef.current = selectedRef.current + 1 >= notes ? 0 : selectedRef.current + 1;
+        tickSymbolsRef.current?.children.item(selectedRef.current)?.classList.add("selected");
+        if (selectedRef.current % (configuration.notes / 4 ) === 0) {
+          bigTick.current?.play(); 
+        } else {
+          smallTick.current?.play();
+        };
+        ticksRef.current.push(performance.now());
+
       intervalRef.current = setInterval(() => {
-        console.log("Interval called");
-        setSelected(val => {
-          const newVal = val + 1;
-          if (newVal % (configuration.notes / 4 ) === 0) {
-            bigTick.current?.play(); 
-          } else {
-            smallTick.current?.play();
-          };
-          return newVal >= notes ? 0 : newVal;
-        });
-        setTicks(t => [...t, Date.now()]);
+        tickSymbolsRef.current?.children.item(selectedRef.current)?.classList.remove("selected");
+        selectedRef.current = selectedRef.current + 1 >= notes ? 0 : selectedRef.current + 1;
+        tickSymbolsRef.current?.children.item(selectedRef.current)?.classList.add("selected");
+        if (selectedRef.current % (configuration.notes / 4 ) === 0) {
+          bigTick.current?.play(); 
+        } else {
+          smallTick.current?.play();
+        };
+        ticksRef.current.push(performance.now());
       }, beatTime);
+    } else {
+      tickSymbolsRef.current?.children.item(selectedRef.current)?.classList.remove("selected"); 
     }
   }, [started, configuration, score]);
 
   useEffect(() => {
     if (input) {
-      input.addListener("noteon", (e) => {
-        setPlayed(p => [...p, { timestamp: Date.now(), note: mappings[e.note.number] }]);
-      });
+      const listener = (e: NoteMessageEvent) => {
+        notesPlayedRef.current.push({ timestamp: e.timestamp, note: mappings[e.note.number] });
+      };
+      input.addListener("noteon", listener);
       return () => {
-        input.removeListener("noteon");
+        input.removeListener("noteon", listener);
       }
     }
-  }, [input, setPlayed]);
+  }, [input]);
 
-  const toggle = useCallback(() => {
+  const toggle = () => {
     if (started) {
       setResult(calculateResult({
-        ticks, notesPlayed: played, score, graceTime: configuration.graceTime
+        ticks: ticksRef.current, notesPlayed: notesPlayedRef.current, score, graceTime: configuration.graceTime
       }));
     } else {
-      setPlayed([]);
-      setTicks([]);
-      setSelected(0);
+      notesPlayedRef.current = [];
+      ticksRef.current = [];
+      selectedRef.current = -1;
       setResult(undefined);
     }
     setStarted(v => !v);
-  }, [score, configuration.graceTime]);
+  };
 
   return <div className={className}>
     <Button onClick={() => toggle()}>{started ? "STOP": "START"}</Button>
-    <div style={{ display: "flex", justifyContent: "space-evenly"}}>
+    <div style={{ display: "flex", justifyContent: "space-evenly"}} ref={tickSymbolsRef}>
       {Array.from({ length: configuration.notes }).map((_, index) => {
-        return <div className={`${index % (configuration.notes / 4) === 0 ? "metronome-big" : "metronome-small"} ${started && index === selected ? "selected" : ""}`}></div>
+        return <div className={`${index % (configuration.notes / 4) === 0 ? "metronome-big" : "metronome-small"}`}></div>
       })}
     </div>
     {result && <Result right={result.right} missed={result.missed} />}

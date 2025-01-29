@@ -4,7 +4,7 @@ export interface ResultProps {
 };
 
 export function Result(result: ResultProps) {
-  return <div style={{ display: "flex", flexDirection: "column", alignItems: "center"}}>
+  return <div style={{ display: "flex", alignItems: "center"}}>
       <h4>Right: {result.right}</h4>
       <h4>Missed: {result.missed}</h4>
     </div>
