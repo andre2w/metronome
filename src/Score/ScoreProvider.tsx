@@ -1,4 +1,4 @@
-import { createContext, ReactNode, useContext, useState } from "react";
+import { createContext, ReactNode, useContext, useEffect, useState } from "react";
 import { Note, Notes, Score } from "../lib/types";
 
 export interface ScoreContextValue {
@@ -14,23 +14,55 @@ export interface ScoreContextProviderProps {
     notes: number;
 }
 
+function useHash() {
+    const [hash, setHashInternal] = useState<URLSearchParams>(new URLSearchParams);
+
+    useEffect(() => {
+        const hashListener = () => {
+            const searchParams = new URLSearchParams(window.location.hash.substring(1));
+            setHashInternal(searchParams);
+        };
+
+        hashListener();
+
+        window.addEventListener("hashchange", hashListener);
+
+        return () => {
+            window.removeEventListener("hashchange", hashListener)
+        }
+    }, []);
+
+    const setHash = (hash: URLSearchParams) => {
+        window.location.hash = hash.toString();
+    }
+
+    return { hash, setHash };
+}
+
 export function ScoreContextProvider({ children, notes }: ScoreContextProviderProps) {
-    const [score, setScore] = useState<Score>([]);
+    const { hash, setHash } = useHash();
+    const scoreText = hash.get("score");
+    const initialScore = scoreText ? JSON.parse(scoreText) : [];
+    const [score, setScore] = useState<Score>(initialScore);
+    
+
+    useEffect(() => {
+        const scoreText = hash.get("score");
+        const score = scoreText ? JSON.parse(scoreText) : [];
+        setScore(score);
+    }, [hash])
 
     const addStave = () => {
-        setScore((n) => {
-            const newArr = Array.from<Notes>({
-            length: notes,
-            }).fill([]);
-            return [...n, newArr];
-        });
+        const newArr = Array.from<Notes>({ length: notes }).fill([]);
+        const newHash = new URLSearchParams(hash);
+        newHash.set("score", JSON.stringify([...score, newArr]))
+        setHash(newHash)
     }
 
     const toggleNote: ScoreContextValue["toggleNote"] = ({ staveIndex, staveNoteIndex, note }) => {
-        setScore((oldScore) => {
-            const newNote = oldScore[staveIndex][staveNoteIndex] ? [...oldScore[staveIndex][staveNoteIndex]] : [];
-            const newNotation = [...oldScore[staveIndex]];
-            const newScore = [...oldScore];
+            const newNote = score[staveIndex][staveNoteIndex] ? [...score[staveIndex][staveNoteIndex]] : [];
+            const newNotation = [...score[staveIndex]];
+            const newScore = [...score];
             newScore[staveIndex] = newNotation;
             newNotation[staveNoteIndex] = newNote;
 
@@ -42,12 +74,16 @@ export function ScoreContextProvider({ children, notes }: ScoreContextProviderPr
                 newNote.splice(noteIndex, 1);
                 }
             }
-            return newScore;
-        })
+            const newHash = new URLSearchParams(hash);
+            newHash.set("score", JSON.stringify(newScore));
+            setHash(newHash);
     }
 
     const removeStave: ScoreContextValue["removeStave"] = (staveIndex) =>  {
-        setScore(oldScore => oldScore.toSpliced(staveIndex, 1));
+        const newScore = score.toSpliced(staveIndex, 1);
+        const newHash = new URLSearchParams(hash);
+        newHash.set("score", JSON.stringify(newScore));
+        setHash(newHash);
     }
 
 
