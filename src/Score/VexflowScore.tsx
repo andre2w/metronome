@@ -2,11 +2,14 @@ import { useEffect, useRef } from "react";
 import { NOTES, Score } from "../lib/types";
 import { calculateWidthAndPosition } from "./helpers";
 import { Flow } from "vexflow";
+import { useResizeObserver } from "usehooks-ts";
 
 export function VexflowScore({ score }: { score: Score }) {
     const divRef = useRef<HTMLDivElement | null>(null);
     const rendererRef = useRef<Flow.Renderer | undefined>();
-    console.log({ score });
+    const scoreSize = useResizeObserver({
+        ref: divRef,
+    })
 
     useEffect(() => {
         if (!divRef.current)  {
@@ -80,7 +83,7 @@ export function VexflowScore({ score }: { score: Score }) {
                 align_rests: true,
             });
         }
-    }, [score]);
+    }, [score, scoreSize.width]);
 
     return <div style={{ border: "1px solid var(--accent-9)", marginTop: "10px" }} ref={divRef}></div>;
 }
