@@ -9,14 +9,17 @@ import { Flex, Theme, ThemeProps, Select, IconButton } from '@radix-ui/themes';
 import { ScoreContextProvider } from './Score/ScoreProvider';
 import { MetronomeConfiguration } from './Metronome/MetronomeConfiguration';
 import { SunIcon, MoonIcon } from "@radix-ui/react-icons"
+import { useLocalStorage } from 'usehooks-ts';
 
 const accentColors = ["gray", "gold", "bronze", "brown", "yellow", "amber", "orange", "tomato", "red", "ruby", "crimson", "pink", "plum", "purple", "violet", "iris", "indigo", "blue", "cyan", "teal", "jade", "green", "grass", "lime", "mint", "sky"];
 
 function App() {
+  const [{ accentColor, appearance }, setThemePreferences] = useLocalStorage("theme-preferences", {
+    appearance: "dark" as "light" | "dark",
+    accentColor: "indigo" as ThemeProps["accentColor"]
+  });
   const [selectedDevice, setSelectedDevice] = useState<Input | undefined>();
   const [configuration, setConfiguration] = useState<BaseMetronomeConfigurationProps>(defaultMetronomeConfiguration);
-  const [appearance, setAppearance] = useState<"light" | "dark">("dark");
-  const [accentColor, setAccentColor] = useState<ThemeProps["accentColor"]>("indigo");
 
   return (
     <Theme appearance={appearance} accentColor={accentColor}>
@@ -26,10 +29,10 @@ function App() {
             <InputConfiguration selectedInput={selectedDevice} onSelect={(input) => setSelectedDevice(input)} />
             <MetronomeConfiguration configuration={configuration} onChange={setConfiguration}  />
             <Flex style={{ flexGrow: "2", justifyContent: "flex-end" }}>
-              <IconButton onClick={() => setAppearance(currentAppearance => currentAppearance === "dark" ? "light" : "dark")} >
+              <IconButton onClick={() => setThemePreferences({ appearance: appearance === "dark" ? "light" : "dark", accentColor, })} >
                   {appearance === "light" ? <SunIcon /> : <MoonIcon />}
               </IconButton>
-              <Select.Root onValueChange={value => setAccentColor((value ?? "indigo") as ThemeProps["accentColor"])} value={accentColor}>
+              <Select.Root onValueChange={value => setThemePreferences({ appearance, accentColor: (value ?? "indigo") as ThemeProps["accentColor"] } )} value={accentColor}>
                 <Select.Trigger />
                 <Select.Content>
                   {accentColors.map(color => <Select.Item value={color} >{color}</Select.Item>)}
