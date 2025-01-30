@@ -6,6 +6,7 @@ import { Flow } from "vexflow";
 export function VexflowScore({ score }: { score: Score }) {
     const divRef = useRef<HTMLDivElement | null>(null);
     const rendererRef = useRef<Flow.Renderer | undefined>();
+    console.log({ score });
 
     useEffect(() => {
         if (!divRef.current)  {
