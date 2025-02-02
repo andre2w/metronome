@@ -74,7 +74,7 @@ export function VexflowScore({ score }: { score: Score }) {
       for (const bar of bars) {
         let staveNote: Flow.StemmableNote;
         if (bar?.notes?.length) {
-          const keys = bar.notes.map(part => NOTES[part]);
+          const keys = bar.notes.map((part) => NOTES[part]);
           staveNote = new Flow.StaveNote({ keys, duration });
           if (bar.notes.includes("HIGH_HAT_OPEN")) {
             staveNote.addModifier(new Flow.Annotation("O"));

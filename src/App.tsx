@@ -81,7 +81,9 @@ function App() {
               configuration={configuration}
               onChange={setConfiguration}
             />
-            <Flex style={{ flexGrow: "2", justifyContent: "flex-end", gap: "5px" }}>
+            <Flex
+              style={{ flexGrow: "2", justifyContent: "flex-end", gap: "5px" }}
+            >
               <IconButton
                 onClick={() =>
                   setThemePreferences({

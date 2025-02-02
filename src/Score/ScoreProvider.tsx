@@ -80,7 +80,9 @@ export function ScoreContextProvider({
   }, [hash]);
 
   const addStave = () => {
-    const newArr = Array.from<NotesWithSticking>({ length: notes }).fill({ notes: [] });
+    const newArr = Array.from<NotesWithSticking>({ length: notes }).fill({
+      notes: [],
+    });
     const newHash = new URLSearchParams(hash);
     newHash.set("score", JSON.stringify([...score, newArr]));
     setHash(newHash);
@@ -93,7 +95,7 @@ export function ScoreContextProvider({
   }) => {
     const newScore = [...score];
     const notesWithSticking = newScore[staveIndex][staveNoteIndex];
-    
+
     if (!notesWithSticking.notes.includes(note)) {
       notesWithSticking.notes.push(note);
     } else {
@@ -114,16 +116,24 @@ export function ScoreContextProvider({
     setHash(newHash);
   };
 
-  const setSticking: ScoreContextValue["setSticking"] = ({ staveIndex, staveNoteIndex, sticking }) => {
+  const setSticking: ScoreContextValue["setSticking"] = ({
+    staveIndex,
+    staveNoteIndex,
+    sticking,
+  }) => {
     const newScore = [...score];
-    newScore[staveIndex][staveNoteIndex] = sticking ? { ...newScore[staveIndex][staveNoteIndex], sticking } : { notes: newScore[staveIndex][staveNoteIndex].notes };
+    newScore[staveIndex][staveNoteIndex] = sticking
+      ? { ...newScore[staveIndex][staveNoteIndex], sticking }
+      : { notes: newScore[staveIndex][staveNoteIndex].notes };
     const newHash = new URLSearchParams(hash);
     newHash.set("score", JSON.stringify(newScore));
     setHash(newHash);
-  }
+  };
 
   return (
-    <ScoreContext.Provider value={{ score, addStave, toggleNote, removeStave, setSticking }}>
+    <ScoreContext.Provider
+      value={{ score, addStave, toggleNote, removeStave, setSticking }}
+    >
       {children}
     </ScoreContext.Provider>
   );

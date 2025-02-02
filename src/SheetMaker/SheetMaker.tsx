@@ -20,7 +20,8 @@ const noteLabel: Record<Note, string> = {
 };
 
 export function SheetMaker() {
-  const { addStave, score, toggleNote, removeStave, setSticking } = useScoreContext();
+  const { addStave, score, toggleNote, removeStave, setSticking } =
+    useScoreContext();
 
   return (
     <>
@@ -36,13 +37,17 @@ export function SheetMaker() {
         >
           <div style={{ alignSelf: "flex-end", position: "sticky" }}>
             <div>---</div>
-            <div style={{
-                  height: "35px",
-                  boxSizing: "border-box",
-                  alignContent: "center",
-                  textAlign: "end",
-                  paddingRight: "5px",
-                }}>Sticking</div>
+            <div
+              style={{
+                height: "35px",
+                boxSizing: "border-box",
+                alignContent: "center",
+                textAlign: "end",
+                paddingRight: "5px",
+              }}
+            >
+              Sticking
+            </div>
             {Object.keys(NOTES).map((note) => (
               <div
                 key={note}
@@ -118,7 +123,13 @@ interface StaveProps {
     sticking: Parameters<NonNullable<NotatorDropdownProps["onSetSticking"]>>[0],
   ) => void;
 }
-function Stave({ bar, index, onSelectNote, onRemoveStave, onSetStickings }: StaveProps) {
+function Stave({
+  bar,
+  index,
+  onSelectNote,
+  onRemoveStave,
+  onSetStickings,
+}: StaveProps) {
   const tempoCounting = counting[bar.length];
   const notes = bar.map((notesWithSticking, noteIndex) => {
     const noteCount = tempoCounting[noteIndex];
@@ -129,7 +140,7 @@ function Stave({ bar, index, onSelectNote, onRemoveStave, onSetStickings }: Stav
         index={index}
         notesWithSticking={notesWithSticking}
         onSelect={(note) => onSelectNote(noteIndex, note)}
-        onSetSticking={sticking => onSetStickings(noteIndex, sticking)}
+        onSetSticking={(sticking) => onSetStickings(noteIndex, sticking)}
       />
     );
   });

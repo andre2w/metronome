@@ -52,7 +52,7 @@ export function calculateResult({
       }
     }
 
-    const expectedNotes = score[scoreIndex][barIndex];
+    const expectedNotes = score[scoreIndex][barIndex].notes;
     barIndex++;
     if (barIndex >= score[scoreIndex].length) {
       barIndex = 0;

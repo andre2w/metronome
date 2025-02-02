@@ -19,8 +19,18 @@ test("calculate results for simple score with a single part being played", () =>
     { timestamp: 50, note: "SNARE" },
   ];
   const score: Score = [
-    [["SNARE"], ["SNARE"], ["SNARE"], ["SNARE"]],
-    [["SNARE"], ["SNARE"], ["SNARE"], ["SNARE"]],
+    [
+      { notes: ["SNARE"] },
+      { notes: ["SNARE"] },
+      { notes: ["SNARE"] },
+      { notes: ["SNARE"] },
+    ],
+    [
+      { notes: ["SNARE"] },
+      { notes: ["SNARE"] },
+      { notes: ["SNARE"] },
+      { notes: ["SNARE"] },
+    ],
   ];
 
   assert.deepStrictEqual(
@@ -44,8 +54,18 @@ test("calculate results for simple scores with multiple parts being played", () 
     { timestamp: 50, note: "SNARE" },
   ];
   const score: Score = [
-    [["SNARE", "HIGH_HAT"], ["SNARE"], ["SNARE"], ["SNARE"]],
-    [["SNARE", "HIGH_HAT"], ["SNARE"], ["SNARE"], ["SNARE"]],
+    [
+      { notes: ["SNARE", "HIGH_HAT"] },
+      { notes: ["SNARE"] },
+      { notes: ["SNARE"] },
+      { notes: ["SNARE"] },
+    ],
+    [
+      { notes: ["SNARE", "HIGH_HAT"] },
+      { notes: ["SNARE"] },
+      { notes: ["SNARE"] },
+      { notes: ["SNARE"] },
+    ],
   ];
 
   assert.deepStrictEqual(
@@ -68,8 +88,18 @@ test("counts as a miss if there's a missing part in the tick", () => {
     { timestamp: 50, note: "SNARE" },
   ];
   const score: Score = [
-    [["SNARE", "HIGH_HAT"], ["SNARE"], ["SNARE"], ["SNARE"]],
-    [["SNARE", "HIGH_HAT"], ["SNARE"], ["SNARE"], ["SNARE"]],
+    [
+      { notes: ["SNARE", "HIGH_HAT"] },
+      { notes: ["SNARE"] },
+      { notes: ["SNARE"] },
+      { notes: ["SNARE"] },
+    ],
+    [
+      { notes: ["SNARE", "HIGH_HAT"] },
+      { notes: ["SNARE"] },
+      { notes: ["SNARE"] },
+      { notes: ["SNARE"] },
+    ],
   ];
 
   assert.deepStrictEqual(
@@ -94,8 +124,18 @@ test("counts as a miss if more parts are played during a tick", () => {
     { timestamp: 50, note: "SNARE" },
   ];
   const score: Score = [
-    [["SNARE", "HIGH_HAT"], ["SNARE"], ["SNARE"], ["SNARE"]],
-    [["SNARE", "HIGH_HAT"], ["SNARE"], ["SNARE"], ["SNARE"]],
+    [
+      { notes: ["SNARE", "HIGH_HAT"] },
+      { notes: ["SNARE"] },
+      { notes: ["SNARE"] },
+      { notes: ["SNARE"] },
+    ],
+    [
+      { notes: ["SNARE", "HIGH_HAT"] },
+      { notes: ["SNARE"] },
+      { notes: ["SNARE"] },
+      { notes: ["SNARE"] },
+    ],
   ];
 
   assert.deepStrictEqual(
@@ -119,8 +159,18 @@ test("group notes for a tick inside the grace time", () => {
     { timestamp: 80, note: "SNARE" },
   ];
   const score: Score = [
-    [["SNARE", "HIGH_HAT"], ["SNARE"], ["SNARE"], ["SNARE"]],
-    [["SNARE", "HIGH_HAT"], ["SNARE"], ["SNARE"], ["SNARE"]],
+    [
+      { notes: ["SNARE", "HIGH_HAT"] },
+      { notes: ["SNARE"] },
+      { notes: ["SNARE"] },
+      { notes: ["SNARE"] },
+    ],
+    [
+      { notes: ["SNARE", "HIGH_HAT"] },
+      { notes: ["SNARE"] },
+      { notes: ["SNARE"] },
+      { notes: ["SNARE"] },
+    ],
   ];
 
   assert.deepStrictEqual(
@@ -144,7 +194,12 @@ test("loops through the score when the number of ticks is greater than entire sc
     { timestamp: 80, note: "SNARE" },
   ];
   const score: Score = [
-    [["SNARE", "HIGH_HAT"], ["SNARE"], ["SNARE"], ["SNARE"]],
+    [
+      { notes: ["SNARE", "HIGH_HAT"] },
+      { notes: ["SNARE"] },
+      { notes: ["SNARE"] },
+      { notes: ["SNARE"] },
+    ],
   ];
 
   assert.deepStrictEqual(
@@ -168,9 +223,24 @@ test("only counts ticks and ignore rest of score if not played entirely", () => 
     { timestamp: 80, note: "SNARE" },
   ];
   const score: Score = [
-    [["SNARE", "HIGH_HAT"], ["SNARE"], ["SNARE"], ["SNARE"]],
-    [["SNARE", "HIGH_HAT"], ["SNARE"], ["SNARE"], ["SNARE"]],
-    [["SNARE", "HIGH_HAT"], ["SNARE"], ["SNARE"], ["SNARE"]],
+    [
+      { notes: ["SNARE", "HIGH_HAT"] },
+      { notes: ["SNARE"] },
+      { notes: ["SNARE"] },
+      { notes: ["SNARE"] },
+    ],
+    [
+      { notes: ["SNARE", "HIGH_HAT"] },
+      { notes: ["SNARE"] },
+      { notes: ["SNARE"] },
+      { notes: ["SNARE"] },
+    ],
+    [
+      { notes: ["SNARE", "HIGH_HAT"] },
+      { notes: ["SNARE"] },
+      { notes: ["SNARE"] },
+      { notes: ["SNARE"] },
+    ],
   ];
 
   assert.deepStrictEqual(
@@ -194,8 +264,18 @@ test("calculates results when user start to play later", () => {
     { timestamp: 107, note: "SNARE" },
   ];
   const score: Score = [
-    [["SNARE"], ["SNARE"], ["SNARE"], ["SNARE"]],
-    [["SNARE"], ["SNARE"], ["SNARE"], ["SNARE"]],
+    [
+      { notes: ["SNARE"] },
+      { notes: ["SNARE"] },
+      { notes: ["SNARE"] },
+      { notes: ["SNARE"] },
+    ],
+    [
+      { notes: ["SNARE"] },
+      { notes: ["SNARE"] },
+      { notes: ["SNARE"] },
+      { notes: ["SNARE"] },
+    ],
   ];
 
   assert.deepStrictEqual(
@@ -208,8 +288,18 @@ test("when no notes were played", () => {
   const ticks = [10, 15, 20, 25, 30, 35, 40, 50];
   const notesPlayed: NotePlayed[] = [];
   const score: Score = [
-    [["SNARE"], ["SNARE"], ["SNARE"], ["SNARE"]],
-    [["SNARE"], ["SNARE"], ["SNARE"], ["SNARE"]],
+    [
+      { notes: ["SNARE"] },
+      { notes: ["SNARE"] },
+      { notes: ["SNARE"] },
+      { notes: ["SNARE"] },
+    ],
+    [
+      { notes: ["SNARE"] },
+      { notes: ["SNARE"] },
+      { notes: ["SNARE"] },
+      { notes: ["SNARE"] },
+    ],
   ];
 
   assert.deepStrictEqual(
@@ -312,7 +402,14 @@ test("real world example", { only: true }, () => {
         note: "SNARE",
       },
     ],
-    score: [[["SNARE"], ["SNARE"], ["SNARE"], ["SNARE"]]],
+    score: [
+      [
+        { notes: ["SNARE"] },
+        { notes: ["SNARE"] },
+        { notes: ["SNARE"] },
+        { notes: ["SNARE"] },
+      ],
+    ],
     graceTime: 100,
   };
   const final = [];

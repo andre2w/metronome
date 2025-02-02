@@ -128,7 +128,11 @@ export function Metronome({ className, input, configuration }: MetronomeProps) {
     <div className={className}>
       <Button onClick={() => toggle()}>{started ? "STOP" : "START"}</Button>
       <div
-        style={{ display: "flex", justifyContent: "space-evenly", marginTop: "5px" }}
+        style={{
+          display: "flex",
+          justifyContent: "space-evenly",
+          marginTop: "5px",
+        }}
         ref={tickSymbolsRef}
       >
         {Array.from({ length: configuration.notes }).map((_, index) => {

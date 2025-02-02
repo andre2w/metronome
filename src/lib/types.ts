@@ -18,14 +18,14 @@ export const NOTES = {
 } as const;
 
 export const sticking = ["L", "R", "R/L"] as const;
-export type Sticking = typeof sticking[number];
+export type Sticking = (typeof sticking)[number];
 export type Note = keyof typeof NOTES;
 
 /**
  * Is one or more parts of the drum that must be played at a moment
  */
 export type Notes = Note[];
-export type NotesWithSticking = { notes: Notes, sticking?: Sticking };
+export type NotesWithSticking = { notes: Notes; sticking?: Sticking };
 /**
  * It's 4 groups of notes - a bar can be 1/4 1/8 1/16
  */
