@@ -1,17 +1,24 @@
 import { NotatorDropdown, type NotatorDropdownProps } from "./NotatorDropdown";
-import { type Bar, NOTES } from "../lib/types";
+import { type Bar, type Note, NOTES } from "../lib/types";
 import { Button, Text } from "@radix-ui/themes";
 import { useScoreContext } from "../Score/ScoreProvider";
 import { VexflowScore } from "../Score/VexflowScore";
 import { Cross1Icon } from "@radix-ui/react-icons";
 
-// see updateSheetMusic in GrooveScribe for abc notation
-// get32NoteArrayFromClickableUI
-// Everything is 1/32 based, and it just keep spaces between
-// x8 the number is the time waiting - Here is 8 because everything is 32 so waits for ticks
-// Things inside square brackets are together like kick and snare at the same time
-// notations together outside the square brackets with the number is how to define the ligature
-// space means different groups of ligatures
+const noteLabel: Record<Note, string> = {
+  KICK: "Kick",
+  SNARE: "Snare",
+  SNARE_X_STICK: "Snare cross-stick",
+  TOM_1: "Tom 1",
+  TOM_2: "Tom 2",
+  TOM_3: "Tom 2",
+  HIGH_HAT: "High hat",
+  HIGH_HAT_OPEN: "High hat open",
+  HIGH_HAT_PEDAL: "High hat pedal",
+  CRASH: "Crash",
+  RIDE: "Pedal",
+};
+
 export function SheetMaker() {
   const { addStave, score, toggleNote, removeStave } = useScoreContext();
 
@@ -40,7 +47,9 @@ export function SheetMaker() {
                   paddingRight: "5px",
                 }}
               >
-                {note}
+                <Text as="p" wrap="nowrap">
+                  {noteLabel[note as Note]}
+                </Text>
               </div>
             ))}
           </div>

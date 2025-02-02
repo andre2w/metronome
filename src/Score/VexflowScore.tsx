@@ -3,11 +3,8 @@ import { NOTES, type Score } from "../lib/types";
 import { calculateWidthAndPosition } from "./helpers";
 import { Flow } from "vexflow";
 import { useResizeObserver } from "usehooks-ts";
-import { useThemeContext } from "@radix-ui/themes";
-import { Annotation } from "vexflow";
 
 export function VexflowScore({ score }: { score: Score }) {
-  const { appearance } = useThemeContext();
   const divRef = useRef<HTMLDivElement | null>(null);
   const rendererRef = useRef<Flow.Renderer | undefined>();
   const scoreSize = useResizeObserver({
@@ -46,9 +43,8 @@ export function VexflowScore({ score }: { score: Score }) {
     renderer.resize(sheetWidth, height);
     const context = renderer.getContext();
     context.clear();
-    const color = appearance === "dark" ? "white" : "black";
-    context.setFillStyle(color);
-    context.setStrokeStyle(color);
+    context.setFillStyle("var(--accent-9)");
+    context.setStrokeStyle("var(--accent-9)");
     if (!score.length) {
       const stave = new Flow.Stave(0, 0, 0);
       stave.setContext(context).draw();
@@ -60,7 +56,6 @@ export function VexflowScore({ score }: { score: Score }) {
     }
 
     for (let i = 0; i < score.length; i++) {
-
       const position = positions[i];
       const stave = new Flow.Stave(position.x, position.y, position.width);
 
@@ -84,19 +79,14 @@ export function VexflowScore({ score }: { score: Score }) {
           notes.push(new Flow.GhostNote({ duration }));
         }
       }
-      
+
       stave.setContext(context).draw();
       Flow.Formatter.FormatAndDraw(context, stave, notes, {
         auto_beam: true,
         align_rests: true,
       });
     }
-  }, [score, scoreSize.width, appearance]);
+  }, [score, scoreSize.width]);
 
-  return (
-    <div
-      style={{ border: "1px solid var(--accent-9)", marginTop: "10px" }}
-      ref={divRef}
-    />
-  );
+  return <div style={{ marginTop: "10px" }} ref={divRef} />;
 }

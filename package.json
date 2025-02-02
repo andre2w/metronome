@@ -7,7 +7,7 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "biome lint && biome format",
-
+    "lint:fix": "biome lint --write && biome format --write",
     "preview": "vite preview",
     "test": "node -r ts-node/register -r tsconfig-paths/register --test"
   },

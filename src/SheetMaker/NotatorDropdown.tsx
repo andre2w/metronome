@@ -27,7 +27,6 @@ export function NotatorDropdown({
               background: `${selected?.includes(note as Note) ? "var(--accent-9)" : ""}`,
             }}
             onClick={() => {
-              console.log("Clicked");
               onSelect?.({
                 action: selected?.includes(note as Note) ? "remove" : "add",
                 note: note as Note,
