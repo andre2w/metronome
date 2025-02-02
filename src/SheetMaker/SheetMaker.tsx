@@ -20,7 +20,7 @@ const noteLabel: Record<Note, string> = {
 };
 
 export function SheetMaker() {
-  const { addStave, score, toggleNote, removeStave } = useScoreContext();
+  const { addStave, score, toggleNote, removeStave, setSticking } = useScoreContext();
 
   return (
     <>
@@ -36,6 +36,13 @@ export function SheetMaker() {
         >
           <div style={{ alignSelf: "flex-end", position: "sticky" }}>
             <div>---</div>
+            <div style={{
+                  height: "35px",
+                  boxSizing: "border-box",
+                  alignContent: "center",
+                  textAlign: "end",
+                  paddingRight: "5px",
+                }}>Sticking</div>
             {Object.keys(NOTES).map((note) => (
               <div
                 key={note}
@@ -60,9 +67,12 @@ export function SheetMaker() {
                 bar={bar}
                 index={staveIndex}
                 onSelectNote={(staveNoteIndex, note) => {
-                  toggleNote({ staveIndex, staveNoteIndex, note: note.note });
+                  toggleNote({ staveIndex, staveNoteIndex, note });
                 }}
                 onRemoveStave={() => removeStave(staveIndex)}
+                onSetStickings={(staveNoteIndex, sticking) => {
+                  setSticking({ staveIndex, staveNoteIndex, sticking });
+                }}
               />
             );
           })}
@@ -103,18 +113,23 @@ interface StaveProps {
     note: Parameters<NonNullable<NotatorDropdownProps["onSelect"]>>[0],
   ) => void;
   onRemoveStave: () => void;
+  onSetStickings: (
+    barIndex: number,
+    sticking: Parameters<NonNullable<NotatorDropdownProps["onSetSticking"]>>[0],
+  ) => void;
 }
-function Stave({ bar, index, onSelectNote, onRemoveStave }: StaveProps) {
+function Stave({ bar, index, onSelectNote, onRemoveStave, onSetStickings }: StaveProps) {
   const tempoCounting = counting[bar.length];
-  const notes = bar.map((notes, noteIndex) => {
+  const notes = bar.map((notesWithSticking, noteIndex) => {
     const noteCount = tempoCounting[noteIndex];
     return (
       // biome-ignore lint/correctness/useJsxKeyInIterable: <explanation>
       <NotatorDropdown
         noteCount={noteCount}
         index={index}
-        selected={notes}
+        notesWithSticking={notesWithSticking}
         onSelect={(note) => onSelectNote(noteIndex, note)}
+        onSetSticking={sticking => onSetStickings(noteIndex, sticking)}
       />
     );
   });

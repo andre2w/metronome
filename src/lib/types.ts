@@ -15,19 +15,21 @@ export const NOTES = {
   HIGH_HAT_PEDAL: "d/4/x2",
   CRASH: "f/5/x2",
   RIDE: "a/5/x2",
-};
+} as const;
 
+export const sticking = ["L", "R", "R/L"] as const;
+export type Sticking = typeof sticking[number];
 export type Note = keyof typeof NOTES;
 
 /**
  * Is one or more parts of the drum that must be played at a moment
  */
 export type Notes = Note[];
-
+export type NotesWithSticking = { notes: Notes, sticking?: Sticking };
 /**
  * It's 4 groups of notes - a bar can be 1/4 1/8 1/16
  */
-export type Bar = Notes[];
+export type Bar = NotesWithSticking[];
 
 /**
  * The score is a list of bars that must be played

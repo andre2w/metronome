@@ -4,6 +4,10 @@ import { calculateWidthAndPosition } from "./helpers";
 import { Flow } from "vexflow";
 import { useResizeObserver } from "usehooks-ts";
 
+const Y_OFFSET = 50;
+const STAVE_HEIGHT = 150;
+const STAVE_WIDTH = 300;
+
 export function VexflowScore({ score }: { score: Score }) {
   const divRef = useRef<HTMLDivElement | null>(null);
   const rendererRef = useRef<Flow.Renderer | undefined>();
@@ -26,16 +30,16 @@ export function VexflowScore({ score }: { score: Score }) {
     const sheetWidth = scoreSize.width ?? element.getBoundingClientRect().width;
 
     const positions = calculateWidthAndPosition({
-      sheetWidth: sheetWidth - 20,
+      sheetWidth: sheetWidth - 40,
       staveCount: score.length,
-      staveHeight: 150,
-      staveWidth: 300,
-      startY: 10,
-      startX: 10,
+      staveHeight: STAVE_HEIGHT,
+      staveWidth: STAVE_WIDTH,
+      startY: Y_OFFSET,
+      startX: 20,
     });
     const height = positions.reduce(
-      (prev, curr) => Math.max(prev, curr.y + 150),
-      0,
+      (prev, curr) => Math.max(prev, curr.y + STAVE_HEIGHT),
+      Y_OFFSET,
     );
 
     const renderer = rendererRef.current;
@@ -68,16 +72,20 @@ export function VexflowScore({ score }: { score: Score }) {
       const notes = [];
       const duration = String(bars.length);
       for (const bar of bars) {
-        if (bar?.length) {
-          const note = bar.map((part) => NOTES[part]);
-          const staveNote = new Flow.StaveNote({ keys: note, duration });
-          if (bar.includes("HIGH_HAT_OPEN")) {
+        let staveNote: Flow.StemmableNote;
+        if (bar?.notes?.length) {
+          const keys = bar.notes.map(part => NOTES[part]);
+          staveNote = new Flow.StaveNote({ keys, duration });
+          if (bar.notes.includes("HIGH_HAT_OPEN")) {
             staveNote.addModifier(new Flow.Annotation("O"));
           }
-          notes.push(staveNote);
         } else {
-          notes.push(new Flow.GhostNote({ duration }));
+          staveNote = new Flow.GhostNote({ duration });
         }
+        if (bar.sticking) {
+          staveNote.addModifier(new Flow.Annotation(bar.sticking));
+        }
+        notes.push(staveNote);
       }
 
       stave.setContext(context).draw();

@@ -1,22 +1,32 @@
 import { Box } from "@radix-ui/themes";
-import { type Notes, NOTES, type Note } from "../lib/types";
+import { type Notes, NOTES, type Note, type NotesWithSticking, type Sticking } from "../lib/types";
 
 export interface NotatorDropdownProps {
-  onSelect?: (note: { action: "add" | "remove"; note: Note }) => void;
-  selected?: Notes;
+  onSelect?: (note: Note) => void;
+  onSetSticking?: (sticking: Sticking | null) => void;
+  notesWithSticking: NotesWithSticking;
   index: number;
   noteCount?: string;
 }
 
+const stickingsLoop = [null, "L", "R", "R/L"] as const;
+
 export function NotatorDropdown({
   onSelect,
-  selected,
-  noteCount,
+  notesWithSticking,
+  onSetSticking
 }: NotatorDropdownProps) {
+  const { notes: selectedNotes, sticking } = notesWithSticking;
+  const stickingIndex = Math.max(stickingsLoop.findIndex(s => s === sticking), 0);
+  const nextIndex = stickingIndex + 1 >= stickingsLoop.length ? 0 : stickingIndex + 1;
   return (
     <div style={{ display: "flex", flexDirection: "column" }}>
-      {<div style={{ textAlign: "center" }}>{noteCount}</div>}
+      {/* <div style={{ textAlign: "center" }}>{noteCount}</div> */}
+      <Box width={"35px"} height={"35px"} style={{ display: "flex", justifyContent: "center", alignItems: "center" }} onClick={() => {
+        onSetSticking?.(stickingsLoop[nextIndex]);
+      }}>{sticking ?? "-"}</Box>
       {Object.keys(NOTES).map((note) => {
+        const isSelected = selectedNotes.includes(note as Note);
         return (
           <Box
             key={note}
@@ -24,13 +34,10 @@ export function NotatorDropdown({
             height={"35px"}
             style={{
               border: "1px solid var(--accent-9)",
-              background: `${selected?.includes(note as Note) ? "var(--accent-9)" : ""}`,
+              background: `${isSelected ? "var(--accent-9)" : ""}`,
             }}
             onClick={() => {
-              onSelect?.({
-                action: selected?.includes(note as Note) ? "remove" : "add",
-                note: note as Note,
-              });
+              onSelect?.(note as Note);
             }}
           />
         );

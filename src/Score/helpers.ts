@@ -16,7 +16,6 @@ export interface StavePosition {
 export function calculateWidthAndPosition(
   props: CalculateWidthAndPositionProps,
 ): StavePosition[] {
-  console.log(props);
   if (props.staveCount < 1) {
     return [];
   }

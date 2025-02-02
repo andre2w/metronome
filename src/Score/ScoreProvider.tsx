@@ -5,7 +5,7 @@ import {
   useEffect,
   useState,
 } from "react";
-import type { Note, Notes, Score } from "../lib/types";
+import type { Note, NotesWithSticking, Score, Sticking } from "../lib/types";
 
 export interface ScoreContextValue {
   score: Score;
@@ -16,12 +16,18 @@ export interface ScoreContextValue {
     note: Note;
   }) => void;
   removeStave: (staveIndex: number) => void;
+  setSticking: (props: {
+    staveIndex: number;
+    staveNoteIndex: number;
+    sticking: Sticking | null;
+  }) => void;
 }
 const ScoreContext = createContext<ScoreContextValue>({
   score: [],
   toggleNote: () => {},
   addStave: () => {},
   removeStave: () => {},
+  setSticking: () => {},
 });
 
 export interface ScoreContextProviderProps {
@@ -74,7 +80,7 @@ export function ScoreContextProvider({
   }, [hash]);
 
   const addStave = () => {
-    const newArr = Array.from<Notes>({ length: notes }).fill([]);
+    const newArr = Array.from<NotesWithSticking>({ length: notes }).fill({ notes: [] });
     const newHash = new URLSearchParams(hash);
     newHash.set("score", JSON.stringify([...score, newArr]));
     setHash(newHash);
@@ -85,20 +91,15 @@ export function ScoreContextProvider({
     staveNoteIndex,
     note,
   }) => {
-    const newNote = score[staveIndex][staveNoteIndex]
-      ? [...score[staveIndex][staveNoteIndex]]
-      : [];
-    const newNotation = [...score[staveIndex]];
     const newScore = [...score];
-    newScore[staveIndex] = newNotation;
-    newNotation[staveNoteIndex] = newNote;
-
-    if (!newNote.includes(note)) {
-      newNote.push(note);
+    const notesWithSticking = newScore[staveIndex][staveNoteIndex];
+    
+    if (!notesWithSticking.notes.includes(note)) {
+      notesWithSticking.notes.push(note);
     } else {
-      const noteIndex = newNote.indexOf(note);
+      const noteIndex = notesWithSticking.notes.indexOf(note);
       if (noteIndex >= 0) {
-        newNote.splice(noteIndex, 1);
+        notesWithSticking.notes.splice(noteIndex, 1);
       }
     }
     const newHash = new URLSearchParams(hash);
@@ -113,8 +114,16 @@ export function ScoreContextProvider({
     setHash(newHash);
   };
 
+  const setSticking: ScoreContextValue["setSticking"] = ({ staveIndex, staveNoteIndex, sticking }) => {
+    const newScore = [...score];
+    newScore[staveIndex][staveNoteIndex] = sticking ? { ...newScore[staveIndex][staveNoteIndex], sticking } : { notes: newScore[staveIndex][staveNoteIndex].notes };
+    const newHash = new URLSearchParams(hash);
+    newHash.set("score", JSON.stringify(newScore));
+    setHash(newHash);
+  }
+
   return (
-    <ScoreContext.Provider value={{ score, addStave, toggleNote, removeStave }}>
+    <ScoreContext.Provider value={{ score, addStave, toggleNote, removeStave, setSticking }}>
       {children}
     </ScoreContext.Provider>
   );
