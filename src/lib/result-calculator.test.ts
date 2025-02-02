@@ -1,7 +1,10 @@
 import test from "node:test";
 import assert from "node:assert";
-import { NotePlayed, Score } from "./types";
-import { calculateResult, CalculateResultProps } from "./result-calculator";
+import type { NotePlayed, Score } from "./types";
+import {
+  calculateResult,
+  type CalculateResultProps,
+} from "./result-calculator";
 
 test("calculate results for simple score with a single part being played", () => {
   const ticks = [10, 15, 20, 25, 30, 35, 40, 50];
@@ -17,10 +20,13 @@ test("calculate results for simple score with a single part being played", () =>
   ];
   const score: Score = [
     [["SNARE"], ["SNARE"], ["SNARE"], ["SNARE"]],
-    [["SNARE"], ["SNARE"], ["SNARE"], ["SNARE"]]
+    [["SNARE"], ["SNARE"], ["SNARE"], ["SNARE"]],
   ];
 
-  assert.deepStrictEqual(calculateResult({ ticks, notesPlayed, score, graceTime: 0 }), { missed: 0, right: 8 });
+  assert.deepStrictEqual(
+    calculateResult({ ticks, notesPlayed, score, graceTime: 0 }),
+    { missed: 0, right: 8 },
+  );
 });
 
 test("calculate results for simple scores with multiple parts being played", () => {
@@ -39,10 +45,13 @@ test("calculate results for simple scores with multiple parts being played", () 
   ];
   const score: Score = [
     [["SNARE", "HIGH_HAT"], ["SNARE"], ["SNARE"], ["SNARE"]],
-    [["SNARE", "HIGH_HAT"], ["SNARE"], ["SNARE"], ["SNARE"]]
+    [["SNARE", "HIGH_HAT"], ["SNARE"], ["SNARE"], ["SNARE"]],
   ];
 
-  assert.deepStrictEqual(calculateResult({ ticks, notesPlayed, score, graceTime: 0 }), { missed: 0, right: 8 });
+  assert.deepStrictEqual(
+    calculateResult({ ticks, notesPlayed, score, graceTime: 0 }),
+    { missed: 0, right: 8 },
+  );
 });
 
 test("counts as a miss if there's a missing part in the tick", () => {
@@ -60,10 +69,13 @@ test("counts as a miss if there's a missing part in the tick", () => {
   ];
   const score: Score = [
     [["SNARE", "HIGH_HAT"], ["SNARE"], ["SNARE"], ["SNARE"]],
-    [["SNARE", "HIGH_HAT"], ["SNARE"], ["SNARE"], ["SNARE"]]
+    [["SNARE", "HIGH_HAT"], ["SNARE"], ["SNARE"], ["SNARE"]],
   ];
 
-  assert.deepStrictEqual(calculateResult({ ticks, notesPlayed, score, graceTime: 0 }), { missed: 1, right: 7 });
+  assert.deepStrictEqual(
+    calculateResult({ ticks, notesPlayed, score, graceTime: 0 }),
+    { missed: 1, right: 7 },
+  );
 });
 
 test("counts as a miss if more parts are played during a tick", () => {
@@ -83,10 +95,13 @@ test("counts as a miss if more parts are played during a tick", () => {
   ];
   const score: Score = [
     [["SNARE", "HIGH_HAT"], ["SNARE"], ["SNARE"], ["SNARE"]],
-    [["SNARE", "HIGH_HAT"], ["SNARE"], ["SNARE"], ["SNARE"]]
+    [["SNARE", "HIGH_HAT"], ["SNARE"], ["SNARE"], ["SNARE"]],
   ];
 
-  assert.deepStrictEqual(calculateResult({ ticks, notesPlayed, score, graceTime: 0 }), { missed: 1, right: 7 });
+  assert.deepStrictEqual(
+    calculateResult({ ticks, notesPlayed, score, graceTime: 0 }),
+    { missed: 1, right: 7 },
+  );
 });
 
 test("group notes for a tick inside the grace time", () => {
@@ -105,10 +120,13 @@ test("group notes for a tick inside the grace time", () => {
   ];
   const score: Score = [
     [["SNARE", "HIGH_HAT"], ["SNARE"], ["SNARE"], ["SNARE"]],
-    [["SNARE", "HIGH_HAT"], ["SNARE"], ["SNARE"], ["SNARE"]]
+    [["SNARE", "HIGH_HAT"], ["SNARE"], ["SNARE"], ["SNARE"]],
   ];
 
-  assert.deepStrictEqual(calculateResult({ ticks, notesPlayed, score, graceTime: 2 }), { missed: 0, right: 8 });
+  assert.deepStrictEqual(
+    calculateResult({ ticks, notesPlayed, score, graceTime: 2 }),
+    { missed: 0, right: 8 },
+  );
 });
 
 test("loops through the score when the number of ticks is greater than entire score", () => {
@@ -126,10 +144,13 @@ test("loops through the score when the number of ticks is greater than entire sc
     { timestamp: 80, note: "SNARE" },
   ];
   const score: Score = [
-    [["SNARE", "HIGH_HAT"], ["SNARE"], ["SNARE"], ["SNARE"]]
+    [["SNARE", "HIGH_HAT"], ["SNARE"], ["SNARE"], ["SNARE"]],
   ];
 
-  assert.deepStrictEqual(calculateResult({ ticks, notesPlayed, score, graceTime: 2 }), { missed: 0, right: 8 });
+  assert.deepStrictEqual(
+    calculateResult({ ticks, notesPlayed, score, graceTime: 2 }),
+    { missed: 0, right: 8 },
+  );
 });
 
 test("only counts ticks and ignore rest of score if not played entirely", () => {
@@ -152,13 +173,15 @@ test("only counts ticks and ignore rest of score if not played entirely", () => 
     [["SNARE", "HIGH_HAT"], ["SNARE"], ["SNARE"], ["SNARE"]],
   ];
 
-  assert.deepStrictEqual(calculateResult({ ticks, notesPlayed, score, graceTime: 2 }), { missed: 0, right: 8 });
+  assert.deepStrictEqual(
+    calculateResult({ ticks, notesPlayed, score, graceTime: 2 }),
+    { missed: 0, right: 8 },
+  );
 });
 
 test("calculates results when user start to play later", () => {
   const ticks = [
-    10, 15, 20, 25, 30, 35, 40, 50,
-    100, 101, 102, 103, 104, 105, 106, 107
+    10, 15, 20, 25, 30, 35, 40, 50, 100, 101, 102, 103, 104, 105, 106, 107,
   ];
   const notesPlayed: NotePlayed[] = [
     { timestamp: 100, note: "SNARE" },
@@ -172,10 +195,13 @@ test("calculates results when user start to play later", () => {
   ];
   const score: Score = [
     [["SNARE"], ["SNARE"], ["SNARE"], ["SNARE"]],
-    [["SNARE"], ["SNARE"], ["SNARE"], ["SNARE"]]
+    [["SNARE"], ["SNARE"], ["SNARE"], ["SNARE"]],
   ];
 
-  assert.deepStrictEqual(calculateResult({ ticks, notesPlayed, score, graceTime: 0 }), { missed: 8, right: 8 });
+  assert.deepStrictEqual(
+    calculateResult({ ticks, notesPlayed, score, graceTime: 0 }),
+    { missed: 8, right: 8 },
+  );
 });
 
 test("when no notes were played", () => {
@@ -183,10 +209,13 @@ test("when no notes were played", () => {
   const notesPlayed: NotePlayed[] = [];
   const score: Score = [
     [["SNARE"], ["SNARE"], ["SNARE"], ["SNARE"]],
-    [["SNARE"], ["SNARE"], ["SNARE"], ["SNARE"]]
+    [["SNARE"], ["SNARE"], ["SNARE"], ["SNARE"]],
   ];
 
-  assert.deepStrictEqual(calculateResult({ ticks, notesPlayed, score, graceTime: 0 }), { missed: 8, right: 0 });
+  assert.deepStrictEqual(
+    calculateResult({ ticks, notesPlayed, score, graceTime: 0 }),
+    { missed: 8, right: 0 },
+  );
 });
 
 test("when there is no score", () => {
@@ -194,32 +223,22 @@ test("when there is no score", () => {
   const notesPlayed: NotePlayed[] = [];
   const score: Score = [];
 
-  assert.deepStrictEqual(calculateResult({ ticks, notesPlayed, score, graceTime: 0 }), { missed: 0, right: 0 });
-})
+  assert.deepStrictEqual(
+    calculateResult({ ticks, notesPlayed, score, graceTime: 0 }),
+    { missed: 0, right: 0 },
+  );
+});
 
 test("real world example", { only: true }, () => {
-const props: CalculateResultProps = {
-  ticks: [
-    31710.5,
-    32460,
-    33210.200000047684,
-    33959.80000001192,
-    34710.60000002384,
-    35460.200000047684,
-    36210.80000001192,
-    36960.700000047684,
-    37709.5,
-    38460,
-    39209.60000002384,
-    39959.90000003576,
-    40710.200000047684,
-    41459.5,
-    42209.90000003576,
-    42959.700000047684,
-    43710.200000047684,
-    44459.90000003576
-  ],
-  notesPlayed: [
+  const props: CalculateResultProps = {
+    ticks: [
+      31710.5, 32460, 33210.200000047684, 33959.80000001192, 34710.60000002384,
+      35460.200000047684, 36210.80000001192, 36960.700000047684, 37709.5, 38460,
+      39209.60000002384, 39959.90000003576, 40710.200000047684, 41459.5,
+      42209.90000003576, 42959.700000047684, 43710.200000047684,
+      44459.90000003576,
+    ],
+    notesPlayed: [
       {
         timestamp: 31941.600000023842,
         note: "SNARE",
@@ -281,21 +300,21 @@ const props: CalculateResultProps = {
         note: "SNARE",
       },
       {
-          timestamp: 43101.40000003576,
-          note: "SNARE",
+        timestamp: 43101.40000003576,
+        note: "SNARE",
       },
       {
-          timestamp: 43801.5,
-          note: "SNARE",
+        timestamp: 43801.5,
+        note: "SNARE",
       },
       {
-          timestamp: 44511.5,
-          note: "SNARE",
-      }
-  ],
-  score: [[["SNARE"], ["SNARE"], ["SNARE"], ["SNARE"]]],
-  graceTime: 100
-}
+        timestamp: 44511.5,
+        note: "SNARE",
+      },
+    ],
+    score: [[["SNARE"], ["SNARE"], ["SNARE"], ["SNARE"]]],
+    graceTime: 100,
+  };
   const final = [];
   for (const tick of props.ticks) {
     const start = tick - props.graceTime;

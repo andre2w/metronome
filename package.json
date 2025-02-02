@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
-    "lint": "eslint .",
+    "lint": "biome lint && biome format",
     "preview": "vite preview",
     "test": "node -r ts-node/register -r tsconfig-paths/register --test"
   },
@@ -22,6 +22,7 @@
     "webmidi": "^3.1.11"
   },
   "devDependencies": {
+    "@biomejs/biome": "1.9.4",
     "@eslint/js": "^9.9.0",
     "@types/node": "^20.16.10",
     "@types/react": "^18.3.3",

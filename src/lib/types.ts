@@ -12,7 +12,7 @@ export const NOTES = {
   HIGH_HAT: "g/5/x2",
   HIGH_HAT_PEDAL: "d/4/x2",
   CRASH: "f/5/x2",
-  RIDE: "a/5/x2"
+  RIDE: "a/5/x2",
 };
 
 export type Note = keyof typeof NOTES;
@@ -31,7 +31,6 @@ export type Bar = Notes[];
  * The score is a list of bars that must be played
  */
 export type Score = Bar[];
-
 
 /**
  * A tick is one tick of the metronome when the note

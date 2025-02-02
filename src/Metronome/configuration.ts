@@ -9,5 +9,5 @@ export interface BaseMetronomeConfigurationProps {
 export const defaultMetronomeConfiguration = {
   beats: 60,
   notes: 4,
-  graceTime: calculateBeatTime(60, 4) - 2
+  graceTime: calculateBeatTime(60, 4) - 2,
 };

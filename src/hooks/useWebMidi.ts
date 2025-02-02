@@ -11,8 +11,8 @@ export function useWebMidi() {
       const webmidi = await createWebMidi();
       setWebMidi(webmidi);
     },
-    webmidi
-  }
+    webmidi,
+  };
 }
 
 function createWebMidi() {

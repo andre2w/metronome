@@ -1,89 +1,99 @@
 import { useEffect, useRef } from "react";
-import { NOTES, Score } from "../lib/types";
+import { NOTES, type Score } from "../lib/types";
 import { calculateWidthAndPosition } from "./helpers";
 import { Flow } from "vexflow";
 import { useResizeObserver } from "usehooks-ts";
 
 export function VexflowScore({ score }: { score: Score }) {
-    const divRef = useRef<HTMLDivElement | null>(null);
-    const rendererRef = useRef<Flow.Renderer | undefined>();
-    const scoreSize = useResizeObserver({
-        ref: divRef,
-    })
+  const divRef = useRef<HTMLDivElement | null>(null);
+  const rendererRef = useRef<Flow.Renderer | undefined>();
+  const scoreSize = useResizeObserver({
+    ref: divRef,
+  });
 
-    useEffect(() => {
-        if (!divRef.current)  {
-            return;
+  useEffect(() => {
+    if (!divRef.current) {
+      return;
+    }
+    if (!rendererRef.current) {
+      rendererRef.current = new Flow.Renderer(
+        divRef.current,
+        Flow.Renderer.Backends.SVG,
+      );
+    }
+
+    const element = divRef.current;
+    const sheetWidth = scoreSize.width ?? element.getBoundingClientRect().width;
+    console.log({
+      sheetWidth: sheetWidth - 20,
+      staveCount: score.length,
+      staveHeight: 150,
+      staveWidth: 300,
+      startY: 10,
+      startX: 10,
+    });
+    const positions = calculateWidthAndPosition({
+      sheetWidth: sheetWidth - 20,
+      staveCount: score.length,
+      staveHeight: 150,
+      staveWidth: 300,
+      startY: 10,
+      startX: 10,
+    });
+    const height = positions.reduce(
+      (prev, curr) => Math.max(prev, curr.y + 150),
+      0,
+    );
+
+    const renderer = rendererRef.current;
+
+    renderer.resize(sheetWidth, height);
+    const context = renderer.getContext();
+    context.clear();
+
+    if (!score.length) {
+      const stave = new Flow.Stave(0, 0, 0);
+      stave.setContext(context).draw();
+      Flow.Formatter.FormatAndDraw(context, stave, [], {
+        auto_beam: true,
+        align_rests: true,
+      });
+      return;
+    }
+
+    for (let i = 0; i < score.length; i++) {
+      const position = positions[i];
+      const stave = new Flow.Stave(position.x, position.y, position.width);
+
+      if (i === 0) {
+        stave.addClef("treble").addTimeSignature("4/4");
+      }
+
+      const bars = score[i];
+
+      const notes = [];
+      const duration = String(bars.length);
+      for (const bar of bars) {
+        if (bar?.length) {
+          const note = bar.map((part) => NOTES[part]);
+          notes.push(new Flow.StaveNote({ keys: note, duration }));
+        } else {
+          notes.push(new Flow.GhostNote({ duration }));
         }
-        if (!rendererRef.current) {
-            rendererRef.current = new Flow.Renderer(divRef.current, Flow.Renderer.Backends.SVG);
-        }
+      }
 
-        const element = divRef.current;
-        const sheetWidth = element.getBoundingClientRect().width;
-        console.log({
-            sheetWidth: sheetWidth - 20,
-            staveCount: score.length,
-            staveHeight: 150,
-            staveWidth: 300,
-            startY: 10,
-            startX: 10
-        });
-        const positions = calculateWidthAndPosition({
-            sheetWidth: sheetWidth - 20,
-            staveCount: score.length,
-            staveHeight: 150,
-            staveWidth: 300,
-            startY: 10,
-            startX: 10
-        });
-        const height = positions.reduce((prev, curr) => Math.max(prev, curr.y + 150)  , 0);
+      stave.setContext(context).draw();
+      Flow.Formatter.FormatAndDraw(context, stave, notes, {
+        auto_beam: true,
+        align_rests: true,
+      });
+    }
+  }, [score, scoreSize.width]);
 
-        const renderer = rendererRef.current;
-
-
-        renderer.resize(sheetWidth, height);
-        const context = renderer.getContext();
-        context.clear();
-
-        if (!score.length) {
-            const stave = new Flow.Stave(0, 0, 0);
-            stave.setContext(context).draw();
-            Flow.Formatter.FormatAndDraw(context, stave, [], {
-                auto_beam: true,
-                align_rests: true,
-            });
-            return;
-        }
-
-        for (let i = 0; i < score.length; i++) {
-            const position = positions[i];
-            const stave = new Flow.Stave(position.x, position.y, position.width);
-
-            if (i === 0) {
-                stave.addClef("treble").addTimeSignature("4/4");
-            }
-
-            const bars = score[i];
-
-            const notes = [];
-            const duration = String(bars.length);
-            for (const bar of bars) {
-                if (bar && bar.length) {
-                const note = bar.map(part => NOTES[part]);
-                notes.push(new Flow.StaveNote({ keys: note, duration }));
-                } else {
-                notes.push(new Flow.GhostNote({ duration }));
-                }
-            }
-
-            stave.setContext(context).draw();
-            Flow.Formatter.FormatAndDraw(context, stave, notes, {
-                auto_beam: true,
-                align_rests: true,
-            });
-        }
-    }, [score, scoreSize.width]);
-
-    return <div style={{ border: "1px solid var(--accent-9)", marginTop: "10px" }} ref={divRef}></div>;
+  return (
+    <div
+      style={{ border: "1px solid var(--accent-9)", marginTop: "10px" }}
+      ref={divRef}
+    />
+  );
 }

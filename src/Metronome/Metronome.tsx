@@ -1,9 +1,9 @@
-import { Input, NoteMessageEvent } from "webmidi";
+import type { Input, NoteMessageEvent } from "webmidi";
 import "./Metronome.css";
 import { useEffect, useRef, useState } from "react";
-import { BaseMetronomeConfigurationProps } from "./configuration";
-import { Result, ResultProps } from "./Result";
-import { NotePlayed, Ticks } from "../lib/types";
+import type { BaseMetronomeConfigurationProps } from "./configuration";
+import { Result, type ResultProps } from "./Result";
+import type { NotePlayed, Ticks } from "../lib/types";
 import { calculateResult } from "../lib/result-calculator";
 import { calculateBeatTime } from "../lib/beat-time";
 import { mappings } from "../mappings/roland-td07";
@@ -30,16 +30,19 @@ export function Metronome({ className, input, configuration }: MetronomeProps) {
 
   useEffect(() => {
     bigTick.current = new Audio("/metronome1Count.mp3");
-    smallTick.current = new Audio("/metronomeClick.mp3");    
+    smallTick.current = new Audio("/metronomeClick.mp3");
   }, []);
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: We want the side effect that the rule complains about
   useEffect(() => {
     if (started && selectedRef.current > configuration.notes) {
-      selectedRef.current = Math.floor(selectedRef.current % configuration.notes)
+      selectedRef.current = Math.floor(
+        selectedRef.current % configuration.notes,
+      );
     }
-  }, [configuration.notes])
+  }, [configuration.notes]);
 
-
+  // biome-ignore lint/correctness/useExhaustiveDependencies: Need to fix this later
   useEffect(() => {
     const { notes, beats } = configuration;
     const beatTime = calculateBeatTime(beats, notes);
@@ -48,66 +51,96 @@ export function Metronome({ className, input, configuration }: MetronomeProps) {
       clearInterval(oldInterval);
       intervalRef.current = undefined;
     }
-    if (started) { 
-        tickSymbolsRef.current?.children.item(selectedRef.current)?.classList.remove("selected");
-        selectedRef.current = selectedRef.current + 1 >= notes ? 0 : selectedRef.current + 1;
-        tickSymbolsRef.current?.children.item(selectedRef.current)?.classList.add("selected");
-        if (selectedRef.current % (configuration.notes / 4 ) === 0) {
-          bigTick.current?.play(); 
-        } else {
-          smallTick.current?.play();
-        };
-        ticksRef.current.push(performance.now());
+    if (started) {
+      tickSymbolsRef.current?.children
+        .item(selectedRef.current)
+        ?.classList.remove("selected");
+      selectedRef.current =
+        selectedRef.current + 1 >= notes ? 0 : selectedRef.current + 1;
+      tickSymbolsRef.current?.children
+        .item(selectedRef.current)
+        ?.classList.add("selected");
+      if (selectedRef.current % (configuration.notes / 4) === 0) {
+        bigTick.current?.play();
+      } else {
+        smallTick.current?.play();
+      }
+      ticksRef.current.push(performance.now());
 
       intervalRef.current = setInterval(() => {
-        tickSymbolsRef.current?.children.item(selectedRef.current)?.classList.remove("selected");
-        selectedRef.current = selectedRef.current + 1 >= notes ? 0 : selectedRef.current + 1;
-        tickSymbolsRef.current?.children.item(selectedRef.current)?.classList.add("selected");
-        if (selectedRef.current % (configuration.notes / 4 ) === 0) {
-          bigTick.current?.play(); 
+        tickSymbolsRef.current?.children
+          .item(selectedRef.current)
+          ?.classList.remove("selected");
+        selectedRef.current =
+          selectedRef.current + 1 >= notes ? 0 : selectedRef.current + 1;
+        tickSymbolsRef.current?.children
+          .item(selectedRef.current)
+          ?.classList.add("selected");
+        if (selectedRef.current % (configuration.notes / 4) === 0) {
+          bigTick.current?.play();
         } else {
           smallTick.current?.play();
-        };
+        }
         ticksRef.current.push(performance.now());
       }, beatTime);
     } else {
-      tickSymbolsRef.current?.children.item(selectedRef.current)?.classList.remove("selected"); 
+      tickSymbolsRef.current?.children
+        .item(selectedRef.current)
+        ?.classList.remove("selected");
     }
   }, [started, configuration, score]);
 
   useEffect(() => {
     if (input) {
       const listener = (e: NoteMessageEvent) => {
-        notesPlayedRef.current.push({ timestamp: e.timestamp, note: mappings[e.note.number] });
+        notesPlayedRef.current.push({
+          timestamp: e.timestamp,
+          note: mappings[e.note.number],
+        });
       };
       input.addListener("noteon", listener);
       return () => {
         input.removeListener("noteon", listener);
-      }
+      };
     }
   }, [input]);
 
   const toggle = () => {
     if (started) {
-      setResult(calculateResult({
-        ticks: ticksRef.current, notesPlayed: notesPlayedRef.current, score, graceTime: configuration.graceTime
-      }));
+      setResult(
+        calculateResult({
+          ticks: ticksRef.current,
+          notesPlayed: notesPlayedRef.current,
+          score,
+          graceTime: configuration.graceTime,
+        }),
+      );
     } else {
       notesPlayedRef.current = [];
       ticksRef.current = [];
       selectedRef.current = -1;
       setResult(undefined);
     }
-    setStarted(v => !v);
+    setStarted((v) => !v);
   };
 
-  return <div className={className}>
-    <Button onClick={() => toggle()}>{started ? "STOP": "START"}</Button>
-    <div style={{ display: "flex", justifyContent: "space-evenly"}} ref={tickSymbolsRef}>
-      {Array.from({ length: configuration.notes }).map((_, index) => {
-        return <div className={`${index % (configuration.notes / 4) === 0 ? "metronome-big" : "metronome-small"}`}></div>
-      })}
+  return (
+    <div className={className}>
+      <Button onClick={() => toggle()}>{started ? "STOP" : "START"}</Button>
+      <div
+        style={{ display: "flex", justifyContent: "space-evenly" }}
+        ref={tickSymbolsRef}
+      >
+        {Array.from({ length: configuration.notes }).map((_, index) => {
+          return (
+            // biome-ignore lint/correctness/useJsxKeyInIterable: <explanation>
+            <div
+              className={`${index % (configuration.notes / 4) === 0 ? "metronome-big" : "metronome-small"}`}
+            />
+          );
+        })}
+      </div>
+      {result && <Result right={result.right} missed={result.missed} />}
     </div>
-    {result && <Result right={result.right} missed={result.missed} />}
-  </div>
+  );
 }

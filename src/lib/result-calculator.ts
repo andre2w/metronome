@@ -1,4 +1,4 @@
-import { NotePlayed, Score, Ticks } from "./types";
+import type { NotePlayed, Score, Ticks } from "./types";
 
 export interface CalculateResultProps {
   ticks: Ticks;
@@ -7,7 +7,12 @@ export interface CalculateResultProps {
   graceTime: number;
 }
 
-export function calculateResult({ ticks, notesPlayed, score, graceTime }: CalculateResultProps) {
+export function calculateResult({
+  ticks,
+  notesPlayed,
+  score,
+  graceTime,
+}: CalculateResultProps) {
   let right = 0;
   let missed = 0;
   let tickIndex = 0;
@@ -58,7 +63,10 @@ export function calculateResult({ ticks, notesPlayed, score, graceTime }: Calcul
     }
     tickIndex++;
 
-    if (notesInTime.length === expectedNotes.length && expectedNotes.every(n => notesInTime.includes(n))) {
+    if (
+      notesInTime.length === expectedNotes.length &&
+      expectedNotes.every((n) => notesInTime.includes(n))
+    ) {
       right++;
     } else {
       missed++;
