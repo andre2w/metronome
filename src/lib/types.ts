@@ -6,10 +6,12 @@
 export const NOTES = {
   KICK: "f/4",
   SNARE: "c/5",
+  SNARE_X_STICK: "c/5/x2",
   TOM_1: "e/5",
   TOM_2: "d/5",
   TOM_3: "a/4",
   HIGH_HAT: "g/5/x2",
+  HIGH_HAT_OPEN: "g/5/x2",
   HIGH_HAT_PEDAL: "d/4/x2",
   CRASH: "f/5/x2",
   RIDE: "a/5/x2",

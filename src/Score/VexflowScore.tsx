@@ -3,8 +3,11 @@ import { NOTES, type Score } from "../lib/types";
 import { calculateWidthAndPosition } from "./helpers";
 import { Flow } from "vexflow";
 import { useResizeObserver } from "usehooks-ts";
+import { useThemeContext } from "@radix-ui/themes";
+import { Annotation } from "vexflow";
 
 export function VexflowScore({ score }: { score: Score }) {
+  const { appearance } = useThemeContext();
   const divRef = useRef<HTMLDivElement | null>(null);
   const rendererRef = useRef<Flow.Renderer | undefined>();
   const scoreSize = useResizeObserver({
@@ -24,14 +27,7 @@ export function VexflowScore({ score }: { score: Score }) {
 
     const element = divRef.current;
     const sheetWidth = scoreSize.width ?? element.getBoundingClientRect().width;
-    console.log({
-      sheetWidth: sheetWidth - 20,
-      staveCount: score.length,
-      staveHeight: 150,
-      staveWidth: 300,
-      startY: 10,
-      startX: 10,
-    });
+
     const positions = calculateWidthAndPosition({
       sheetWidth: sheetWidth - 20,
       staveCount: score.length,
@@ -50,7 +46,9 @@ export function VexflowScore({ score }: { score: Score }) {
     renderer.resize(sheetWidth, height);
     const context = renderer.getContext();
     context.clear();
-
+    const color = appearance === "dark" ? "white" : "black";
+    context.setFillStyle(color);
+    context.setStrokeStyle(color);
     if (!score.length) {
       const stave = new Flow.Stave(0, 0, 0);
       stave.setContext(context).draw();
@@ -62,6 +60,7 @@ export function VexflowScore({ score }: { score: Score }) {
     }
 
     for (let i = 0; i < score.length; i++) {
+
       const position = positions[i];
       const stave = new Flow.Stave(position.x, position.y, position.width);
 
@@ -76,19 +75,23 @@ export function VexflowScore({ score }: { score: Score }) {
       for (const bar of bars) {
         if (bar?.length) {
           const note = bar.map((part) => NOTES[part]);
-          notes.push(new Flow.StaveNote({ keys: note, duration }));
+          const staveNote = new Flow.StaveNote({ keys: note, duration });
+          if (bar.includes("HIGH_HAT_OPEN")) {
+            staveNote.addModifier(new Flow.Annotation("O"));
+          }
+          notes.push(staveNote);
         } else {
           notes.push(new Flow.GhostNote({ duration }));
         }
       }
-
+      
       stave.setContext(context).draw();
       Flow.Formatter.FormatAndDraw(context, stave, notes, {
         auto_beam: true,
         align_rests: true,
       });
     }
-  }, [score, scoreSize.width]);
+  }, [score, scoreSize.width, appearance]);
 
   return (
     <div
