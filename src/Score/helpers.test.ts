@@ -1,5 +1,5 @@
-import { test, suite } from "node:test";
 import assert from "node:assert/strict";
+import { suite, test } from "node:test";
 import { calculateWidthAndPosition } from "./helpers";
 
 suite("calculateHeightAndPosition", () => {
@@ -106,12 +106,12 @@ suite("calculateHeightAndPosition", () => {
       [
         { width: 483, x: 0, y: 0 },
         { width: 483, x: 483, y: 0 },
-        { width: 484, x: 966, y: 0 },
+        { width: 483, x: 966, y: 0 },
       ],
     );
   });
 
-  test("Recursive Here", () => {
+  test("edge case that had recursion Here", () => {
     assert.deepEqual(
       calculateWidthAndPosition({
         sheetWidth: 2407.33349609375,
@@ -121,7 +121,15 @@ suite("calculateHeightAndPosition", () => {
         startY: 10,
         startX: 10,
       }),
-      {},
+      [ 
+        { y: 10, x: 10, width: 343 }, 
+        { y: 10, x: 353, width: 343 }, 
+        { y: 10, x: 696, width: 343 }, 
+        { y: 10, x: 1039, width: 343 }, 
+        { y: 10, x: 1382, width: 343 }, 
+        { y: 10, x: 1725, width: 343 }, 
+        { y: 10, x: 2068, width: 343 } 
+      ],
     );
   });
 });
