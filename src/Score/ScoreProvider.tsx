@@ -1,10 +1,11 @@
 import {
-  createContext,
   type ReactNode,
+  createContext,
   useContext,
   useEffect,
   useState,
 } from "react";
+import { useURLHash } from "../hooks/useURLHash";
 import type { Note, NotesWithSticking, Score, Sticking } from "../lib/types";
 
 export interface ScoreContextValue {
@@ -35,40 +36,12 @@ export interface ScoreContextProviderProps {
   notes: number;
 }
 
-function useHash() {
-  const [hash, setHashInternal] = useState<URLSearchParams>(
-    new URLSearchParams(),
-  );
-
-  useEffect(() => {
-    const hashListener = () => {
-      const searchParams = new URLSearchParams(
-        window.location.hash.substring(1),
-      );
-      setHashInternal(searchParams);
-    };
-
-    hashListener();
-
-    window.addEventListener("hashchange", hashListener);
-
-    return () => {
-      window.removeEventListener("hashchange", hashListener);
-    };
-  }, []);
-
-  const setHash = (hash: URLSearchParams) => {
-    window.location.hash = hash.toString();
-  };
-
-  return { hash, setHash };
-}
 
 export function ScoreContextProvider({
   children,
   notes,
 }: ScoreContextProviderProps) {
-  const { hash, setHash } = useHash();
+  const { hash, setHash } = useURLHash();
   const scoreText = hash.get("score");
   const initialScore = scoreText ? JSON.parse(scoreText) : [];
   const [score, setScore] = useState<Score>(initialScore);

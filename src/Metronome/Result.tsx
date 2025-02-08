@@ -1,3 +1,6 @@
+import { Flex, Heading } from "@radix-ui/themes";
+import "./Result.css";
+
 export interface ResultProps {
   right: number;
   missed: number;
@@ -5,9 +8,9 @@ export interface ResultProps {
 
 export function Result(result: ResultProps) {
   return (
-    <div style={{ display: "flex", alignItems: "center" }}>
-      <h4>Right: {result.right}</h4>
-      <h4>Missed: {result.missed}</h4>
-    </div>
+    <Flex className="result">
+      <Heading as="h4">Right: {result.right}</Heading>
+      <Heading as="h4">Missed: {result.missed}</Heading>
+    </Flex>
   );
 }

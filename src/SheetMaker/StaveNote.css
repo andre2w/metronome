@@ -11,8 +11,6 @@
 
 .note {
     border: 1px solid var(--accent-9);
-    margin-right: var(--space-note-right);
-    margin-top: var(--space-note-top);
 }
 
 .note-selected {

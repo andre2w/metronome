@@ -1,9 +1,10 @@
-import { Button, Text } from "@radix-ui/themes";
+import { Box, Button, Text } from "@radix-ui/themes";
 import { useScoreContext } from "../Score/ScoreProvider";
 import { VexflowScore } from "../Score/VexflowScore";
 import { NOTES, type Note } from "../lib/types";
 import { Stave } from "./Stave";
 import "./SheetMaker.css";
+import { StaveNoteBox } from "./StaveNoteBox";
 
 const noteLabel: Record<Note, string> = {
   KICK: "Kick",
@@ -27,20 +28,17 @@ export function SheetMaker() {
     <>
       <VexflowScore score={score} />
       <div className="sheet-maker">
-        <div style={{ display: "flex" }}>
+        <div className="add">
           <Button onClick={addStave}>Add new line</Button>
         </div>
         <div className="sheet">
           <div className="parts">
-            <div>---</div>
-            <div className="part-name">
-              Sticking
-            </div>
+            <StaveNoteBox className="part-name"><Text as="p" wrap="nowrap" align="right">Stickings</Text></StaveNoteBox>
             {Object.keys(NOTES).map((note) => (
-              <div key={note} className="part-name">
-                <Text as="p" wrap="nowrap">{noteLabel[note as Note]}</Text>
-              </div>
-            ))}
+
+      <StaveNoteBox key={note} className="part-name">
+        <Text as="p" wrap="nowrap" align="right">{noteLabel[note as Note]}</Text>
+      </StaveNoteBox>))}
           </div>
           {score.map((bar, staveIndex) => {
             return (

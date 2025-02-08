@@ -12,19 +12,26 @@
 .sheet {
     display: flex;
     flex-direction: row;
-    margin-top: 10px;
+    margin-top: var(--space-2);
+    margin-bottom: var(--space-3);
 }
 
 .parts {
     align-self: flex-end; 
     position: sticky;
+    left: 0;
+    background-color: var(--color-background);
+    margin-right: var(--space-2);
 }
 
 .part-name {
-    height: 35px;
-    box-sizing: border-box;
-    align-content: center;
-    text-align: end;
-    padding-right: 5px;
-    margin-top: var(--space-note-top);
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+.add {
+    position: sticky;
+    left: 0;
+    display: flex;
 }

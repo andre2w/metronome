@@ -6,6 +6,7 @@ import {
   type Sticking,
 } from "../lib/types";
 import "./StaveNote.css";
+import { StaveNoteBox } from "./StaveNoteBox";
 
 export interface StaveNoteProps {
   onSelect: (note: Note) => void;
@@ -32,21 +33,20 @@ export function StaveNote({
     stickingIndex + 1 >= stickingsLoop.length ? 0 : stickingIndex + 1;
   return (
     <div className="stave-note">
-      <Box
-        width={"35px"} height={"35px"} className="sticking" 
+      <StaveNoteBox squared
+        className="sticking" 
         onClick={() => {
           onSetSticking?.(stickingsLoop[nextIndex]);
         }}
       >
         <Text weight={sticking ? "bold" : "light"}>{sticking ?? noteCount}</Text>
-      </Box>
+      </StaveNoteBox>
       {Object.keys(NOTES).map((note) => {
         const isSelected = selectedNotes.includes(note as Note);
         return (
-          <Box
+          <StaveNoteBox
             key={note}
-            width={"35px"}
-            height={"35px"}
+            squared
             className={`note ${isSelected ? "note-selected" : ""}`}
             onClick={() => {
               onSelect?.(note as Note);
