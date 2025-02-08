@@ -6,11 +6,13 @@ export type WebMidiApi = Awaited<ReturnType<typeof createWebMidi>>;
 export function useWebMidi() {
   const [webmidi, setWebMidi] = useState<WebMidiApi | undefined>(undefined);
 
+  const enable = async () => {
+    const webmidi = await createWebMidi();
+    setWebMidi(webmidi);
+  };
+
   return {
-    enable: async () => {
-      const webmidi = await createWebMidi();
-      setWebMidi(webmidi);
-    },
+    enable,
     webmidi,
   };
 }

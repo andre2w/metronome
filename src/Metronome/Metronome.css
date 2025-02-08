@@ -18,3 +18,9 @@
 .selected {
   background-color: var(--accent-9);
 }
+
+.ticks {
+  display: flex;
+  justify-content: space-evenly;
+  margin-top: 5px;
+}

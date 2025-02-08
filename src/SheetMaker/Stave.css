@@ -1,0 +1,15 @@
+.stave {
+  padding-right: 5px;
+}
+
+.stave-content {
+  display: flex;
+  justify-content: center;
+  border-bottom: 1px solid var(--accent-9);
+  margin-bottom: 5px;
+  align-items: center;
+}
+
+.stave-notes {
+  display: flex;
+}

@@ -1,0 +1,4 @@
+.stave-note-box {
+  margin-right: var(--space-note-right);
+  margin-top: var(--space-note-top);
+}

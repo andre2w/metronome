@@ -1,14 +1,14 @@
 import type { Input, NoteMessageEvent } from "webmidi";
 import "./Metronome.css";
-import { useEffect, useRef, useState } from "react";
-import type { BaseMetronomeConfigurationProps } from "./configuration";
-import { Result, type ResultProps } from "./Result";
-import type { NotePlayed, Ticks } from "../lib/types";
-import { calculateResult } from "../lib/result-calculator";
-import { calculateBeatTime } from "../lib/beat-time";
-import { mappings } from "../mappings/roland-td07";
-import { useScoreContext } from "../Score/ScoreProvider";
 import { Button } from "@radix-ui/themes";
+import { useEffect, useRef, useState } from "react";
+import { useScoreContext } from "../Score/ScoreProvider";
+import { calculateBeatTime } from "../lib/beat-time";
+import { calculateResult } from "../lib/result-calculator";
+import type { NotePlayed, Ticks } from "../lib/types";
+import { mappings } from "../mappings/roland-td07";
+import { Result, type ResultProps } from "./Result";
+import type { BaseMetronomeConfigurationProps } from "./configuration";
 
 export interface MetronomeProps {
   configuration: BaseMetronomeConfigurationProps;
@@ -47,11 +47,8 @@ export function Metronome({ className, input, configuration }: MetronomeProps) {
     const { notes, beats } = configuration;
     const beatTime = calculateBeatTime(beats, notes);
     const oldInterval = intervalRef.current;
-    if (oldInterval) {
-      clearInterval(oldInterval);
-      intervalRef.current = undefined;
-    }
-    if (started) {
+
+    const tick = () => {
       tickSymbolsRef.current?.children
         .item(selectedRef.current)
         ?.classList.remove("selected");
@@ -66,23 +63,16 @@ export function Metronome({ className, input, configuration }: MetronomeProps) {
         smallTick.current?.play();
       }
       ticksRef.current.push(performance.now());
+    };
 
-      intervalRef.current = setInterval(() => {
-        tickSymbolsRef.current?.children
-          .item(selectedRef.current)
-          ?.classList.remove("selected");
-        selectedRef.current =
-          selectedRef.current + 1 >= notes ? 0 : selectedRef.current + 1;
-        tickSymbolsRef.current?.children
-          .item(selectedRef.current)
-          ?.classList.add("selected");
-        if (selectedRef.current % (configuration.notes / 4) === 0) {
-          bigTick.current?.play();
-        } else {
-          smallTick.current?.play();
-        }
-        ticksRef.current.push(performance.now());
-      }, beatTime);
+    if (oldInterval) {
+      clearInterval(oldInterval);
+      intervalRef.current = undefined;
+    }
+    if (started) {
+      tick();
+
+      intervalRef.current = setInterval(tick, beatTime);
     } else {
       tickSymbolsRef.current?.children
         .item(selectedRef.current)
@@ -127,14 +117,7 @@ export function Metronome({ className, input, configuration }: MetronomeProps) {
   return (
     <div className={className}>
       <Button onClick={() => toggle()}>{started ? "STOP" : "START"}</Button>
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-evenly",
-          marginTop: "5px",
-        }}
-        ref={tickSymbolsRef}
-      >
+      <div className="ticks" ref={tickSymbolsRef}>
         {Array.from({ length: configuration.notes }).map((_, index) => {
           return (
             // biome-ignore lint/correctness/useJsxKeyInIterable: <explanation>
