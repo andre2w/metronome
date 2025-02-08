@@ -36,7 +36,6 @@ export interface ScoreContextProviderProps {
   notes: number;
 }
 
-
 export function ScoreContextProvider({
   children,
   notes,

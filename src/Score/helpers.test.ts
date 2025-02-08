@@ -121,14 +121,14 @@ suite("calculateHeightAndPosition", () => {
         startY: 10,
         startX: 10,
       }),
-      [ 
-        { y: 10, x: 10, width: 343 }, 
-        { y: 10, x: 353, width: 343 }, 
-        { y: 10, x: 696, width: 343 }, 
-        { y: 10, x: 1039, width: 343 }, 
-        { y: 10, x: 1382, width: 343 }, 
-        { y: 10, x: 1725, width: 343 }, 
-        { y: 10, x: 2068, width: 343 } 
+      [
+        { y: 10, x: 10, width: 343 },
+        { y: 10, x: 353, width: 343 },
+        { y: 10, x: 696, width: 343 },
+        { y: 10, x: 1039, width: 343 },
+        { y: 10, x: 1382, width: 343 },
+        { y: 10, x: 1725, width: 343 },
+        { y: 10, x: 2068, width: 343 },
       ],
     );
   });

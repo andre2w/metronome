@@ -1,23 +1,23 @@
-import { useState } from "react";
-import type { Input } from "webmidi";
-import { Metronome } from "./Metronome/Metronome";
-import { InputConfiguration } from "./InputConfiguration/InputConfiguration";
-import { SheetMaker } from "./SheetMaker/SheetMaker";
-import {
-  defaultMetronomeConfiguration,
-  type BaseMetronomeConfigurationProps,
-} from "./Metronome/configuration";
+import { MoonIcon, SunIcon } from "@radix-ui/react-icons";
 import {
   Flex,
+  IconButton,
+  Select,
   Theme,
   type ThemeProps,
-  Select,
-  IconButton,
 } from "@radix-ui/themes";
-import { ScoreContextProvider } from "./Score/ScoreProvider";
-import { MetronomeConfiguration } from "./Metronome/MetronomeConfiguration";
-import { SunIcon, MoonIcon } from "@radix-ui/react-icons";
+import { useState } from "react";
 import { useLocalStorage } from "usehooks-ts";
+import type { Input } from "webmidi";
+import { InputConfiguration } from "./InputConfiguration/InputConfiguration";
+import { Metronome } from "./Metronome/Metronome";
+import { MetronomeConfiguration } from "./Metronome/MetronomeConfiguration";
+import {
+  type BaseMetronomeConfigurationProps,
+  defaultMetronomeConfiguration,
+} from "./Metronome/configuration";
+import { ScoreContextProvider } from "./Score/ScoreProvider";
+import { Sheet } from "./SheetMaker/Sheet";
 
 const accentColors = [
   "gray",
@@ -116,7 +116,7 @@ function App() {
             </Flex>
           </Flex>
           <Metronome input={selectedDevice} configuration={configuration} />
-          <SheetMaker />
+          <Sheet />
         </Flex>
       </ScoreContextProvider>
     </Theme>

@@ -63,7 +63,7 @@ export function Metronome({ className, input, configuration }: MetronomeProps) {
         smallTick.current?.play();
       }
       ticksRef.current.push(performance.now());
-    }
+    };
 
     if (oldInterval) {
       clearInterval(oldInterval);
@@ -117,14 +117,13 @@ export function Metronome({ className, input, configuration }: MetronomeProps) {
   return (
     <div className={className}>
       <Button onClick={() => toggle()}>{started ? "STOP" : "START"}</Button>
-      <div
-        className="ticks"
-        ref={tickSymbolsRef}
-      >
+      <div className="ticks" ref={tickSymbolsRef}>
         {Array.from({ length: configuration.notes }).map((_, index) => {
           return (
             // biome-ignore lint/correctness/useJsxKeyInIterable: <explanation>
-            <div className={`${index % (configuration.notes / 4) === 0 ? "metronome-big" : "metronome-small"}`} />
+            <div
+              className={`${index % (configuration.notes / 4) === 0 ? "metronome-big" : "metronome-small"}`}
+            />
           );
         })}
       </div>

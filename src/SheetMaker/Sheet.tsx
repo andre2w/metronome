@@ -1,9 +1,9 @@
-import { Box, Button, Text } from "@radix-ui/themes";
+import { Button, Text } from "@radix-ui/themes";
 import { useScoreContext } from "../Score/ScoreProvider";
 import { VexflowScore } from "../Score/VexflowScore";
 import { NOTES, type Note } from "../lib/types";
 import { Stave } from "./Stave";
-import "./SheetMaker.css";
+import "./Sheet.css";
 import { StaveNoteBox } from "./StaveNoteBox";
 
 const noteLabel: Record<Note, string> = {
@@ -20,7 +20,7 @@ const noteLabel: Record<Note, string> = {
   RIDE: "Pedal",
 };
 
-export function SheetMaker() {
+export function Sheet() {
   const { addStave, score, toggleNote, removeStave, setSticking } =
     useScoreContext();
 
@@ -33,12 +33,18 @@ export function SheetMaker() {
         </div>
         <div className="sheet">
           <div className="parts">
-            <StaveNoteBox className="part-name"><Text as="p" wrap="nowrap" align="right">Stickings</Text></StaveNoteBox>
+            <StaveNoteBox className="part-name">
+              <Text as="p" wrap="nowrap" align="right">
+                Stickings
+              </Text>
+            </StaveNoteBox>
             {Object.keys(NOTES).map((note) => (
-
-      <StaveNoteBox key={note} className="part-name">
-        <Text as="p" wrap="nowrap" align="right">{noteLabel[note as Note]}</Text>
-      </StaveNoteBox>))}
+              <StaveNoteBox key={note} className="part-name">
+                <Text as="p" wrap="nowrap" align="right">
+                  {noteLabel[note as Note]}
+                </Text>
+              </StaveNoteBox>
+            ))}
           </div>
           {score.map((bar, staveIndex) => {
             return (
