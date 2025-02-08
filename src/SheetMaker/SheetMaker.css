@@ -1,0 +1,30 @@
+:root {
+    --space-note-top: 1px;
+    --space-note-right: 1px;
+}
+
+.sheet-maker {
+    margin-top: auto; 
+    margin-bottom: 15px;
+    overflow: scroll;
+}
+
+.sheet {
+    display: flex;
+    flex-direction: row;
+    margin-top: 10px;
+}
+
+.parts {
+    align-self: flex-end; 
+    position: sticky;
+}
+
+.part-name {
+    height: 35px;
+    box-sizing: border-box;
+    align-content: center;
+    text-align: end;
+    padding-right: 5px;
+    margin-top: var(--space-note-top);
+}

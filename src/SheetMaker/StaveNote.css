@@ -1,0 +1,20 @@
+.stave-note {
+    display: flex;
+    flex-direction: column;
+}
+
+.sticking {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.note {
+    border: 1px solid var(--accent-9);
+    margin-right: var(--space-note-right);
+    margin-top: var(--space-note-top);
+}
+
+.note-selected {
+    background: var(--accent-9);
+}

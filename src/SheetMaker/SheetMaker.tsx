@@ -1,9 +1,9 @@
-import { NotatorDropdown, type NotatorDropdownProps } from "./NotatorDropdown";
-import { type Bar, type Note, NOTES } from "../lib/types";
 import { Button, Text } from "@radix-ui/themes";
 import { useScoreContext } from "../Score/ScoreProvider";
 import { VexflowScore } from "../Score/VexflowScore";
-import { Cross1Icon } from "@radix-ui/react-icons";
+import { NOTES, type Note } from "../lib/types";
+import { Stave } from "./Stave";
+import "./SheetMaker.css";
 
 const noteLabel: Record<Note, string> = {
   KICK: "Kick",
@@ -26,42 +26,19 @@ export function SheetMaker() {
   return (
     <>
       <VexflowScore score={score} />
-      <div
-        style={{ marginTop: "auto", marginBottom: "15px", overflow: "scroll" }}
-      >
+      <div className="sheet-maker">
         <div style={{ display: "flex" }}>
           <Button onClick={addStave}>Add new line</Button>
         </div>
-        <div
-          style={{ display: "flex", flexDirection: "row", marginTop: "10px" }}
-        >
-          <div style={{ alignSelf: "flex-end", position: "sticky" }}>
+        <div className="sheet">
+          <div className="parts">
             <div>---</div>
-            <div
-              style={{
-                height: "35px",
-                boxSizing: "border-box",
-                alignContent: "center",
-                textAlign: "end",
-                paddingRight: "5px",
-              }}
-            >
+            <div className="part-name">
               Sticking
             </div>
             {Object.keys(NOTES).map((note) => (
-              <div
-                key={note}
-                style={{
-                  height: "35px",
-                  boxSizing: "border-box",
-                  alignContent: "center",
-                  textAlign: "end",
-                  paddingRight: "5px",
-                }}
-              >
-                <Text as="p" wrap="nowrap">
-                  {noteLabel[note as Note]}
-                </Text>
+              <div key={note} className="part-name">
+                <Text as="p" wrap="nowrap">{noteLabel[note as Note]}</Text>
               </div>
             ))}
           </div>
@@ -84,83 +61,5 @@ export function SheetMaker() {
         </div>
       </div>
     </>
-  );
-}
-
-const counting: { [k: number]: string[] } = {
-  4: ["1", "2", "3", "4"],
-  8: ["1", "&", "2", "&", "3", "&", "4", "&"],
-  16: [
-    "1",
-    "e",
-    "&",
-    "a",
-    "2",
-    "e",
-    "&",
-    "a",
-    "3",
-    "e",
-    "&",
-    "a",
-    "4",
-    "e",
-    "&",
-    "a",
-  ],
-};
-
-interface StaveProps {
-  bar: Bar;
-  index: number;
-  onSelectNote: (
-    barIndex: number,
-    note: Parameters<NonNullable<NotatorDropdownProps["onSelect"]>>[0],
-  ) => void;
-  onRemoveStave: () => void;
-  onSetStickings: (
-    barIndex: number,
-    sticking: Parameters<NonNullable<NotatorDropdownProps["onSetSticking"]>>[0],
-  ) => void;
-}
-function Stave({
-  bar,
-  index,
-  onSelectNote,
-  onRemoveStave,
-  onSetStickings,
-}: StaveProps) {
-  const tempoCounting = counting[bar.length];
-  const notes = bar.map((notesWithSticking, noteIndex) => {
-    const noteCount = tempoCounting[noteIndex];
-    return (
-      // biome-ignore lint/correctness/useJsxKeyInIterable: <explanation>
-      <NotatorDropdown
-        noteCount={noteCount}
-        index={index}
-        notesWithSticking={notesWithSticking}
-        onSelect={(note) => onSelectNote(noteIndex, note)}
-        onSetSticking={(sticking) => onSetStickings(noteIndex, sticking)}
-      />
-    );
-  });
-
-  return (
-    <div style={{ paddingRight: "5px" }}>
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          borderBottom: "1px solid wheat",
-          marginBottom: "5px",
-        }}
-      >
-        <Text>{index}</Text>
-        <Button onClick={onRemoveStave} variant="ghost">
-          <Cross1Icon />
-        </Button>
-      </div>
-      <div style={{ display: "flex" }}>{notes}</div>
-    </div>
   );
 }
