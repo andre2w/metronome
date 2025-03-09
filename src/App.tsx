@@ -6,7 +6,7 @@ import {
   Theme,
   type ThemeProps,
 } from "@radix-ui/themes";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useLocalStorage } from "usehooks-ts";
 import type { Input } from "webmidi";
 import { InputConfiguration } from "./InputConfiguration/InputConfiguration";
@@ -18,6 +18,7 @@ import {
 } from "./Metronome/configuration";
 import { ScoreContextProvider } from "./Score/ScoreProvider";
 import { Sheet } from "./SheetMaker/Sheet";
+import { calculateBeatTime } from "./lib/beat-time";
 
 const accentColors = [
   "gray",
@@ -59,6 +60,11 @@ function App() {
   const [selectedDevice, setSelectedDevice] = useState<Input | undefined>();
   const [configuration, setConfiguration] =
     useState<BaseMetronomeConfigurationProps>(defaultMetronomeConfiguration);
+
+  useEffect(() => {
+    const beatTime = calculateBeatTime(configuration.beats, configuration.notes);
+    document.documentElement.style.setProperty("--beat-time", `${beatTime}ms`);
+  }, [configuration]);
 
   return (
     <Theme appearance={appearance} accentColor={accentColor}>

@@ -1,6 +1,6 @@
 import type { Input, NoteMessageEvent } from "webmidi";
 import "./Metronome.css";
-import { Button } from "@radix-ui/themes";
+import { Button, Flex } from "@radix-ui/themes";
 import { useEffect, useRef, useState } from "react";
 import { useScoreContext } from "../Score/ScoreProvider";
 import { calculateBeatTime } from "../lib/beat-time";
@@ -117,16 +117,16 @@ export function Metronome({ className, input, configuration }: MetronomeProps) {
   return (
     <div className={className}>
       <Button onClick={() => toggle()}>{started ? "STOP" : "START"}</Button>
-      <div className="ticks" ref={tickSymbolsRef}>
+      <Flex justify="between" gap="2" ref={tickSymbolsRef}> 
         {Array.from({ length: configuration.notes }).map((_, index) => {
           return (
             // biome-ignore lint/correctness/useJsxKeyInIterable: <explanation>
             <div
-              className={`${index % (configuration.notes / 4) === 0 ? "metronome-big" : "metronome-small"}`}
+              className={`metronome-tick ${index % (configuration.notes / 4) === 0 ? "metronome-tick-big" : "metronome-tick-small"}`}
             />
           );
         })}
-      </div>
+      </Flex>
       {result && <Result right={result.right} missed={result.missed} />}
     </div>
   );
