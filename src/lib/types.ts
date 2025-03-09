@@ -60,6 +60,6 @@ export interface NotePlayed {
 }
 
 export interface SavedScore extends BaseMetronomeConfigurationProps {
-  score: Score; 
+  score: Score;
   name: string;
 }

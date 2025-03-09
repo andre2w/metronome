@@ -62,7 +62,10 @@ function App() {
     useState<BaseMetronomeConfigurationProps>(defaultMetronomeConfiguration);
 
   useEffect(() => {
-    const beatTime = calculateBeatTime(configuration.beats, configuration.notes);
+    const beatTime = calculateBeatTime(
+      configuration.beats,
+      configuration.notes,
+    );
     document.documentElement.style.setProperty("--beat-time", `${beatTime}ms`);
   }, [configuration]);
 

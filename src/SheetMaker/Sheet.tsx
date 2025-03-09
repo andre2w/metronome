@@ -37,7 +37,12 @@ export function Sheet({ configuration }: SheetProps) {
       <div className="sheet-maker">
         <div className="add">
           <Button onClick={addStave}>Add new line</Button>
-          <SaveScore score={score} beats={configuration.beats} graceTime={configuration.graceTime} notes={configuration.notes} />
+          <SaveScore
+            score={score}
+            beats={configuration.beats}
+            graceTime={configuration.graceTime}
+            notes={configuration.notes}
+          />
           <ListScores />
         </div>
         <div className="sheet">
