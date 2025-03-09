@@ -116,7 +116,7 @@ function App() {
             </Flex>
           </Flex>
           <Metronome input={selectedDevice} configuration={configuration} />
-          <Sheet />
+          <Sheet configuration={configuration} />
         </Flex>
       </ScoreContextProvider>
     </Theme>
