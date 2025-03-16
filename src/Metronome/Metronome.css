@@ -1,26 +1,16 @@
-.metronome-big {
-  width: 50px;
-  height: 100px;
+.metronome-tick {
+  width: 100%;
   border: 5px solid var(--accent-9);
+  border-radius: var(--radius-6);
 }
 
-.metronome-small {
-  width: 50px;
+.metronome-tick-small {
   height: 50px;
-  border: 5px solid var(--accent-9);
 }
-
-.metronome {
-  display: flex;
-  gap: 15px;
+.metronome-tick-big {
+  height: 100px;
 }
 
 .selected {
   background-color: var(--accent-9);
-}
-
-.ticks {
-  display: flex;
-  justify-content: space-evenly;
-  margin-top: 5px;
 }

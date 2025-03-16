@@ -4,6 +4,9 @@ import { VexflowScore } from "../Score/VexflowScore";
 import { NOTES, type Note } from "../lib/types";
 import { Stave } from "./Stave";
 import "./Sheet.css";
+import type { BaseMetronomeConfigurationProps } from "../Metronome/configuration";
+import { ListScores } from "./ListScores";
+import { SaveScore } from "./SaveScore";
 import { StaveNoteBox } from "./StaveNoteBox";
 
 const noteLabel: Record<Note, string> = {
@@ -20,7 +23,11 @@ const noteLabel: Record<Note, string> = {
   RIDE: "Pedal",
 };
 
-export function Sheet() {
+export interface SheetProps {
+  configuration: BaseMetronomeConfigurationProps;
+}
+
+export function Sheet({ configuration }: SheetProps) {
   const { addStave, score, toggleNote, removeStave, setSticking } =
     useScoreContext();
 
@@ -30,6 +37,13 @@ export function Sheet() {
       <div className="sheet-maker">
         <div className="add">
           <Button onClick={addStave}>Add new line</Button>
+          <SaveScore
+            score={score}
+            beats={configuration.beats}
+            graceTime={configuration.graceTime}
+            notes={configuration.notes}
+          />
+          <ListScores />
         </div>
         <div className="sheet">
           <div className="parts">

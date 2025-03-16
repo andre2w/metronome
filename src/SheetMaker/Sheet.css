@@ -6,7 +6,8 @@
 .sheet-maker {
   margin-top: auto;
   margin-bottom: 15px;
-  overflow: scroll;
+  overflow-y: hidden;
+  overflow-x: scroll;
 }
 
 .sheet {
