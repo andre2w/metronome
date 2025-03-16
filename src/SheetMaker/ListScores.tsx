@@ -2,26 +2,16 @@ import { Button, Dialog, Flex, Separator, Text } from "@radix-ui/themes";
 import { useLiveQuery } from "dexie-react-hooks";
 import { useCallback, useState } from "react";
 import React from "react";
-import { useURLHash } from "../hooks/useURLHash";
+import { useScoreContext } from "../Score/ScoreProvider";
 import { db } from "../lib/storage";
-import type { SavedScore, Score } from "../lib/types";
+import type { SavedScore } from "../lib/types";
 
 export function ListScores() {
   const [isOpen, setIsOpen] = useState(false);
-  const { setHash, hash } = useURLHash();
+  const { loadScore } = useScoreContext();
   const scores = useLiveQuery(async () => {
     return await db.scores.toArray();
   });
-
-  const loadScore = useCallback(
-    (score: Score) => {
-      const newHash = new URLSearchParams(hash);
-      newHash.set("score", JSON.stringify(score));
-      setHash(newHash);
-      setIsOpen(false);
-    },
-    [hash, setHash],
-  );
 
   const deleteScore = useCallback(async (id: number) => {
     await db.scores.delete(id);
@@ -42,7 +32,10 @@ export function ListScores() {
               <React.Fragment key={score.id}>
                 <ScoreRow
                   score={score}
-                  onLoad={() => loadScore(score.score)}
+                  onLoad={() => {
+                    loadScore(score.score);
+                    setIsOpen(false);
+                  }}
                   onDelete={() => {
                     deleteScore(score.id);
                   }}

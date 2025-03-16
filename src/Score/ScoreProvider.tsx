@@ -1,10 +1,11 @@
 import {
   type ReactNode,
   createContext,
+  useCallback,
   useContext,
   useEffect,
-  useState,
 } from "react";
+import { useImmer } from "use-immer";
 import { useURLHash } from "../hooks/useURLHash";
 import type { Note, NotesWithSticking, Score, Sticking } from "../lib/types";
 
@@ -22,6 +23,7 @@ export interface ScoreContextValue {
     staveNoteIndex: number;
     sticking: Sticking | null;
   }) => void;
+  loadScore: (score: Score) => void;
 }
 const ScoreContext = createContext<ScoreContextValue>({
   score: [],
@@ -29,6 +31,7 @@ const ScoreContext = createContext<ScoreContextValue>({
   addStave: () => {},
   removeStave: () => {},
   setSticking: () => {},
+  loadScore: () => {},
 });
 
 export interface ScoreContextProviderProps {
@@ -40,70 +43,87 @@ export function ScoreContextProvider({
   children,
   notes,
 }: ScoreContextProviderProps) {
-  const { hash, setHash } = useURLHash();
-  const scoreText = hash.get("score");
-  const initialScore = scoreText ? JSON.parse(scoreText) : [];
-  const [score, setScore] = useState<Score>(initialScore);
+  const { setHash, getHash } = useURLHash();
+  const [score, setScore] = useImmer<Score>(() => {
+    const scoreText = getHash().get("score");
+    const initalScore: Score = scoreText
+      ? JSON.parse(scoreText)
+      : [createStave(notes)];
+    return initalScore;
+  });
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: No need to update here
   useEffect(() => {
-    const scoreText = hash.get("score");
-    const score = scoreText ? JSON.parse(scoreText) : [];
-    setScore(score);
-  }, [hash]);
-
-  const updateScore = (score: Score) => {
-    setScore(score);
-    const newHash = new URLSearchParams(hash);
+    const newHash = new URLSearchParams(getHash());
     newHash.set("score", JSON.stringify(score));
     setHash(newHash);
-  };
+  }, [score]);
 
-  const addStave = () => {
-    const newArr = Array.from<NotesWithSticking>({ length: notes }).fill({
-      notes: [],
+  const addStave = useCallback(() => {
+    setScore((score) => {
+      score.push(createStave(notes));
     });
-    updateScore([...score, newArr]);
-  };
+  }, [setScore, notes]);
 
-  const toggleNote: ScoreContextValue["toggleNote"] = ({
-    staveIndex,
-    staveNoteIndex,
-    note,
-  }) => {
-    const newScore = [...score];
-    const notesWithSticking = newScore[staveIndex][staveNoteIndex];
+  const toggleNote: ScoreContextValue["toggleNote"] = useCallback(
+    ({ staveIndex, staveNoteIndex, note }) => {
+      setScore((score) => {
+        const notesWithSticking = score[staveIndex][staveNoteIndex];
+        if (!notesWithSticking.notes.includes(note)) {
+          notesWithSticking.notes.push(note);
+        } else {
+          const noteIndex = notesWithSticking.notes.indexOf(note);
+          if (noteIndex >= 0) {
+            notesWithSticking.notes.splice(noteIndex, 1);
+          }
+        }
+      });
+    },
+    [setScore],
+  );
 
-    if (!notesWithSticking.notes.includes(note)) {
-      notesWithSticking.notes.push(note);
-    } else {
-      const noteIndex = notesWithSticking.notes.indexOf(note);
-      if (noteIndex >= 0) {
-        notesWithSticking.notes.splice(noteIndex, 1);
-      }
-    }
-    updateScore(newScore);
-  };
+  const removeStave: ScoreContextValue["removeStave"] = useCallback(
+    (staveIndex) => {
+      setScore((score) => {
+        score.splice(staveIndex, 1);
+        if (score.length === 0) {
+          score.push(createStave(notes));
+        }
+      });
+    },
+    [setScore, notes],
+  );
 
-  const removeStave: ScoreContextValue["removeStave"] = (staveIndex) => {
-    const newScore = score.toSpliced(staveIndex, 1);
-    updateScore(newScore);
-  };
+  const setSticking: ScoreContextValue["setSticking"] = useCallback(
+    ({ staveIndex, staveNoteIndex, sticking }) => {
+      setScore((score) => {
+        if (sticking !== null) {
+          score[staveIndex][staveNoteIndex].sticking = sticking;
+        } else {
+          score[staveIndex][staveNoteIndex].sticking = undefined;
+        }
+      });
+    },
+    [setScore],
+  );
 
-  const setSticking: ScoreContextValue["setSticking"] = ({
-    staveIndex,
-    staveNoteIndex,
-    sticking,
-  }) => {
-    const newScore = [...score];
-    newScore[staveIndex][staveNoteIndex] = sticking
-      ? { ...newScore[staveIndex][staveNoteIndex], sticking }
-      : { notes: newScore[staveIndex][staveNoteIndex].notes };
-    updateScore(newScore);
-  };
+  const loadScore: ScoreContextValue["loadScore"] = useCallback(
+    (score) => {
+      setScore(score);
+    },
+    [setScore],
+  );
 
   return (
     <ScoreContext.Provider
-      value={{ score, addStave, toggleNote, removeStave, setSticking }}
+      value={{
+        score,
+        addStave,
+        toggleNote,
+        removeStave,
+        setSticking,
+        loadScore,
+      }}
     >
       {children}
     </ScoreContext.Provider>
@@ -112,4 +132,10 @@ export function ScoreContextProvider({
 
 export function useScoreContext() {
   return useContext(ScoreContext);
+}
+
+function createStave(notes: number) {
+  return Array.from<NotesWithSticking>({ length: notes }).fill({
+    notes: [],
+  });
 }
