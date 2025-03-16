@@ -1,10 +1,4 @@
-import {
-  Button,
-  Dialog,
-  Flex,
-  Separator,
-  Text,
-} from "@radix-ui/themes";
+import { Button, Dialog, Flex, Separator, Text } from "@radix-ui/themes";
 import { useLiveQuery } from "dexie-react-hooks";
 import { useCallback, useState } from "react";
 import React from "react";

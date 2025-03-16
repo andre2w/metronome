@@ -2,10 +2,6 @@
   width: 100%;
   border: 5px solid var(--accent-9);
   border-radius: var(--radius-6);
-  /* background: linear-gradient(to right, var(--color-background) 33%, var(--accent-9) 33% 66%, var(--color-background) 66% 100%);
-  background-size: 300%;
-  background-position: right bottom;
-  transition: none; */
 }
 
 .metronome-tick-small {
@@ -16,7 +12,5 @@
 }
 
 .selected {
-  /* background-position: left bottom; */
-  /* transition: all var(--beat-time) linear;  */
   background-color: var(--accent-9);
 }
