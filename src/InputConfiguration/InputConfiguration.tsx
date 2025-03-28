@@ -1,22 +1,15 @@
-import type { Input } from "webmidi";
-import { useWebMidi } from "../hooks/useWebMidi";
-import classes from "./InputConfiguration.module.scss";
 import { Button, Select } from "@radix-ui/themes";
+import classes from "./InputConfiguration.module.scss";
+import {
+  NO_INPUT_SELECTED,
+  useInputConfigurationContext,
+} from "./InputConfigurationContext";
 
-export const NO_INPUT_SELECTED = "NO_INPUT_SELECTED";
+export function InputConfiguration() {
+  const { devices, enable, enabled, selectDevice, selectedDevice } =
+    useInputConfigurationContext();
 
-export interface InputConfigurationProps {
-  selectedInput?: Input;
-  onSelect: (input: Input | undefined) => void;
-}
-
-export function InputConfiguration({
-  selectedInput,
-  onSelect,
-}: InputConfigurationProps) {
-  const { enable, webmidi } = useWebMidi();
-
-  if (!webmidi) {
+  if (!enabled) {
     return (
       <div className={classes.enableMidi}>
         <Button onClick={() => enable()}>
@@ -26,27 +19,17 @@ export function InputConfiguration({
     );
   }
 
-  const onChange = (value: string) => {
-    if (value === NO_INPUT_SELECTED) {
-      onSelect(undefined);
-      return;
-    }
-
-    const input = webmidi.getInputById(value);
-    onSelect(input);
-  };
-
   return (
     <Select.Root
-      onValueChange={onChange}
-      value={selectedInput?.id ?? NO_INPUT_SELECTED}
+      onValueChange={selectDevice}
+      value={selectedDevice?.id ?? NO_INPUT_SELECTED}
     >
       <Select.Trigger />
       <Select.Content>
         <Select.Item value={NO_INPUT_SELECTED}>Select a device</Select.Item>
-        {webmidi.inputs.map((input) => (
-          <Select.Item value={input.id} key={input.id}>
-            {input.manufacturer} {input.name}
+        {devices.map((device) => (
+          <Select.Item value={device.id} key={device.id}>
+            {device.manufacturer} {device.name}
           </Select.Item>
         ))}
       </Select.Content>
