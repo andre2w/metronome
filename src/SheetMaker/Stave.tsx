@@ -66,7 +66,7 @@ export function Stave({
   return (
     <div className="stave">
       <div className="stave-content">
-        <Text>{index}</Text>
+        <Text>{index + 1}</Text>
         <Button onClick={onRemoveStave} variant="ghost">
           <Cross1Icon />
         </Button>

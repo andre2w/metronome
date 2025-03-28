@@ -46,11 +46,15 @@ export function ScoreContextProvider({
   const { setHash, getHash } = useURLHash();
   const [score, setScore] = useImmer<Score>(() => {
     const scoreText = getHash().get("score");
-    const initalScore: Score = scoreText
+    const initialScore: Score = scoreText
       ? JSON.parse(scoreText)
       : [createStave(notes)];
-    return initalScore;
+    return initialScore;
   });
+
+  if (score.length === 1 && score[0].length !== notes && score[0].every(n => n.notes.length === 0) ) {
+    setScore([createStave(notes)]);
+  }
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: No need to update here
   useEffect(() => {
