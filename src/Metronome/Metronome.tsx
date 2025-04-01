@@ -1,7 +1,8 @@
-import type { Input, NoteMessageEvent } from "webmidi";
+import type { NoteMessageEvent } from "webmidi";
 import "./Metronome.css";
 import { Button, Flex } from "@radix-ui/themes";
 import { useEffect, useRef, useState } from "react";
+import { useInputConfigurationContext } from "../InputConfiguration/InputConfigurationContext";
 import { useScoreContext } from "../Score/ScoreProvider";
 import { calculateBeatTime } from "../lib/beat-time";
 import { calculateResult } from "../lib/result-calculator";
@@ -12,11 +13,11 @@ import type { BaseMetronomeConfigurationProps } from "./configuration";
 
 export interface MetronomeProps {
   configuration: BaseMetronomeConfigurationProps;
-  input?: Input;
   className?: string;
 }
 
-export function Metronome({ className, input, configuration }: MetronomeProps) {
+export function Metronome({ className, configuration }: MetronomeProps) {
+  const { selectedDevice: input } = useInputConfigurationContext();
   const [started, setStarted] = useState(false);
   const selectedRef = useRef<number>(-1);
   const notesPlayedRef = useRef<NotePlayed[]>([]);
@@ -116,7 +117,12 @@ export function Metronome({ className, input, configuration }: MetronomeProps) {
 
   return (
     <div className={className}>
-      <Button onClick={() => toggle()}>{started ? "STOP" : "START"}</Button>
+      <Button
+        onClick={() => toggle()}
+        style={{ marginBottom: "var(--space-2)" }}
+      >
+        {started ? "STOP" : "START"}
+      </Button>
       <Flex justify="between" gap="2" ref={tickSymbolsRef}>
         {Array.from({ length: configuration.notes }).map((_, index) => {
           return (
