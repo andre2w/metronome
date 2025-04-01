@@ -52,7 +52,11 @@ export function ScoreContextProvider({
     return initialScore;
   });
 
-  if (score.length === 1 && score[0].length !== notes && score[0].every(n => n.notes.length === 0) ) {
+  if (
+    score.length === 1 &&
+    score[0].length !== notes &&
+    score[0].every((n) => n.notes.length === 0)
+  ) {
     setScore([createStave(notes)]);
   }
 
