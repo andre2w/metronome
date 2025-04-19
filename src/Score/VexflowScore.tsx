@@ -1,8 +1,8 @@
 import { useEffect, useRef } from "react";
+import { useResizeObserver } from "usehooks-ts";
+import { Annotation, Formatter, GhostNote, Renderer, Stave, StaveNote, type StemmableNote } from "vexflow";
 import { NOTES, type Score } from "../lib/types";
 import { calculateWidthAndPosition } from "./helpers";
-import { Flow } from "vexflow";
-import { useResizeObserver } from "usehooks-ts";
 
 const Y_OFFSET = 50;
 const STAVE_HEIGHT = 150;
@@ -10,7 +10,7 @@ const STAVE_WIDTH = 300;
 
 export function VexflowScore({ score }: { score: Score }) {
   const divRef = useRef<HTMLDivElement | null>(null);
-  const rendererRef = useRef<Flow.Renderer | undefined>();
+  const rendererRef = useRef<Renderer | undefined>();
   const scoreSize = useResizeObserver({
     ref: divRef,
   });
@@ -20,9 +20,9 @@ export function VexflowScore({ score }: { score: Score }) {
       return;
     }
     if (!rendererRef.current) {
-      rendererRef.current = new Flow.Renderer(
+      rendererRef.current = new Renderer(
         divRef.current,
-        Flow.Renderer.Backends.SVG,
+        Renderer.Backends.SVG,
       );
     }
 
@@ -50,18 +50,18 @@ export function VexflowScore({ score }: { score: Score }) {
     context.setFillStyle("var(--accent-9)");
     context.setStrokeStyle("var(--accent-9)");
     if (!score.length) {
-      const stave = new Flow.Stave(0, 0, 0);
+      const stave = new Stave(0, 0, 0);
       stave.setContext(context).draw();
-      Flow.Formatter.FormatAndDraw(context, stave, [], {
-        auto_beam: true,
-        align_rests: true,
+      Formatter.FormatAndDraw(context, stave, [], {
+        autoBeam: true,
+        alignRests: true,
       });
       return;
     }
 
     for (let i = 0; i < score.length; i++) {
       const position = positions[i];
-      const stave = new Flow.Stave(position.x, position.y, position.width);
+      const stave = new Stave(position.x, position.y, position.width);
 
       if (i === 0) {
         stave.addClef("treble").addTimeSignature("4/4");
@@ -72,29 +72,31 @@ export function VexflowScore({ score }: { score: Score }) {
       const notes = [];
       const duration = String(bars.length);
       for (const bar of bars) {
-        let staveNote: Flow.StemmableNote;
+        let staveNote: StemmableNote;
         if (bar?.notes?.length) {
           const keys = bar.notes.map((part) => NOTES[part]);
-          staveNote = new Flow.StaveNote({ keys, duration });
+          staveNote = new StaveNote({ keys, duration });
           if (bar.notes.includes("HIGH_HAT_OPEN")) {
-            staveNote.addModifier(new Flow.Annotation("O"));
+            staveNote.addModifier(new Annotation("O"));
           }
         } else {
-          staveNote = new Flow.GhostNote({ duration });
+          staveNote = new GhostNote({ duration });
         }
         if (bar.sticking) {
-          staveNote.addModifier(new Flow.Annotation(bar.sticking));
+          staveNote.addModifier(new Annotation(bar.sticking));
         }
         notes.push(staveNote);
       }
 
       stave.setContext(context).draw();
-      Flow.Formatter.FormatAndDraw(context, stave, notes, {
-        auto_beam: true,
-        align_rests: true,
+      Formatter.FormatAndDraw(context, stave, notes, {
+        autoBeam: true,
+        alignRests: true,
       });
     }
   }, [score, scoreSize.width]);
 
-  return <div style={{ marginTop: "10px" }} ref={divRef} />;
+  return <div style={{ marginTop: "10px" }} ref={divRef}>
+      <img id="cursor" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABUAAAABCAYAAAAxUOUbAAAAAXNSR0IArs4c6QAAAC5JREFUGFdjfPr7acOFH+cYQPj8r4sM937dYSAVKLGpMBiy6TMYcJgwGHAYMAAAGFUPRw5ILS0AAAAASUVORK5CYII=" width="21" height="300" style={{ position: "absolute", zIndex: -1, top: 0, right: 0 }} />
+    </div>;
 }

@@ -28,6 +28,7 @@ export function Metronome({ className, configuration }: MetronomeProps) {
   const bigTick = useRef<HTMLAudioElement | undefined>();
   const smallTick = useRef<HTMLAudioElement | undefined>();
   const tickSymbolsRef = useRef<HTMLDivElement | null>(null);
+  const selectedStaveRef = useRef<number>(0);
 
   useEffect(() => {
     bigTick.current = new Audio("/metronome1Count.mp3");
@@ -64,6 +65,31 @@ export function Metronome({ className, configuration }: MetronomeProps) {
         smallTick.current?.play();
       }
       ticksRef.current.push(performance.now());
+
+      const cursor = document.querySelector<HTMLImageElement>("#cursor");
+      const staves = document.querySelectorAll<HTMLElement>(".vf-stavenote");
+      if (!cursor) {
+        return
+      }
+
+      if (!staves.length) {
+        return;
+      }
+
+      if (selectedStaveRef.current >= (staves.length ?? 0)) {
+        selectedStaveRef.current = 0;
+      }
+
+      const rect = staves.item(selectedStaveRef.current)?.getBoundingClientRect();
+      if (!rect) {
+        return;
+      }
+
+      cursor.style.top = `${rect.top}px`;
+      cursor.style.left = `${rect.left}px`;
+      cursor.style.width = `${rect.width}px`;
+      cursor.style.height = `${rect.height}px`;
+      selectedStaveRef.current++;
     };
 
     if (oldInterval) {
