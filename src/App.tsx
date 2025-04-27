@@ -18,35 +18,7 @@ import {
 } from "./Metronome/configuration";
 import { ScoreContextProvider } from "./Score/ScoreProvider";
 import { Sheet } from "./SheetMaker/Sheet";
-
-const accentColors = [
-  "gray",
-  "gold",
-  "bronze",
-  "brown",
-  "yellow",
-  "amber",
-  "orange",
-  "tomato",
-  "red",
-  "ruby",
-  "crimson",
-  "pink",
-  "plum",
-  "purple",
-  "violet",
-  "iris",
-  "indigo",
-  "blue",
-  "cyan",
-  "teal",
-  "jade",
-  "green",
-  "grass",
-  "lime",
-  "mint",
-  "sky",
-];
+import { ThemePicker } from "./components/ThemePicker";
 
 function App() {
   const [{ accentColor, appearance }, setThemePreferences] = useLocalStorage(
@@ -60,7 +32,7 @@ function App() {
     useState<BaseMetronomeConfigurationProps>(defaultMetronomeConfiguration);
 
   return (
-    <Theme appearance={appearance} accentColor={accentColor}>
+    <Theme accentColor={accentColor} appearance={appearance}>
       <InputConfigurationProvider>
         <ScoreContextProvider notes={configuration.notes}>
           <Flex
@@ -78,43 +50,11 @@ function App() {
                 configuration={configuration}
                 onChange={setConfiguration}
               />
-              <Flex
-                style={{
-                  flexGrow: "2",
-                  justifyContent: "flex-end",
-                  gap: "5px",
-                }}
-              >
-                <IconButton
-                  onClick={() =>
-                    setThemePreferences({
-                      appearance: appearance === "dark" ? "light" : "dark",
-                      accentColor,
-                    })
-                  }
-                >
-                  {appearance === "light" ? <SunIcon /> : <MoonIcon />}
-                </IconButton>
-                <Select.Root
-                  onValueChange={(value) =>
-                    setThemePreferences({
-                      appearance,
-                      accentColor: (value ??
-                        "indigo") as ThemeProps["accentColor"],
-                    })
-                  }
-                  value={accentColor}
-                >
-                  <Select.Trigger />
-                  <Select.Content>
-                    {accentColors.map((color) => (
-                      <Select.Item key={color} value={color}>
-                        {color}
-                      </Select.Item>
-                    ))}
-                  </Select.Content>
-                </Select.Root>
-              </Flex>
+              <ThemePicker
+                accentColor={accentColor}
+                appearance={appearance}
+                onChange={setThemePreferences}
+              />
             </Flex>
             <Metronome configuration={configuration} />
             <Sheet configuration={configuration} />

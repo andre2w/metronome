@@ -31,11 +31,9 @@ export interface SheetProps {
 export function Sheet({ configuration }: SheetProps) {
   const { addStave, score, toggleNote, removeStave, setSticking } =
     useScoreContext();
-  const vexflowScoreRef = useRef<VexflowScoreHandle>(null);
 
   return (
     <>
-      <VexflowScore score={score} ref={vexflowScoreRef}/>
       <div className="sheet-maker">
         <div className="add">
           <Button onClick={addStave}>Add new line</Button>
