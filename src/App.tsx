@@ -10,7 +10,7 @@ import { useState } from "react";
 import { useLocalStorage } from "usehooks-ts";
 import { InputConfiguration } from "./InputConfiguration/InputConfiguration";
 import { InputConfigurationProvider } from "./InputConfiguration/InputConfigurationContext";
-import { Metronome } from "./Metronome/Metronome";
+import { Metronome } from "./Metronome";
 import { MetronomeConfiguration } from "./Metronome/MetronomeConfiguration";
 import {
   type BaseMetronomeConfigurationProps,

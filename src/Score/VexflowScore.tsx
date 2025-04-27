@@ -1,6 +1,14 @@
 import { useEffect, useRef } from "react";
 import { useResizeObserver } from "usehooks-ts";
-import { Annotation, Formatter, GhostNote, Renderer, Stave, StaveNote, type StemmableNote } from "vexflow";
+import {
+  Annotation,
+  Formatter,
+  GhostNote,
+  Renderer,
+  Stave,
+  StaveNote,
+  type StemmableNote,
+} from "vexflow";
 import { NOTES, type Score } from "../lib/types";
 import { calculateWidthAndPosition } from "./helpers";
 
@@ -20,10 +28,7 @@ export function VexflowScore({ score }: { score: Score }) {
       return;
     }
     if (!rendererRef.current) {
-      rendererRef.current = new Renderer(
-        divRef.current,
-        Renderer.Backends.SVG,
-      );
+      rendererRef.current = new Renderer(divRef.current, Renderer.Backends.SVG);
     }
 
     const element = divRef.current;
@@ -96,7 +101,22 @@ export function VexflowScore({ score }: { score: Score }) {
     }
   }, [score, scoreSize.width]);
 
-  return <div style={{ marginTop: "10px" }} ref={divRef}>
-      <img id="cursor" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABUAAAABCAYAAAAxUOUbAAAAAXNSR0IArs4c6QAAAC5JREFUGFdjfPr7acOFH+cYQPj8r4sM937dYSAVKLGpMBiy6TMYcJgwGHAYMAAAGFUPRw5ILS0AAAAASUVORK5CYII=" width="21" height="300" style={{ position: "absolute", zIndex: -1, top: 0, right: 0 }} />
-    </div>;
+  return (
+    <div style={{ marginTop: "10px" }} ref={divRef}>
+      <img
+        alt="cursor"
+        id="cursor"
+        src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABUAAAABCAYAAAAxUOUbAAAAAXNSR0IArs4c6QAAAC5JREFUGFdjfPr7acOFH+cYQPj8r4sM937dYSAVKLGpMBiy6TMYcJgwGHAYMAAAGFUPRw5ILS0AAAAASUVORK5CYII="
+        width="21"
+        height="300"
+        style={{
+          position: "absolute",
+          zIndex: -1,
+          top: 0,
+          right: 0,
+          visibility: "hidden",
+        }}
+      />
+    </div>
+  );
 }
