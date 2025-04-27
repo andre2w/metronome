@@ -1,12 +1,5 @@
 import { Flex } from "@radix-ui/themes";
-import {
-  type ForwardedRef,
-  forwardRef,
-  useCallback,
-  useEffect,
-  useImperativeHandle,
-  useRef,
-} from "react";
+import { forwardRef, useCallback, useImperativeHandle, useRef } from "react";
 import "../Metronome.css";
 import { nextInLoop } from "../../utils";
 
@@ -57,8 +50,9 @@ export const Ticks = forwardRef<TicksHandle, TicksProps>((props, ref) => {
     <Flex justify="between" gap="2" ref={ticksRef}>
       {Array.from({ length: props.notes }).map((_, index) => {
         return (
-          // biome-ignore lint/correctness/useJsxKeyInIterable: <explanation>
           <div
+            // biome-ignore lint/suspicious/noArrayIndexKey: We count the tempo using numbers just like the index
+            key={index}
             className={`metronome-tick ${index % (props.notes / 4) === 0 ? "metronome-tick-big" : "metronome-tick-small"}`}
           />
         );
