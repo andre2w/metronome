@@ -8,39 +8,37 @@ import { calculateResult } from "../lib/result-calculator";
 import type { Ticks } from "../lib/types";
 import { Result, type ResultProps } from "./Result";
 import { Ticks as TicksComponent, type TicksHandle } from "./components/Ticks";
-import type { BaseMetronomeConfigurationProps } from "./configuration";
 import { useAudioTicks } from "./useAudioTick";
 import { useInputListener } from "./useInputListener";
 
 export interface MetronomeProps {
-  configuration: BaseMetronomeConfigurationProps;
   className?: string;
 }
 
-export function Metronome({ className, configuration }: MetronomeProps) {
+export function Metronome({ className }: MetronomeProps) {
   const [started, setStarted] = useState(false);
   const selectedRef = useRef<number>(-1);
   const vexflowScoreRef = useRef<VexflowScoreHandle>(null);
   const ticksRef = useRef<Ticks>([]);
   const [result, setResult] = useState<ResultProps | undefined>(undefined);
-  const { score } = useScoreContext();
+  const { score, configuration } = useScoreContext();
   const intervalRef = useRef<ReturnType<typeof setInterval> | undefined>();
   const tickSymbolsRef = useRef<TicksHandle | null>(null);
   const { playNextTick, reset: resetAudioTicks } = useAudioTicks({
-    notes: configuration.notes,
+    notes: configuration.signature,
   });
   const { getPlayedNotes, resetPlayedNotes } = useInputListener();
 
-  const tick = () => {
+  const tick = async () => {
     tickSymbolsRef.current?.next();
-    playNextTick();
+    await playNextTick();
     ticksRef.current.push(performance.now());
     vexflowScoreRef.current?.next();
   };
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: Need to fix this later
   useEffect(() => {
-    const { notes, beats } = configuration;
+    const { signature: notes, bpm: beats } = configuration;
     const beatTime = calculateBeatTime(beats, notes);
     const oldInterval = intervalRef.current;
 
@@ -90,7 +88,7 @@ export function Metronome({ className, configuration }: MetronomeProps) {
         >
           {started ? "STOP" : "START"}
         </Button>
-        <TicksComponent ref={tickSymbolsRef} notes={configuration.notes} />
+        <TicksComponent ref={tickSymbolsRef} notes={configuration.signature} />
         {result && <Result right={result.right} missed={result.missed} />}
       </div>
       <VexflowScore score={score} ref={vexflowScoreRef} />

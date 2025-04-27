@@ -20,8 +20,10 @@ export function useAudioTicks({ notes }: UseAudioTicksProps) {
       indexRef.current = nextInLoop(indexRef.current, notes);
 
       if (indexRef.current % (notes / 4) === 0) {
+        bigTick.current?.load();
         await bigTick.current?.play();
       } else {
+        smallTick.current?.load();
         await smallTick.current?.play();
       }
     },

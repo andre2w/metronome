@@ -1,9 +1,9 @@
 import { Button, Dialog, Flex, Text, TextField } from "@radix-ui/themes";
 import { useState } from "react";
 import { db } from "../lib/storage";
-import type { SavedScore } from "../lib/types";
+import type { FullScore } from "../lib/types";
 
-export type SaveScoreProps = Omit<SavedScore, "name">;
+export type SaveScoreProps = Omit<FullScore, "name">;
 
 export function SaveScore(props: SaveScoreProps) {
   const [scoreName, setScoreName] = useState("");

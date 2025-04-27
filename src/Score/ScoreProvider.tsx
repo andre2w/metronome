@@ -4,10 +4,21 @@ import {
   useCallback,
   useContext,
   useEffect,
+  useState,
 } from "react";
 import { useImmer } from "use-immer";
+import {
+  type MetronomeConfigurationProps,
+  defaultMetronomeConfiguration,
+} from "../Metronome/configuration";
 import { useURLHash } from "../hooks/useURLHash";
-import type { Note, NotesWithSticking, Score, Sticking } from "../lib/types";
+import type {
+  FullScore,
+  Note,
+  NotesWithSticking,
+  Score,
+  Sticking,
+} from "../lib/types";
 
 export interface ScoreContextValue {
   score: Score;
@@ -23,7 +34,9 @@ export interface ScoreContextValue {
     staveNoteIndex: number;
     sticking: Sticking | null;
   }) => void;
-  loadScore: (score: Score) => void;
+  loadScore: (score: FullScore) => void;
+  configuration: MetronomeConfigurationProps;
+  onChangeConfiguration: (configuration: MetronomeConfigurationProps) => void;
 }
 const ScoreContext = createContext<ScoreContextValue>({
   score: [],
@@ -32,46 +45,64 @@ const ScoreContext = createContext<ScoreContextValue>({
   removeStave: () => {},
   setSticking: () => {},
   loadScore: () => {},
+  configuration: defaultMetronomeConfiguration,
+  onChangeConfiguration: () => {},
 });
 
 export interface ScoreContextProviderProps {
   children: ReactNode;
-  notes: number;
 }
 
-export function ScoreContextProvider({
-  children,
-  notes,
-}: ScoreContextProviderProps) {
+export function ScoreContextProvider({ children }: ScoreContextProviderProps) {
   const { setHash, getHash } = useURLHash();
+  const [configuration, setConfiguration] =
+    useState<MetronomeConfigurationProps>(() => {
+      const hash = getHash();
+      const signature = hash.get("signature");
+      const bpm = hash.get("bpm");
+      const graceTime = hash.get("graceTime");
+
+      return {
+        signature: signature
+          ? Number(signature)
+          : defaultMetronomeConfiguration.signature,
+        bpm: bpm ? Number(bpm) : defaultMetronomeConfiguration.bpm,
+        graceTime: graceTime
+          ? Number(graceTime)
+          : defaultMetronomeConfiguration.graceTime,
+      };
+    });
   const [score, setScore] = useImmer<Score>(() => {
     const scoreText = getHash().get("score");
     const initialScore: Score = scoreText
       ? JSON.parse(scoreText)
-      : [createStave(notes)];
+      : [createStave(configuration.signature)];
     return initialScore;
   });
 
   if (
     score.length === 1 &&
-    score[0].length !== notes &&
+    score[0].length !== configuration.signature &&
     score[0].every((n) => n.notes.length === 0)
   ) {
-    setScore([createStave(notes)]);
+    setScore([createStave(configuration.signature)]);
   }
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: No need to update here
   useEffect(() => {
     const newHash = new URLSearchParams(getHash());
     newHash.set("score", JSON.stringify(score));
+    newHash.set("signature", String(configuration.signature));
+    newHash.set("bpm", String(configuration.bpm));
+    newHash.set("graceTime", String(configuration.graceTime));
     setHash(newHash);
-  }, [score]);
+  }, [score, configuration]);
 
   const addStave = useCallback(() => {
     setScore((score) => {
-      score.push(createStave(notes));
+      score.push(createStave(configuration.signature));
     });
-  }, [setScore, notes]);
+  }, [setScore, configuration.signature]);
 
   const toggleNote: ScoreContextValue["toggleNote"] = useCallback(
     ({ staveIndex, staveNoteIndex, note }) => {
@@ -95,11 +126,11 @@ export function ScoreContextProvider({
       setScore((score) => {
         score.splice(staveIndex, 1);
         if (score.length === 0) {
-          score.push(createStave(notes));
+          score.push(createStave(configuration.signature));
         }
       });
     },
-    [setScore, notes],
+    [setScore, configuration.signature],
   );
 
   const setSticking: ScoreContextValue["setSticking"] = useCallback(
@@ -116,8 +147,15 @@ export function ScoreContextProvider({
   );
 
   const loadScore: ScoreContextValue["loadScore"] = useCallback(
-    (score) => {
-      setScore(score);
+    (fullScore) => {
+      setScore(fullScore.score);
+      if (fullScore.bpm && fullScore.graceTime && fullScore.signature) {
+        setConfiguration({
+          bpm: fullScore.bpm,
+          graceTime: fullScore.graceTime,
+          signature: fullScore.signature,
+        });
+      }
     },
     [setScore],
   );
@@ -131,6 +169,8 @@ export function ScoreContextProvider({
         removeStave,
         setSticking,
         loadScore,
+        configuration,
+        onChangeConfiguration: setConfiguration,
       }}
     >
       {children}

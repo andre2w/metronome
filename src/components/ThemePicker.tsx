@@ -1,12 +1,5 @@
 import { MoonIcon, SunIcon } from "@radix-ui/react-icons";
-import {
-  Flex,
-  IconButton,
-  Select,
-  type ThemeProps,
-  useThemeContext,
-} from "@radix-ui/themes";
-import { useLocalStorage } from "usehooks-ts";
+import { Flex, IconButton, Select, type ThemeProps } from "@radix-ui/themes";
 
 const accentColors = [
   "gray",

@@ -1,19 +1,13 @@
 import { Flex, Select, Text, TextField } from "@radix-ui/themes";
+import { useScoreContext } from "../Score/ScoreProvider";
 import { calculateBeatTime } from "../lib/beat-time";
-import type { BaseMetronomeConfigurationProps } from "./configuration";
 
-interface MetronomeConfigurationProps {
-  configuration: BaseMetronomeConfigurationProps;
-  onChange: (props: BaseMetronomeConfigurationProps) => void;
-}
-export function MetronomeConfiguration({
-  configuration,
-  onChange,
-}: MetronomeConfigurationProps) {
+export function MetronomeConfiguration() {
+  const { configuration, onChangeConfiguration } = useScoreContext();
   const maxGraceTime =
-    calculateBeatTime(configuration.beats, configuration.notes) - 2;
+    calculateBeatTime(configuration.bpm, configuration.signature) - 2;
   if (configuration.graceTime > maxGraceTime) {
-    onChange({ ...configuration, graceTime: maxGraceTime });
+    onChangeConfiguration({ ...configuration, graceTime: maxGraceTime });
   }
 
   return (
@@ -21,9 +15,12 @@ export function MetronomeConfiguration({
       <Flex direction="column">
         <Text>Notes</Text>
         <Select.Root
-          value={String(configuration.notes)}
+          value={String(configuration.signature)}
           onValueChange={(value) =>
-            onChange({ ...configuration, notes: Number(value) })
+            onChangeConfiguration({
+              ...configuration,
+              signature: Number(value),
+            })
           }
           defaultValue="4"
         >
@@ -39,9 +36,12 @@ export function MetronomeConfiguration({
         <Text>BPM</Text>
         <TextField.Root
           type="number"
-          value={configuration.beats}
+          value={configuration.bpm}
           onChange={(e) =>
-            onChange({ ...configuration, beats: Number(e.target.value) })
+            onChangeConfiguration({
+              ...configuration,
+              bpm: Number(e.target.value),
+            })
           }
           step={1}
         />
@@ -52,7 +52,7 @@ export function MetronomeConfiguration({
           type="number"
           value={configuration.graceTime}
           onChange={(e) =>
-            onChange({
+            onChangeConfiguration({
               ...configuration,
               graceTime: e.target.value ? Number(e.target.value) : 0,
             })
