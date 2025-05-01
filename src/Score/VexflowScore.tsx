@@ -80,8 +80,8 @@ export const VexflowScore = forwardRef<VexflowScoreHandle, VexflowScoreProps>(
         }
       },
       reset: () => {
-        scoreIndexRef.current = -1;
-        staveIndexRef.current = -1;
+        scoreIndexRef.current = 0;
+        staveIndexRef.current = 0;
       },
     }));
 

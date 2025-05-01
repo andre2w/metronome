@@ -55,6 +55,7 @@ export function Metronome({ className }: MetronomeProps) {
       tickSymbolsRef.current?.clear();
       vexflowScoreRef.current?.hideCursor();
       resetAudioTicks();
+      vexflowScoreRef.current?.reset();
     }
   }, [started, configuration, score]);
 
@@ -74,6 +75,7 @@ export function Metronome({ className }: MetronomeProps) {
       selectedRef.current = -1;
       tickSymbolsRef.current?.clear();
       resetAudioTicks();
+      vexflowScoreRef.current?.reset();
       setResult(undefined);
     }
     setStarted((v) => !v);
