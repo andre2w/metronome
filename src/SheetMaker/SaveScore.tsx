@@ -1,14 +1,13 @@
 import { Button, Dialog, Flex, Text, TextField } from "@radix-ui/themes";
 import { useState } from "react";
+import { useScoreContext } from "../Score/ScoreProvider";
 import { db } from "../lib/storage";
-import type { FullScore } from "../lib/types";
 
-export type SaveScoreProps = Omit<FullScore, "name">;
-
-export function SaveScore(props: SaveScoreProps) {
-  const [scoreName, setScoreName] = useState("");
+export function SaveScore() {
+  const { configuration, score } = useScoreContext();
+  const [scoreName, setScoreName] = useState(configuration.name ?? "");
   const [isOpen, setIsOpen] = useState(false);
-
+  
   return (
     <Dialog.Root open={isOpen} onOpenChange={setIsOpen}>
       <Dialog.Trigger>
@@ -29,8 +28,11 @@ export function SaveScore(props: SaveScoreProps) {
           />
           <Button
             onClick={async () => {
-              await db.scores.add({ ...props, name: scoreName });
-              setScoreName("");
+              if (configuration.id) {
+                await db.scores.update(configuration.id, { ...configuration, score, name: scoreName });
+              } else {
+                await db.scores.add({ ...configuration, score, name: scoreName });
+              }
               setIsOpen(false);
             }}
           >

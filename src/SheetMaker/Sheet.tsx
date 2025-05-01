@@ -28,7 +28,6 @@ export function Sheet() {
     toggleNote,
     removeStave,
     setSticking,
-    configuration,
   } = useScoreContext();
 
   return (
@@ -36,12 +35,7 @@ export function Sheet() {
       <div className="sheet-maker">
         <div className="add">
           <Button onClick={addStave}>Add new line</Button>
-          <SaveScore
-            score={score}
-            bpm={configuration.bpm}
-            graceTime={configuration.graceTime}
-            signature={configuration.signature}
-          />
+          <SaveScore />
           <ListScores />
         </div>
         <div className="sheet">
