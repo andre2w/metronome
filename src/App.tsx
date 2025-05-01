@@ -1,52 +1,12 @@
-import { MoonIcon, SunIcon } from "@radix-ui/react-icons";
-import {
-  Flex,
-  IconButton,
-  Select,
-  Theme,
-  type ThemeProps,
-} from "@radix-ui/themes";
-import { useState } from "react";
+import { Flex, Theme, type ThemeProps } from "@radix-ui/themes";
 import { useLocalStorage } from "usehooks-ts";
 import { InputConfiguration } from "./InputConfiguration/InputConfiguration";
 import { InputConfigurationProvider } from "./InputConfiguration/InputConfigurationContext";
-import { Metronome } from "./Metronome/Metronome";
+import { Metronome } from "./Metronome";
 import { MetronomeConfiguration } from "./Metronome/MetronomeConfiguration";
-import {
-  type BaseMetronomeConfigurationProps,
-  defaultMetronomeConfiguration,
-} from "./Metronome/configuration";
 import { ScoreContextProvider } from "./Score/ScoreProvider";
 import { Sheet } from "./SheetMaker/Sheet";
-
-const accentColors = [
-  "gray",
-  "gold",
-  "bronze",
-  "brown",
-  "yellow",
-  "amber",
-  "orange",
-  "tomato",
-  "red",
-  "ruby",
-  "crimson",
-  "pink",
-  "plum",
-  "purple",
-  "violet",
-  "iris",
-  "indigo",
-  "blue",
-  "cyan",
-  "teal",
-  "jade",
-  "green",
-  "grass",
-  "lime",
-  "mint",
-  "sky",
-];
+import { ThemePicker } from "./components/ThemePicker";
 
 function App() {
   const [{ accentColor, appearance }, setThemePreferences] = useLocalStorage(
@@ -56,13 +16,11 @@ function App() {
       accentColor: "indigo" as ThemeProps["accentColor"],
     },
   );
-  const [configuration, setConfiguration] =
-    useState<BaseMetronomeConfigurationProps>(defaultMetronomeConfiguration);
 
   return (
-    <Theme appearance={appearance} accentColor={accentColor}>
+    <Theme accentColor={accentColor} appearance={appearance}>
       <InputConfigurationProvider>
-        <ScoreContextProvider notes={configuration.notes}>
+        <ScoreContextProvider>
           <Flex
             direction="column"
             style={{
@@ -74,50 +32,15 @@ function App() {
           >
             <Flex align="end" gap="3">
               <InputConfiguration />
-              <MetronomeConfiguration
-                configuration={configuration}
-                onChange={setConfiguration}
+              <MetronomeConfiguration />
+              <ThemePicker
+                accentColor={accentColor}
+                appearance={appearance}
+                onChange={setThemePreferences}
               />
-              <Flex
-                style={{
-                  flexGrow: "2",
-                  justifyContent: "flex-end",
-                  gap: "5px",
-                }}
-              >
-                <IconButton
-                  onClick={() =>
-                    setThemePreferences({
-                      appearance: appearance === "dark" ? "light" : "dark",
-                      accentColor,
-                    })
-                  }
-                >
-                  {appearance === "light" ? <SunIcon /> : <MoonIcon />}
-                </IconButton>
-                <Select.Root
-                  onValueChange={(value) =>
-                    setThemePreferences({
-                      appearance,
-                      accentColor: (value ??
-                        "indigo") as ThemeProps["accentColor"],
-                    })
-                  }
-                  value={accentColor}
-                >
-                  <Select.Trigger />
-                  <Select.Content>
-                    {accentColors.map((color) => (
-                      <Select.Item key={color} value={color}>
-                        {color}
-                      </Select.Item>
-                    ))}
-                  </Select.Content>
-                </Select.Root>
-              </Flex>
             </Flex>
-            <Metronome configuration={configuration} />
-            <Sheet configuration={configuration} />
+            <Metronome />
+            <Sheet />
           </Flex>
         </ScoreContextProvider>
       </InputConfigurationProvider>

@@ -6,8 +6,18 @@ import {
   useEffect,
 } from "react";
 import { useImmer } from "use-immer";
+import {
+  type MetronomeConfigurationProps,
+  defaultMetronomeConfiguration,
+} from "../Metronome/configuration";
 import { useURLHash } from "../hooks/useURLHash";
-import type { Note, NotesWithSticking, Score, Sticking } from "../lib/types";
+import type {
+  FullScore,
+  Note,
+  NotesWithSticking,
+  Score,
+  Sticking,
+} from "../lib/types";
 
 export interface ScoreContextValue {
   score: Score;
@@ -23,7 +33,9 @@ export interface ScoreContextValue {
     staveNoteIndex: number;
     sticking: Sticking | null;
   }) => void;
-  loadScore: (score: Score) => void;
+  loadScore: (score: FullScore) => void;
+  configuration: MetronomeConfigurationProps & { id?: number; name?: string };
+  onChangeConfiguration: (configuration: MetronomeConfigurationProps) => void;
 }
 const ScoreContext = createContext<ScoreContextValue>({
   score: [],
@@ -32,51 +44,75 @@ const ScoreContext = createContext<ScoreContextValue>({
   removeStave: () => {},
   setSticking: () => {},
   loadScore: () => {},
+  configuration: defaultMetronomeConfiguration,
+  onChangeConfiguration: () => {},
 });
 
 export interface ScoreContextProviderProps {
   children: ReactNode;
-  notes: number;
 }
 
-export function ScoreContextProvider({
-  children,
-  notes,
-}: ScoreContextProviderProps) {
+export function ScoreContextProvider({ children }: ScoreContextProviderProps) {
   const { setHash, getHash } = useURLHash();
-  const [score, setScore] = useImmer<Score>(() => {
-    const scoreText = getHash().get("score");
-    const initialScore: Score = scoreText
-      ? JSON.parse(scoreText)
-      : [createStave(notes)];
-    return initialScore;
-  });
+  const [fullScore, setFullScore] = useImmer<FullScore & { id?: number }>(
+    () => {
+      const hash = getHash();
+      const signature = hash.get("signature");
+      const bpm = hash.get("bpm");
+      const graceTime = hash.get("graceTime");
+      const id = hash.get("id");
 
-  if (
-    score.length === 1 &&
-    score[0].length !== notes &&
-    score[0].every((n) => n.notes.length === 0)
-  ) {
-    setScore([createStave(notes)]);
-  }
+      const configuration = {
+        signature: signature
+          ? Number(signature)
+          : defaultMetronomeConfiguration.signature,
+        bpm: bpm ? Number(bpm) : defaultMetronomeConfiguration.bpm,
+        graceTime: graceTime
+          ? Number(graceTime)
+          : defaultMetronomeConfiguration.graceTime,
+        id: id ? Number(id) : undefined,
+      };
+      const scoreText = hash.get("score");
+      const initialScore: Score = scoreText
+        ? JSON.parse(scoreText)
+        : [createStave(configuration.signature)];
+      const score = initialScore;
+      const name = hash.get("name");
+
+      return {
+        ...configuration,
+        name: name ?? "",
+        score,
+      };
+    },
+  );
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: No need to update here
   useEffect(() => {
     const newHash = new URLSearchParams(getHash());
-    newHash.set("score", JSON.stringify(score));
+    newHash.set("score", JSON.stringify(fullScore.score));
+    newHash.set("signature", String(fullScore.signature));
+    newHash.set("bpm", String(fullScore.bpm));
+    newHash.set("graceTime", String(fullScore.graceTime));
+    if (fullScore.id) {
+      newHash.set("id", String(fullScore.id));
+    }
+    if (fullScore.name) {
+      newHash.set("name", fullScore.name);
+    }
     setHash(newHash);
-  }, [score]);
+  }, [fullScore]);
 
   const addStave = useCallback(() => {
-    setScore((score) => {
-      score.push(createStave(notes));
+    setFullScore((fullScore) => {
+      fullScore.score.push(createStave(fullScore.signature));
     });
-  }, [setScore, notes]);
+  }, [setFullScore]);
 
   const toggleNote: ScoreContextValue["toggleNote"] = useCallback(
     ({ staveIndex, staveNoteIndex, note }) => {
-      setScore((score) => {
-        const notesWithSticking = score[staveIndex][staveNoteIndex];
+      setFullScore((fullScore) => {
+        const notesWithSticking = fullScore.score[staveIndex][staveNoteIndex];
         if (!notesWithSticking.notes.includes(note)) {
           notesWithSticking.notes.push(note);
         } else {
@@ -87,50 +123,78 @@ export function ScoreContextProvider({
         }
       });
     },
-    [setScore],
+    [setFullScore],
   );
 
   const removeStave: ScoreContextValue["removeStave"] = useCallback(
     (staveIndex) => {
-      setScore((score) => {
-        score.splice(staveIndex, 1);
-        if (score.length === 0) {
-          score.push(createStave(notes));
+      setFullScore((fullScore) => {
+        fullScore.score.splice(staveIndex, 1);
+        if (fullScore.score.length === 0) {
+          fullScore.score.push(createStave(fullScore.signature));
         }
       });
     },
-    [setScore, notes],
+    [setFullScore],
   );
 
   const setSticking: ScoreContextValue["setSticking"] = useCallback(
     ({ staveIndex, staveNoteIndex, sticking }) => {
-      setScore((score) => {
+      setFullScore((fullScore) => {
         if (sticking !== null) {
-          score[staveIndex][staveNoteIndex].sticking = sticking;
+          fullScore.score[staveIndex][staveNoteIndex].sticking = sticking;
         } else {
-          score[staveIndex][staveNoteIndex].sticking = undefined;
+          fullScore.score[staveIndex][staveNoteIndex].sticking = undefined;
         }
       });
     },
-    [setScore],
+    [setFullScore],
   );
 
   const loadScore: ScoreContextValue["loadScore"] = useCallback(
-    (score) => {
-      setScore(score);
+    (fullScore) => {
+      setFullScore(fullScore);
     },
-    [setScore],
+    [setFullScore],
   );
+
+  const onChangeConfiguration: ScoreContextValue["onChangeConfiguration"] =
+    useCallback(
+      (configuration) => {
+        setFullScore((fullScore) => {
+          fullScore.bpm = configuration.bpm;
+          fullScore.graceTime = configuration.graceTime;
+          fullScore.signature = configuration.signature;
+
+          if (
+            fullScore.score.length === 1 &&
+            fullScore.score[0].length !== fullScore.signature &&
+            fullScore.score[0].every((n) => n.notes.length === 0)
+          ) {
+            fullScore.score = [createStave(configuration.signature)];
+          }
+        });
+      },
+      [setFullScore],
+    );
 
   return (
     <ScoreContext.Provider
       value={{
-        score,
+        score: fullScore.score,
         addStave,
         toggleNote,
         removeStave,
         setSticking,
         loadScore,
+        configuration: {
+          bpm: fullScore.bpm,
+          graceTime: fullScore.graceTime,
+          signature: fullScore.signature,
+          id: fullScore.id,
+          name: fullScore.name,
+        },
+        onChangeConfiguration,
       }}
     >
       {children}

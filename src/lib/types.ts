@@ -3,8 +3,6 @@
 // For vexflow is NOTE/
 // https://github.com/0xfe/vexflow/blob/master/src/stavenote.ts#L407
 
-import type { BaseMetronomeConfigurationProps } from "../Metronome/configuration";
-
 // How to declare a note: https://github.com/0xfe/vexflow/blob/master/src/note.ts#L64
 export const NOTES = {
   KICK: "f/4",
@@ -59,7 +57,10 @@ export interface NotePlayed {
   note: Note;
 }
 
-export interface SavedScore extends BaseMetronomeConfigurationProps {
+export interface FullScore {
   score: Score;
   name: string;
+  signature: number;
+  bpm: number;
+  graceTime: number;
 }

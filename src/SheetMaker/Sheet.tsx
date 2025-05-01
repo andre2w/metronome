@@ -1,10 +1,8 @@
 import { Button, Text } from "@radix-ui/themes";
 import { useScoreContext } from "../Score/ScoreProvider";
-import { VexflowScore } from "../Score/VexflowScore";
 import { NOTES, type Note } from "../lib/types";
 import { Stave } from "./Stave";
 import "./Sheet.css";
-import type { BaseMetronomeConfigurationProps } from "../Metronome/configuration";
 import { ListScores } from "./ListScores";
 import { SaveScore } from "./SaveScore";
 import { StaveNoteBox } from "./StaveNoteBox";
@@ -23,26 +21,16 @@ const noteLabel: Record<Note, string> = {
   RIDE: "Pedal",
 };
 
-export interface SheetProps {
-  configuration: BaseMetronomeConfigurationProps;
-}
-
-export function Sheet({ configuration }: SheetProps) {
+export function Sheet() {
   const { addStave, score, toggleNote, removeStave, setSticking } =
     useScoreContext();
 
   return (
     <>
-      <VexflowScore score={score} />
       <div className="sheet-maker">
         <div className="add">
           <Button onClick={addStave}>Add new line</Button>
-          <SaveScore
-            score={score}
-            beats={configuration.beats}
-            graceTime={configuration.graceTime}
-            notes={configuration.notes}
-          />
+          <SaveScore />
           <ListScores />
         </div>
         <div className="sheet">

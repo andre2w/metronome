@@ -4,7 +4,7 @@ import { useCallback, useState } from "react";
 import React from "react";
 import { useScoreContext } from "../Score/ScoreProvider";
 import { db } from "../lib/storage";
-import type { SavedScore } from "../lib/types";
+import type { FullScore } from "../lib/types";
 
 export function ListScores() {
   const [isOpen, setIsOpen] = useState(false);
@@ -33,7 +33,7 @@ export function ListScores() {
                 <ScoreRow
                   score={score}
                   onLoad={() => {
-                    loadScore(score.score);
+                    loadScore(score);
                     setIsOpen(false);
                   }}
                   onDelete={() => {
@@ -53,7 +53,7 @@ export function ListScores() {
 }
 
 interface ScoreRowProps {
-  score: SavedScore & { id: number };
+  score: FullScore & { id: number };
   onLoad?: () => void;
   onDelete?: () => void;
 }
@@ -92,7 +92,7 @@ function ScoreRow({ score, onLoad, onDelete }: ScoreRowProps) {
           {score.name}
         </Text>
         <Flex gap="3">
-          <Text>{score.beats}BPM</Text> - <Text>1/{score.notes}</Text>
+          <Text>{score.bpm}BPM</Text> - <Text>1/{score.signature}</Text>
         </Flex>
       </Flex>
 
