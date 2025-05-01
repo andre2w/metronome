@@ -4,7 +4,6 @@ import {
   useCallback,
   useContext,
   useEffect,
-  useState,
 } from "react";
 import { useImmer } from "use-immer";
 import {
@@ -54,37 +53,39 @@ export interface ScoreContextProviderProps {
 }
 
 export function ScoreContextProvider({ children }: ScoreContextProviderProps) {
-  const { setHash, getHash } = useURLHash();  
-  const [fullScore, setFullScore] = useImmer<FullScore & { id?: number }>(() => {
-    const hash = getHash();
-    const signature = hash.get("signature");
-    const bpm = hash.get("bpm");
-    const graceTime = hash.get("graceTime");
-    const id = hash.get("id");
+  const { setHash, getHash } = useURLHash();
+  const [fullScore, setFullScore] = useImmer<FullScore & { id?: number }>(
+    () => {
+      const hash = getHash();
+      const signature = hash.get("signature");
+      const bpm = hash.get("bpm");
+      const graceTime = hash.get("graceTime");
+      const id = hash.get("id");
 
-    const configuration = {
-      signature: signature
-        ? Number(signature)
-        : defaultMetronomeConfiguration.signature,
-      bpm: bpm ? Number(bpm) : defaultMetronomeConfiguration.bpm,
-      graceTime: graceTime
-        ? Number(graceTime)
-        : defaultMetronomeConfiguration.graceTime,
-      id: id ? Number(id) : undefined,
-    };
-    const scoreText = hash.get("score");
-    const initialScore: Score = scoreText
-      ? JSON.parse(scoreText)
-      : [createStave(configuration.signature)];
-    const score = initialScore;        
-    const name = hash.get("name");
+      const configuration = {
+        signature: signature
+          ? Number(signature)
+          : defaultMetronomeConfiguration.signature,
+        bpm: bpm ? Number(bpm) : defaultMetronomeConfiguration.bpm,
+        graceTime: graceTime
+          ? Number(graceTime)
+          : defaultMetronomeConfiguration.graceTime,
+        id: id ? Number(id) : undefined,
+      };
+      const scoreText = hash.get("score");
+      const initialScore: Score = scoreText
+        ? JSON.parse(scoreText)
+        : [createStave(configuration.signature)];
+      const score = initialScore;
+      const name = hash.get("name");
 
-    return {
-      ...configuration,
-      name: name ?? "",
-      score
-    };
-  });
+      return {
+        ...configuration,
+        name: name ?? "",
+        score,
+      };
+    },
+  );
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: No need to update here
   useEffect(() => {
@@ -157,17 +158,25 @@ export function ScoreContextProvider({ children }: ScoreContextProviderProps) {
     [setFullScore],
   );
 
-  const onChangeConfiguration: ScoreContextValue["onChangeConfiguration"] = useCallback((configuration) => {
-    setFullScore(fullScore => {
-      fullScore.bpm = configuration.bpm;
-      fullScore.graceTime = configuration.graceTime;
-      fullScore.signature = configuration.signature;
+  const onChangeConfiguration: ScoreContextValue["onChangeConfiguration"] =
+    useCallback(
+      (configuration) => {
+        setFullScore((fullScore) => {
+          fullScore.bpm = configuration.bpm;
+          fullScore.graceTime = configuration.graceTime;
+          fullScore.signature = configuration.signature;
 
-        if (fullScore.score.length === 1 && fullScore.score[0].length !== fullScore.signature && fullScore.score[0].every((n) => n.notes.length === 0)) {
-          fullScore.score = [createStave(configuration.signature)];      
-        }
-    });
-  }, [setFullScore]);
+          if (
+            fullScore.score.length === 1 &&
+            fullScore.score[0].length !== fullScore.signature &&
+            fullScore.score[0].every((n) => n.notes.length === 0)
+          ) {
+            fullScore.score = [createStave(configuration.signature)];
+          }
+        });
+      },
+      [setFullScore],
+    );
 
   return (
     <ScoreContext.Provider

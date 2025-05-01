@@ -1,8 +1,4 @@
-import {
-  Flex,  
-  Theme,
-  type ThemeProps,
-} from "@radix-ui/themes";
+import { Flex, Theme, type ThemeProps } from "@radix-ui/themes";
 import { useLocalStorage } from "usehooks-ts";
 import { InputConfiguration } from "./InputConfiguration/InputConfiguration";
 import { InputConfigurationProvider } from "./InputConfiguration/InputConfigurationContext";

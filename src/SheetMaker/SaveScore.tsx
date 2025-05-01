@@ -7,7 +7,7 @@ export function SaveScore() {
   const { configuration, score } = useScoreContext();
   const [scoreName, setScoreName] = useState(configuration.name ?? "");
   const [isOpen, setIsOpen] = useState(false);
-  
+
   return (
     <Dialog.Root open={isOpen} onOpenChange={setIsOpen}>
       <Dialog.Trigger>
@@ -29,9 +29,17 @@ export function SaveScore() {
           <Button
             onClick={async () => {
               if (configuration.id) {
-                await db.scores.update(configuration.id, { ...configuration, score, name: scoreName });
+                await db.scores.update(configuration.id, {
+                  ...configuration,
+                  score,
+                  name: scoreName,
+                });
               } else {
-                await db.scores.add({ ...configuration, score, name: scoreName });
+                await db.scores.add({
+                  ...configuration,
+                  score,
+                  name: scoreName,
+                });
               }
               setIsOpen(false);
             }}

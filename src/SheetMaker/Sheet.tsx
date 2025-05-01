@@ -22,13 +22,8 @@ const noteLabel: Record<Note, string> = {
 };
 
 export function Sheet() {
-  const {
-    addStave,
-    score,
-    toggleNote,
-    removeStave,
-    setSticking,
-  } = useScoreContext();
+  const { addStave, score, toggleNote, removeStave, setSticking } =
+    useScoreContext();
 
   return (
     <>
