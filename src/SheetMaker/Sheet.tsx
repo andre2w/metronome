@@ -18,20 +18,27 @@ const noteLabel: Record<Note, string> = {
   HIGH_HAT_OPEN: "High hat open",
   HIGH_HAT_PEDAL: "High hat pedal",
   CRASH: "Crash",
-  RIDE: "Pedal",
+  RIDE: "Ride",
 };
 
 export function Sheet() {
-  const { addStave, score, toggleNote, removeStave, setSticking } =
+  const { addStave, score, toggleNote, removeStave, setSticking, clear } =
     useScoreContext();
 
   return (
     <>
       <div className="sheet-maker">
         <div className="add">
-          <Button onClick={addStave}>Add new line</Button>
+          <Button onClick={addStave}>Add stave</Button>
           <SaveScore />
           <ListScores />
+          <Button
+            onClick={() => {
+              clear();
+            }}
+          >
+            New Score
+          </Button>
         </div>
         <div className="sheet">
           <div className="parts">

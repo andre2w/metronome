@@ -36,6 +36,7 @@ export interface ScoreContextValue {
   loadScore: (score: FullScore) => void;
   configuration: MetronomeConfigurationProps & { id?: number; name?: string };
   onChangeConfiguration: (configuration: MetronomeConfigurationProps) => void;
+  clear: () => void;
 }
 const ScoreContext = createContext<ScoreContextValue>({
   score: [],
@@ -46,6 +47,7 @@ const ScoreContext = createContext<ScoreContextValue>({
   loadScore: () => {},
   configuration: defaultMetronomeConfiguration,
   onChangeConfiguration: () => {},
+  clear: () => {},
 });
 
 export interface ScoreContextProviderProps {
@@ -195,6 +197,16 @@ export function ScoreContextProvider({ children }: ScoreContextProviderProps) {
           name: fullScore.name,
         },
         onChangeConfiguration,
+        clear: () => {
+          setFullScore({
+            bpm: fullScore.bpm,
+            graceTime: fullScore.graceTime,
+            signature: fullScore.signature,
+            score: [createStave(fullScore.signature)],
+            name: "",
+            id: undefined,
+          });
+        },
       }}
     >
       {children}
