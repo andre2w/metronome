@@ -19,7 +19,7 @@ export function useAudioTicks({ notes }: UseAudioTicksProps) {
     playNextTick: async () => {
       indexRef.current = nextInLoop(indexRef.current, notes);
 
-      if (indexRef.current % (notes / 4) === 0) {
+      if (indexRef.current === 0) {
         bigTick.current?.load();
         await bigTick.current?.play();
       } else {

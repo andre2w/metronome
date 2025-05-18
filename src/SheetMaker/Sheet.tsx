@@ -13,7 +13,7 @@ const noteLabel: Record<Note, string> = {
   SNARE_X_STICK: "Snare cross-stick",
   TOM_1: "Tom 1",
   TOM_2: "Tom 2",
-  TOM_3: "Tom 2",
+  TOM_3: "Tom 3",
   HIGH_HAT: "High hat",
   HIGH_HAT_OPEN: "High hat open",
   HIGH_HAT_PEDAL: "High hat pedal",

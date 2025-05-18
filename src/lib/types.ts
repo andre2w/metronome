@@ -14,8 +14,8 @@ export const NOTES = {
   HIGH_HAT: "g/5/x2",
   HIGH_HAT_OPEN: "g/5/x2",
   HIGH_HAT_PEDAL: "d/4/x2",
-  CRASH: "f/5/x2",
-  RIDE: "a/5/x2",
+  RIDE: "f/5/x2",
+  CRASH: "a/5/x2",
 } as const;
 
 export const sticking = ["L", "R", "R/L"] as const;
