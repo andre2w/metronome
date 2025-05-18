@@ -61,10 +61,11 @@ export const VexflowScore = forwardRef<VexflowScoreHandle, VexflowScoreProps>(
           return;
         }
 
+        const width = 30;
         cursor.style.top = `${rect.top}px`;
-        cursor.style.left = `${rect.left}px`;
-        cursor.style.width = `${rect.width}px`;
-        cursor.style.height = `${rect.height}px`;
+        cursor.style.left = `${rect.right - width}px`;
+        cursor.style.width = `${width}px`;
+        cursor.style.height = "165px";
         cursor.style.visibility = "visible";
         staveIndexRef.current++;
         scoreIndexRef.current++;

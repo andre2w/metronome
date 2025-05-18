@@ -11,6 +11,8 @@ const noteLabel: Record<Note, string> = {
   KICK: "Kick",
   SNARE: "Snare",
   SNARE_X_STICK: "Snare cross-stick",
+  GHOST_SNARE: "Snare (Ghosted)",
+  ACCENTED_SNARE: "Snare (Accented)",
   TOM_1: "Tom 1",
   TOM_2: "Tom 2",
   TOM_3: "Tom 3",
@@ -18,7 +20,7 @@ const noteLabel: Record<Note, string> = {
   HIGH_HAT_OPEN: "High hat open",
   HIGH_HAT_PEDAL: "High hat pedal",
   CRASH: "Crash",
-  RIDE: "Ride",
+  RIDE: "Ride",  
 };
 
 export function Sheet() {

@@ -2,6 +2,8 @@ import {
   Annotation,
   Formatter,
   GhostNote,
+  ModifierPosition,
+  Parenthesis,
   type Renderer,
   Stave,
   StaveNote,
@@ -74,6 +76,13 @@ export function drawScore({ renderer, sheetWidth, score }: DrawScoreProps) {
         });
         if (bar.notes.includes("HIGH_HAT_OPEN")) {
           staveNote.addModifier(new Annotation("O"));
+        }
+        if (bar.notes.includes("GHOST_SNARE")) {
+          staveNote.addModifier(new Parenthesis(ModifierPosition.LEFT), 0);
+          staveNote.addModifier(new Parenthesis(ModifierPosition.RIGHT), 0);
+        }
+        if (bar.notes.includes("ACCENTED_SNARE")) {
+          staveNote.addModifier(new Annotation(">"));
         }
       } else {
         staveNote = new GhostNote({ duration });
