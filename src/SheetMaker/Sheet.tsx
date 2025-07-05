@@ -57,7 +57,8 @@ export function Sheet() {
               </StaveNoteBox>
             ))}
           </div>
-          {score.map((bar, staveIndex) => {
+          <div style={{ display: "flex", flexDirection: "row" }}>
+{score.map((bar, staveIndex) => {
             return (
               // biome-ignore lint/correctness/useJsxKeyInIterable: <explanation>
               <Stave
@@ -73,6 +74,8 @@ export function Sheet() {
               />
             );
           })}
+          </div>
+          
         </div>
       </div>
     </>

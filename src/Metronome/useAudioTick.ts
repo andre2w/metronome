@@ -12,18 +12,20 @@ export function useAudioTicks({ notes }: UseAudioTicksProps) {
 
   useEffect(() => {
     bigTick.current = new Audio("/metronome1Count.mp3");
+    bigTick.current.load();
+    
     smallTick.current = new Audio("/metronomeClick.mp3");
+    smallTick.current.load();
+    
   }, []);
 
   return {
     playNextTick: async () => {
       indexRef.current = nextInLoop(indexRef.current, notes);
 
-      if (indexRef.current === 0) {
-        bigTick.current?.load();
+      if (indexRef.current === 0) {        
         await bigTick.current?.play();
-      } else {
-        smallTick.current?.load();
+      } else {        
         await smallTick.current?.play();
       }
     },

@@ -20,8 +20,9 @@ export interface DrawScoreProps {
   renderer: Renderer;
   sheetWidth: number;
   score: Score;
+  index: number;
 }
-export function drawScore({ renderer, sheetWidth, score }: DrawScoreProps) {
+export function drawScore({ renderer, sheetWidth, score, index }: DrawScoreProps) {
   const positions = calculateWidthAndPosition({
     sheetWidth: sheetWidth - 40,
     staveCount: score.length,
@@ -38,14 +39,9 @@ export function drawScore({ renderer, sheetWidth, score }: DrawScoreProps) {
   renderer.resize(sheetWidth, height);
   const context = renderer.getContext();
   context.clear();
-  context.setFillStyle("var(--accent-9)");
-  context.setStrokeStyle("var(--accent-9)");
+  
   if (!score.length) {
     const stave = new Stave(0, 0, 0);
-    stave.setStyle({
-      fillStyle: "var(--accent-9)",
-      strokeStyle: "var(--accent-9)",
-    });
     stave.setContext(context).draw();
     Formatter.FormatAndDraw(context, stave, [], {
       autoBeam: true,
@@ -54,9 +50,10 @@ export function drawScore({ renderer, sheetWidth, score }: DrawScoreProps) {
     return;
   }
 
+  let currentIndex = 0;
   for (let i = 0; i < score.length; i++) {
     const position = positions[i];
-    const stave = new Stave(position.x, position.y, position.width);
+    const stave = new Stave(position.x, position.y, position.width);    
 
     if (i === 0) {
       stave.addClef("treble").addTimeSignature("4/4");
@@ -70,33 +67,48 @@ export function drawScore({ renderer, sheetWidth, score }: DrawScoreProps) {
       let staveNote: StemmableNote;
       if (bar?.notes?.length) {
         const keys = bar.notes.map((part) => NOTES[part]);
-        staveNote = new StaveNote({ keys, duration }).setStyle({
-          fillStyle: "var(--accent-9)",
-          strokeStyle: "var(--accent-9)",
-        });
+        staveNote = new StaveNote({ keys, duration });
+        
+        if (index === currentIndex) {
+          staveNote.setStyle({
+            fillStyle: "red",
+            strokeStyle: "red",
+          });  
+        }
+        
         if (bar.notes.includes("HIGH_HAT_OPEN")) {
-          staveNote.addModifier(new Annotation("O"));
+          staveNote.addModifier(new Annotation("O").setStyle({
+            fillStyle: "red",
+            strokeStyle: "red",
+          }));
         }
         if (bar.notes.includes("GHOST_SNARE")) {
           staveNote.addModifier(new Parenthesis(ModifierPosition.LEFT), 0);
           staveNote.addModifier(new Parenthesis(ModifierPosition.RIGHT), 0);
         }
         if (bar.notes.includes("ACCENTED_SNARE")) {
-          staveNote.addModifier(new Annotation(">"));
+          staveNote.addModifier(new Annotation(">").setStyle({
+            fillStyle: "red",
+            strokeStyle: "red",
+          }));
         }
       } else {
         staveNote = new GhostNote({ duration });
       }
       if (bar.sticking) {
-        staveNote.addModifier(new Annotation(bar.sticking));
+        staveNote.addModifier(new Annotation(bar.sticking).setStyle({
+            fillStyle: "red",
+            strokeStyle: "red",
+          }));
       }
+      currentIndex++;
       notes.push(staveNote);
     }
 
     stave.setContext(context).draw();
     Formatter.FormatAndDraw(context, stave, notes, {
       autoBeam: true,
-      alignRests: true,
+      alignRests: true,      
     });
   }
 }

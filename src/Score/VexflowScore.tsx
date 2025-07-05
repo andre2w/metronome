@@ -17,11 +17,12 @@ export interface VexflowScoreHandle {
 
 export const VexflowScore = forwardRef<VexflowScoreHandle, VexflowScoreProps>(
   ({ score }, ref) => {
-    const scoreRef = useRef<HTMLDivElement>(null);
+    const scoreRef = useRef<HTMLCanvasElement>(null);
+    const boxRef = useRef<HTMLDivElement>(null);
     const cursorRef = useRef<HTMLImageElement>(null);
     const rendererRef = useRef<Renderer | undefined>();
     const scoreSize = useResizeObserver({
-      ref: scoreRef,
+      ref: boxRef,
     });
     const scoreIndexRef = useRef(0);
     const staveIndexRef = useRef(0);
@@ -30,6 +31,27 @@ export const VexflowScore = forwardRef<VexflowScoreHandle, VexflowScoreProps>(
 
     useImperativeHandle(ref, () => ({
       next: () => {
+        if (!scoreRef.current) {
+          return;
+        }
+
+        if (!rendererRef.current) {
+          rendererRef.current = new Renderer(
+            scoreRef.current,
+            Renderer.Backends.CANVAS,
+          );
+        }
+
+        if (scoreIndexRef.current >= flatScore.length) {
+          scoreIndexRef.current = 0;
+        }
+
+        const element = scoreRef.current;
+        const sheetWidth = scoreSize.width ?? element.getBoundingClientRect().width;
+        const renderer = rendererRef.current;
+        drawScore({ renderer, score, sheetWidth, index: scoreIndexRef.current });
+        scoreIndexRef.current++;
+
         const cursor = cursorRef.current;
         const staves = stavesRef.current;
         if (!cursor) {
@@ -94,38 +116,33 @@ export const VexflowScore = forwardRef<VexflowScoreHandle, VexflowScoreProps>(
       if (!rendererRef.current) {
         rendererRef.current = new Renderer(
           scoreRef.current,
-          Renderer.Backends.SVG,
+          Renderer.Backends.CANVAS,
         );
       }
 
+      if (boxRef.current) {
+        const boxElement = boxRef.current.getBoundingClientRect();
+        scoreRef.current.width = boxElement.width;
+        scoreRef.current.height = boxElement.height;
+      }
+
       const element = scoreRef.current;
+      
       const sheetWidth =
         scoreSize.width ?? element.getBoundingClientRect().width;
       const renderer = rendererRef.current;
 
-      drawScore({ renderer, score, sheetWidth });
+      drawScore({ renderer, score, sheetWidth, index: -1 });
       stavesRef.current =
         document.querySelectorAll<HTMLElement>(".vf-stavenote");
     }, [score, scoreSize.width]);
 
     return (
-      <div style={{ marginTop: "10px" }} ref={scoreRef}>
-        <img
-          ref={cursorRef}
-          alt="cursor"
-          id="cursor"
-          src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABUAAAABCAYAAAAxUOUbAAAAAXNSR0IArs4c6QAAAC5JREFUGFdjfPr7acOFH+cYQPj8r4sM937dYSAVKLGpMBiy6TMYcJgwGHAYMAAAGFUPRw5ILS0AAAAASUVORK5CYII="
-          width="21"
-          height="300"
-          style={{
-            position: "absolute",
-            zIndex: -1,
-            top: 0,
-            right: 0,
-            visibility: "hidden",
-          }}
-        />
+      <div ref={boxRef}>
+        <canvas ref={scoreRef} />
       </div>
+      
+
     );
   },
 );

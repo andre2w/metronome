@@ -19,8 +19,8 @@
 
 .parts {
   align-self: flex-end;
-  position: sticky;
-  left: 0;
+  /* position: sticky; */
+  /* left: 0; */
   background-color: var(--color-background);
   margin-right: var(--space-2);
 }

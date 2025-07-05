@@ -1,5 +1,6 @@
 import { Flex, Theme, type ThemeProps } from "@radix-ui/themes";
 import { useLocalStorage } from "usehooks-ts";
+import "./App.css";
 import { InputConfiguration } from "./InputConfiguration/InputConfiguration";
 import { InputConfigurationProvider } from "./InputConfiguration/InputConfigurationContext";
 import { Metronome } from "./Metronome";
@@ -21,7 +22,15 @@ function App() {
     <Theme accentColor={accentColor} appearance={appearance}>
       <InputConfigurationProvider>
         <ScoreContextProvider>
-          <Flex
+          <div className="container">                        
+            <div className="header-left"><InputConfiguration /></div>            
+            <div className="header-right"><ThemePicker
+                accentColor={accentColor}
+                appearance={appearance}
+                onChange={setThemePreferences}
+              /></div>
+            <div className="grid-main">            
+              <Flex
             direction="column"
             style={{
               marginLeft: "50px",
@@ -30,18 +39,14 @@ function App() {
             }}
             gap="7"
           >
-            <Flex align="end" gap="3">
-              <InputConfiguration />
-              <MetronomeConfiguration />
-              <ThemePicker
-                accentColor={accentColor}
-                appearance={appearance}
-                onChange={setThemePreferences}
-              />
-            </Flex>
+            
             <Metronome />
+            <MetronomeConfiguration />              
             <Sheet />
           </Flex>
+              </div>
+          </div>
+          
         </ScoreContextProvider>
       </InputConfigurationProvider>
     </Theme>
