@@ -22,6 +22,7 @@ export interface DrawScoreProps {
   score: Score;
   index: number;
 }
+
 export function drawScore({ renderer, sheetWidth, score, index }: DrawScoreProps) {
   const positions = calculateWidthAndPosition({
     sheetWidth: sheetWidth - 40,
@@ -53,7 +54,7 @@ export function drawScore({ renderer, sheetWidth, score, index }: DrawScoreProps
   let currentIndex = 0;
   for (let i = 0; i < score.length; i++) {
     const position = positions[i];
-    const stave = new Stave(position.x, position.y, position.width);    
+    const stave = new Stave(position.x, position.y, position.width);
 
     if (i === 0) {
       stave.addClef("treble").addTimeSignature("4/4");
@@ -63,43 +64,61 @@ export function drawScore({ renderer, sheetWidth, score, index }: DrawScoreProps
 
     const notes = [];
     const duration = String(bars.length);
+    
     for (const bar of bars) {
       let staveNote: StemmableNote;
+      const isHighlighted = index === currentIndex;
       if (bar?.notes?.length) {
         const keys = bar.notes.map((part) => NOTES[part]);
         staveNote = new StaveNote({ keys, duration });
         
-        if (index === currentIndex) {
+        if (isHighlighted) {
           staveNote.setStyle({
             fillStyle: "red",
             strokeStyle: "red",
-          });  
+          });
         }
         
         if (bar.notes.includes("HIGH_HAT_OPEN")) {
-          staveNote.addModifier(new Annotation("O").setStyle({
-            fillStyle: "red",
-            strokeStyle: "red",
-          }));
+          const annotation = new Annotation("O");
+          
+          if (isHighlighted) {
+            annotation.setStyle({
+              fillStyle: "red",
+              strokeStyle: "red",
+            });
+          }
+
+          staveNote.addModifier(annotation);
         }
         if (bar.notes.includes("GHOST_SNARE")) {
           staveNote.addModifier(new Parenthesis(ModifierPosition.LEFT), 0);
           staveNote.addModifier(new Parenthesis(ModifierPosition.RIGHT), 0);
         }
         if (bar.notes.includes("ACCENTED_SNARE")) {
-          staveNote.addModifier(new Annotation(">").setStyle({
-            fillStyle: "red",
-            strokeStyle: "red",
-          }));
+          const annotation = new Annotation(">");
+
+          if (isHighlighted) {
+            annotation.setStyle({
+              fillStyle: "red",
+              strokeStyle: "red",
+            });
+          }
+
+          staveNote.addModifier(annotation);
         }
       } else {
         staveNote = new GhostNote({ duration });
       }
       if (bar.sticking) {
-        staveNote.addModifier(new Annotation(bar.sticking).setStyle({
+        const annotation = new Annotation(bar.sticking);
+        if (isHighlighted) {
+          annotation.setStyle({
             fillStyle: "red",
             strokeStyle: "red",
-          }));
+          });
+        }
+        staveNote.addModifier(annotation);
       }
       currentIndex++;
       notes.push(staveNote);

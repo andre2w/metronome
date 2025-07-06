@@ -22,31 +22,31 @@ function App() {
     <Theme accentColor={accentColor} appearance={appearance}>
       <InputConfigurationProvider>
         <ScoreContextProvider>
-          <div className="container">                        
-            <div className="header-left"><InputConfiguration /></div>            
-            <div className="header-right"><ThemePicker
+          <div className="container">
+            <Flex className="navbar" justify="between" align="center">
+              <InputConfiguration />
+              <ThemePicker
                 accentColor={accentColor}
                 appearance={appearance}
                 onChange={setThemePreferences}
-              /></div>
-            <div className="grid-main">            
+              />
+            </Flex>
+            <div className="grid-main">
               <Flex
-            direction="column"
-            style={{
-              marginLeft: "50px",
-              marginRight: "50px",
-              marginBottom: "10px",
-            }}
-            gap="7"
-          >
-            
-            <Metronome />
-            <MetronomeConfiguration />              
-            <Sheet />
-          </Flex>
-              </div>
+                direction="column"
+                style={{
+                  marginLeft: "50px",
+                  marginRight: "50px",
+                  marginBottom: "10px",
+                }}
+                gap="7"
+              >
+                <Metronome />
+                <MetronomeConfiguration />
+                <Sheet />
+              </Flex>
+            </div>
           </div>
-          
         </ScoreContextProvider>
       </InputConfigurationProvider>
     </Theme>

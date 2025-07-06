@@ -58,22 +58,22 @@ export function Sheet() {
             ))}
           </div>
           <div style={{ display: "flex", flexDirection: "row" }}>
-{score.map((bar, staveIndex) => {
-            return (
-              // biome-ignore lint/correctness/useJsxKeyInIterable: <explanation>
-              <Stave
-                bar={bar}
-                index={staveIndex}
-                onSelectNote={(staveNoteIndex, note) => {
-                  toggleNote({ staveIndex, staveNoteIndex, note });
-                }}
-                onRemoveStave={() => removeStave(staveIndex)}
-                onSetStickings={(staveNoteIndex, sticking) => {
-                  setSticking({ staveIndex, staveNoteIndex, sticking });
-                }}
-              />
-            );
-          })}
+            {score.map((bar, staveIndex) => {
+              return (
+                // biome-ignore lint/correctness/useJsxKeyInIterable: <explanation>
+                <Stave
+                  bar={bar}
+                  index={staveIndex}
+                  onSelectNote={(staveNoteIndex, note) => {
+                    toggleNote({ staveIndex, staveNoteIndex, note });
+                  }}
+                  onRemoveStave={() => removeStave(staveIndex)}
+                  onSetStickings={(staveNoteIndex, sticking) => {
+                    setSticking({ staveIndex, staveNoteIndex, sticking });
+                  }}
+                />
+              );
+            })}
           </div>
           
         </div>

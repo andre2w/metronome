@@ -25,9 +25,7 @@ export const VexflowScore = forwardRef<VexflowScoreHandle, VexflowScoreProps>(
       ref: boxRef,
     });
     const scoreIndexRef = useRef(0);
-    const staveIndexRef = useRef(0);
     const flatScore = score.flat().map((n) => n.notes);
-    const stavesRef = useRef<NodeListOf<HTMLElement> | undefined>();
 
     useImperativeHandle(ref, () => ({
       next: () => {
@@ -51,46 +49,6 @@ export const VexflowScore = forwardRef<VexflowScoreHandle, VexflowScoreProps>(
         const renderer = rendererRef.current;
         drawScore({ renderer, score, sheetWidth, index: scoreIndexRef.current });
         scoreIndexRef.current++;
-
-        const cursor = cursorRef.current;
-        const staves = stavesRef.current;
-        if (!cursor) {
-          return;
-        }
-
-        if (!staves || !staves.length) {
-          return;
-        }
-
-        if (staveIndexRef.current >= (staves.length ?? 0)) {
-          staveIndexRef.current = 0;
-        }
-
-        if (scoreIndexRef.current >= flatScore.length) {
-          scoreIndexRef.current = 0;
-        }
-
-        if (!flatScore.at(scoreIndexRef.current)?.length) {
-          cursor.style.visibility = "hidden";
-          scoreIndexRef.current++;
-          return;
-        }
-
-        const rect = staves
-          .item(staveIndexRef.current)
-          ?.getBoundingClientRect();
-        if (!rect) {
-          return;
-        }
-
-        const width = 30;
-        cursor.style.top = `${rect.top}px`;
-        cursor.style.left = `${rect.right - width}px`;
-        cursor.style.width = `${width}px`;
-        cursor.style.height = "165px";
-        cursor.style.visibility = "visible";
-        staveIndexRef.current++;
-        scoreIndexRef.current++;
       },
       hideCursor: () => {
         if (cursorRef.current) {
@@ -103,8 +61,7 @@ export const VexflowScore = forwardRef<VexflowScoreHandle, VexflowScoreProps>(
         }
       },
       reset: () => {
-        scoreIndexRef.current = 0;
-        staveIndexRef.current = 0;
+        scoreIndexRef.current = 0;        
       },
     }));
 
@@ -133,16 +90,13 @@ export const VexflowScore = forwardRef<VexflowScoreHandle, VexflowScoreProps>(
       const renderer = rendererRef.current;
 
       drawScore({ renderer, score, sheetWidth, index: -1 });
-      stavesRef.current =
-        document.querySelectorAll<HTMLElement>(".vf-stavenote");
+      
     }, [score, scoreSize.width]);
 
     return (
       <div ref={boxRef}>
         <canvas ref={scoreRef} />
       </div>
-      
-
     );
   },
 );

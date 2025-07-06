@@ -1,5 +1,5 @@
 import "./Metronome.css";
-import { Button } from "@radix-ui/themes";
+import { Button, Flex } from "@radix-ui/themes";
 import { useEffect, useRef, useState } from "react";
 import { useScoreContext } from "../Score/ScoreProvider";
 import { VexflowScore, type VexflowScoreHandle } from "../Score/VexflowScore";
@@ -7,7 +7,8 @@ import { calculateBeatTime } from "../lib/beat-time";
 import { calculateResult } from "../lib/result-calculator";
 import type { Ticks } from "../lib/types";
 import { Result, type ResultProps } from "./Result";
-import { Ticks as TicksComponent, type TicksHandle } from "./components/Ticks";
+import { Timer } from "./Timer";
+import type { TicksHandle } from "./components/Ticks";
 import { useAudioTicks } from "./useAudioTick";
 import { useInputListener } from "./useInputListener";
 
@@ -30,10 +31,10 @@ export function Metronome({ className }: MetronomeProps) {
   const { getPlayedNotes, resetPlayedNotes } = useInputListener();
 
   const tick = async () => {
-    tickSymbolsRef.current?.next();
-    playNextAudioTick();
+    tickSymbolsRef.current?.next();    
     ticksRef.current.push(performance.now());
     vexflowScoreRef.current?.next();
+    playNextAudioTick();
   };
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: Need to fix this later
@@ -84,13 +85,12 @@ export function Metronome({ className }: MetronomeProps) {
   return (
     <>
       <div className={className}>
-        <Button
-          onClick={() => toggle()}
-          style={{ marginBottom: "var(--space-2)" }}
-        >
-          {started ? "STOP" : "START"}
-        </Button>
-        <TicksComponent ref={tickSymbolsRef} notes={configuration.signature} />
+        {/* style={{ marginBottom: "var(--space-2)" }} */}
+        <Flex justify="between">
+          <Button onClick={() => toggle()}>{started ? "STOP" : "START"}</Button>
+          <Timer started={started} />
+        </Flex>
+
         {result && <Result right={result.right} missed={result.missed} />}
       </div>
       <VexflowScore score={score} ref={vexflowScoreRef} />
