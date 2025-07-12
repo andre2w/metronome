@@ -45,9 +45,15 @@ export const VexflowScore = forwardRef<VexflowScoreHandle, VexflowScoreProps>(
         }
 
         const element = scoreRef.current;
-        const sheetWidth = scoreSize.width ?? element.getBoundingClientRect().width;
+        const sheetWidth =
+          scoreSize.width ?? element.getBoundingClientRect().width;
         const renderer = rendererRef.current;
-        drawScore({ renderer, score, sheetWidth, index: scoreIndexRef.current });
+        drawScore({
+          renderer,
+          score,
+          sheetWidth,
+          index: scoreIndexRef.current,
+        });
         scoreIndexRef.current++;
       },
       hideCursor: () => {
@@ -61,7 +67,7 @@ export const VexflowScore = forwardRef<VexflowScoreHandle, VexflowScoreProps>(
         }
       },
       reset: () => {
-        scoreIndexRef.current = 0;        
+        scoreIndexRef.current = 0;
       },
     }));
 
@@ -84,13 +90,12 @@ export const VexflowScore = forwardRef<VexflowScoreHandle, VexflowScoreProps>(
       }
 
       const element = scoreRef.current;
-      
+
       const sheetWidth =
         scoreSize.width ?? element.getBoundingClientRect().width;
       const renderer = rendererRef.current;
 
       drawScore({ renderer, score, sheetWidth, index: -1 });
-      
     }, [score, scoreSize.width]);
 
     return (

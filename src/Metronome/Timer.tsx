@@ -11,14 +11,21 @@ export function Timer({ started }: TimerProps) {
     setElapsed(0);
   }
 
-  useInterval(() => {
-    setElapsed(elapsed => elapsed + 1);
-  }, started ? 1000 : null);
+  useInterval(
+    () => {
+      setElapsed((elapsed) => elapsed + 1);
+    },
+    started ? 1000 : null,
+  );
 
-  const minutes = elapsed > 60 ?  elapsed / 60 : 0;
+  const minutes = elapsed > 60 ? elapsed / 60 : 0;
   const seconds = elapsed > 60 ? elapsed % 60 : elapsed;
 
-  return <div>{formatToDoubleDigits(minutes)}:{formatToDoubleDigits(seconds)}</div>
+  return (
+    <div>
+      {formatToDoubleDigits(minutes)}:{formatToDoubleDigits(seconds)}
+    </div>
+  );
 }
 
 function formatToDoubleDigits(time: number) {

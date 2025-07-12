@@ -23,7 +23,12 @@ export interface DrawScoreProps {
   index: number;
 }
 
-export function drawScore({ renderer, sheetWidth, score, index }: DrawScoreProps) {
+export function drawScore({
+  renderer,
+  sheetWidth,
+  score,
+  index,
+}: DrawScoreProps) {
   const positions = calculateWidthAndPosition({
     sheetWidth: sheetWidth - 40,
     staveCount: score.length,
@@ -40,7 +45,7 @@ export function drawScore({ renderer, sheetWidth, score, index }: DrawScoreProps
   renderer.resize(sheetWidth, height);
   const context = renderer.getContext();
   context.clear();
-  
+
   if (!score.length) {
     const stave = new Stave(0, 0, 0);
     stave.setContext(context).draw();
@@ -64,24 +69,24 @@ export function drawScore({ renderer, sheetWidth, score, index }: DrawScoreProps
 
     const notes = [];
     const duration = String(bars.length);
-    
+
     for (const bar of bars) {
       let staveNote: StemmableNote;
       const isHighlighted = index === currentIndex;
       if (bar?.notes?.length) {
         const keys = bar.notes.map((part) => NOTES[part]);
         staveNote = new StaveNote({ keys, duration });
-        
+
         if (isHighlighted) {
           staveNote.setStyle({
             fillStyle: "red",
             strokeStyle: "red",
           });
         }
-        
+
         if (bar.notes.includes("HIGH_HAT_OPEN")) {
           const annotation = new Annotation("O");
-          
+
           if (isHighlighted) {
             annotation.setStyle({
               fillStyle: "red",
@@ -127,7 +132,7 @@ export function drawScore({ renderer, sheetWidth, score, index }: DrawScoreProps
     stave.setContext(context).draw();
     Formatter.FormatAndDraw(context, stave, notes, {
       autoBeam: true,
-      alignRests: true,      
+      alignRests: true,
     });
   }
 }

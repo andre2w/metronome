@@ -25,13 +25,14 @@ export function Metronome({ className }: MetronomeProps) {
   const { score, configuration } = useScoreContext();
   const intervalRef = useRef<ReturnType<typeof setInterval> | undefined>();
   const tickSymbolsRef = useRef<TicksHandle | null>(null);
-  const { playNextTick: playNextAudioTick, reset: resetAudioTicks } = useAudioTicks({
-    notes: configuration.signature,
-  });
+  const { playNextTick: playNextAudioTick, reset: resetAudioTicks } =
+    useAudioTicks({
+      notes: configuration.signature,
+    });
   const { getPlayedNotes, resetPlayedNotes } = useInputListener();
 
   const tick = async () => {
-    tickSymbolsRef.current?.next();    
+    tickSymbolsRef.current?.next();
     ticksRef.current.push(performance.now());
     vexflowScoreRef.current?.next();
     playNextAudioTick();

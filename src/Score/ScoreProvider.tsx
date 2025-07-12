@@ -35,7 +35,9 @@ export interface ScoreContextValue {
   }) => void;
   loadScore: (score: FullScore) => void;
   configuration: MetronomeConfigurationProps & { id?: number; name?: string };
-  onChangeConfiguration: (configuration: MetronomeConfigurationProps & { name?: string }) => void;
+  onChangeConfiguration: (
+    configuration: MetronomeConfigurationProps & { name?: string },
+  ) => void;
   clear: () => void;
 }
 const ScoreContext = createContext<ScoreContextValue>({

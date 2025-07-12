@@ -20,7 +20,7 @@ const noteLabel: Record<Note, string> = {
   HIGH_HAT_OPEN: "High hat open",
   HIGH_HAT_PEDAL: "High hat pedal",
   CRASH: "Crash",
-  RIDE: "Ride",  
+  RIDE: "Ride",
 };
 
 export function Sheet() {
@@ -75,7 +75,6 @@ export function Sheet() {
               );
             })}
           </div>
-          
         </div>
       </div>
     </>

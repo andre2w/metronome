@@ -22,10 +22,10 @@ export function MetronomeConfiguration() {
               ...configuration,
               name: e.target.value,
             })
-          } 
+          }
         />
       </Flex>
-      <Flex direction="column">        
+      <Flex direction="column">
         <Text>Notes</Text>
         <Select.Root
           value={String(configuration.signature)}
