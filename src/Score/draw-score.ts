@@ -24,6 +24,10 @@ export interface DrawScoreProps {
   sheetWidth: number;
   score: Score;
   index: number;
+  colors: {
+    background: "light" | "dark";
+    accent?: string;
+  }
 }
 
 export function drawScore({
@@ -31,6 +35,7 @@ export function drawScore({
   sheetWidth,
   score,
   index,
+  colors: { accent, background }
 }: DrawScoreProps) {
   const positions = calculateWidthAndPosition({
     sheetWidth: sheetWidth - 40,
@@ -49,6 +54,21 @@ export function drawScore({
   const context = renderer.getContext();
   context.clear();
 
+  if (background === "light") {
+    context.fillStyle = "black";
+    context.strokeStyle = "black";
+    context.setStrokeStyle("black");
+    // context.setBackgroundFillStyle("black");
+    // context.setFillStyle("white");
+  } else {
+    context.fillStyle = "white";
+    // context.setBackgroundFillStyle("white");
+    // context.setFillStyle("black");   
+    context.strokeStyle = "white";
+    context.setStrokeStyle("white");
+  }
+  
+
   if (!score.length) {
     const stave = new Stave(0, 0, 0);
     stave.setContext(context).draw();
@@ -61,9 +81,6 @@ export function drawScore({
 
   let currentIndex = 0;
   
-  const staves: Stave[] = [];
-  const voices: Voice[] = [];
-
   for (let i = 0; i < score.length; i++) {
     const position = positions[i];
     const stave = new Stave(position.x, position.y, position.width);
@@ -84,23 +101,12 @@ export function drawScore({
       if (bar?.notes?.length) {
         const keys = bar.notes.map((part) => NOTES[part]);
         staveNote = new StaveNote({ keys, duration });
-
-        // if (isHighlighted) {
-        //   staveNote.setStyle({
-        //     fillStyle: "red",
-        //     strokeStyle: "red",
-        //   });
-        // }
+        if (background === "dark") {
+          staveNote.setStyle({ strokeStyle: "white" });
+        }
 
         if (bar.notes.includes("HIGH_HAT_OPEN")) {
           const annotation = new Annotation("O");
-
-          // if (isHighlighted) {
-          //   annotation.setStyle({
-          //     fillStyle: "red",
-          //     strokeStyle: "red",
-          //   });
-          // }
 
           staveNote.addModifier(annotation);
         }
@@ -111,13 +117,6 @@ export function drawScore({
         if (bar.notes.includes("ACCENTED_SNARE")) {
           const annotation = new Annotation(">");
 
-          // if (isHighlighted) {
-          //   annotation.setStyle({
-          //     fillStyle: "red",
-          //     strokeStyle: "red",
-          //   });
-          // }
-
           staveNote.addModifier(annotation);
         }
       } else {
@@ -125,22 +124,17 @@ export function drawScore({
       }
       if (bar.sticking) {
         const annotation = new Annotation(bar.sticking);
-        // if (isHighlighted) {
-        //   annotation.setStyle({
-        //     fillStyle: "red",
-        //     strokeStyle: "red",
-        //   });
-        // }
+
         staveNote.addModifier(annotation);
       }      
       notes.push(staveNote);
     }
 
-    staves.push(stave);    
-    const voice = new Voice({ numBeats: 4, beatValue: 4, resolution: RESOLUTION }).setMode(Voice.Mode.FULL).addTickables(notes);
-    voice.setContext(context);
-    voice.setStave(stave);
-    voices.push(voice);
+    const voice = new Voice({ numBeats: 4, beatValue: 4, resolution: RESOLUTION })
+      .setMode(Voice.Mode.FULL)
+      .addTickables(notes)
+      .setContext(context)
+      .setStave(stave);
 
     const formatter = new Formatter().joinVoices([voice]);
     const beams = Beam.applyAndGetBeams(voice, 1);
@@ -149,28 +143,10 @@ export function drawScore({
     
     for (const tickable of voice.getTickables()) {
       if (currentIndex === index) {
-        console.log({ 
-          tick: {
-            absoluteX: tickable.getAbsoluteX(),
-            x: tickable.getX(),
-            xShift: tickable.getXShift(),
-            width: tickable.getWidth(),
-            height: tickable.getHeight(),
-            y: tickable.getY(),
-          },
-          stave: {
-            y: stave.getY(),
-            boundingBox: stave.getBoundingBox(),
-          }
-        });
-        console.log({
-          x: tickable.getAbsoluteX(), y: stave.getY(), width: tickable.getWidth(), height: stave.getHeight()
-        });
         const originalFillStyle = context.fillStyle;
-        context.fillStyle = ("rgba(88, 176, 51, 0.5)")
+        context.fillStyle = accent ?? ("rgba(88, 176, 51, 0.5)")
         context.fillRect(tickable.getAbsoluteX(), stave.getY(), tickable.getWidth(), stave.getHeight());
         context.fillStyle = originalFillStyle;
-
       }
       currentIndex++;
     }      

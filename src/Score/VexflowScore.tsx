@@ -1,6 +1,8 @@
+import { useThemeContext } from "@radix-ui/themes";
 import { forwardRef, useEffect, useImperativeHandle, useRef } from "react";
 import { useResizeObserver } from "usehooks-ts";
 import { Renderer } from "vexflow";
+import { hexColorToRGB } from "../lib/color";
 import type { Score } from "../lib/types";
 import { drawScore } from "./draw-score";
 
@@ -23,7 +25,18 @@ export const VexflowScore = forwardRef<VexflowScoreHandle, VexflowScoreProps>(
     });
     const scoreIndexRef = useRef(0);
     const flatScore = score.flat().map((n) => n.notes);
+    const colorRef = useRef<string | undefined>();
+    const { accentColor, appearance } = useThemeContext();
 
+    // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+    useEffect(() => {
+      if (boxRef.current) {
+        const selectedColor = getComputedStyle(boxRef.current).getPropertyValue("--accent-9");         
+        colorRef.current = hexColorToRGB(selectedColor, 0.6);
+      }
+
+    }, [accentColor]);
+  
     useImperativeHandle(ref, () => ({
       next: () => {
         if (!scoreRef.current) {
@@ -50,6 +63,8 @@ export const VexflowScore = forwardRef<VexflowScoreHandle, VexflowScoreProps>(
           score,
           sheetWidth,
           index: scoreIndexRef.current,
+          color: colorRef.current,
+          colors: { accent: colorRef.current, background: appearance === "inherit" ? "light" : appearance }  
         });
         scoreIndexRef.current++;
       },
@@ -74,6 +89,8 @@ export const VexflowScore = forwardRef<VexflowScoreHandle, VexflowScoreProps>(
         const boxElement = boxRef.current.getBoundingClientRect();
         scoreRef.current.width = boxElement.width;
         scoreRef.current.height = boxElement.height;
+        const selectedColor = getComputedStyle(boxRef.current).getPropertyValue("--accent-9");         
+        colorRef.current = hexColorToRGB(selectedColor, 0.6);
       }
 
       const element = scoreRef.current;
@@ -82,8 +99,8 @@ export const VexflowScore = forwardRef<VexflowScoreHandle, VexflowScoreProps>(
         scoreSize.width ?? element.getBoundingClientRect().width;
       const renderer = rendererRef.current;
 
-      drawScore({ renderer, score, sheetWidth, index: -1 });
-    }, [score, scoreSize.width]);
+      drawScore({ renderer, score, sheetWidth, index: -1, colors: { accent: colorRef.current, background: appearance === "inherit" ? "light" : appearance }  });
+    }, [score, scoreSize.width, appearance]);
 
     return (
       <div ref={boxRef}>

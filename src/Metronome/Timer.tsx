@@ -18,8 +18,8 @@ export function Timer({ started }: TimerProps) {
     started ? 1000 : null,
   );
 
-  const minutes = elapsed > 60 ? elapsed / 60 : 0;
-  const seconds = elapsed > 60 ? elapsed % 60 : elapsed;
+  const minutes = Math.ceil(elapsed > 60 ? elapsed / 60 : 0);
+  const seconds = Math.ceil(elapsed > 60 ? elapsed % 60 : elapsed);
 
   return (
     <div>
@@ -29,5 +29,6 @@ export function Timer({ started }: TimerProps) {
 }
 
 function formatToDoubleDigits(time: number) {
-  return time >= 10 ? `${time}` : `0${time}`;
+  
+  return (time >= 10 ? `${time}` : `0${time}`);
 }
