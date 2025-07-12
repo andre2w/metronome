@@ -57,15 +57,9 @@ export function drawScore({
   if (background === "light") {
     context.fillStyle = "black";
     context.strokeStyle = "black";
-    context.setStrokeStyle("black");
-    // context.setBackgroundFillStyle("black");
-    // context.setFillStyle("white");
   } else {
     context.fillStyle = "white";
-    // context.setBackgroundFillStyle("white");
-    // context.setFillStyle("black");   
     context.strokeStyle = "white";
-    context.setStrokeStyle("white");
   }
   
 
