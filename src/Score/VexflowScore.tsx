@@ -10,8 +10,6 @@ export interface VexflowScoreProps {
 
 export interface VexflowScoreHandle {
   next: () => void;
-  showCursor: () => void;
-  hideCursor: () => void;
   reset: () => void;
 }
 
@@ -19,7 +17,6 @@ export const VexflowScore = forwardRef<VexflowScoreHandle, VexflowScoreProps>(
   ({ score }, ref) => {
     const scoreRef = useRef<HTMLCanvasElement>(null);
     const boxRef = useRef<HTMLDivElement>(null);
-    const cursorRef = useRef<HTMLImageElement>(null);
     const rendererRef = useRef<Renderer | undefined>();
     const scoreSize = useResizeObserver({
       ref: boxRef,
@@ -55,16 +52,6 @@ export const VexflowScore = forwardRef<VexflowScoreHandle, VexflowScoreProps>(
           index: scoreIndexRef.current,
         });
         scoreIndexRef.current++;
-      },
-      hideCursor: () => {
-        if (cursorRef.current) {
-          cursorRef.current.style.visibility = "hidden";
-        }
-      },
-      showCursor: () => {
-        if (cursorRef.current) {
-          cursorRef.current.style.visibility = "visible";
-        }
       },
       reset: () => {
         scoreIndexRef.current = 0;

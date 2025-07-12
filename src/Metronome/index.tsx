@@ -49,13 +49,10 @@ export function Metronome({ className }: MetronomeProps) {
       intervalRef.current = undefined;
     }
     if (started) {
-      vexflowScoreRef.current?.showCursor();
       tick();
-
       intervalRef.current = setInterval(tick, beatTime);
     } else {
       tickSymbolsRef.current?.clear();
-      vexflowScoreRef.current?.hideCursor();
       resetAudioTicks();
       vexflowScoreRef.current?.reset();
     }
