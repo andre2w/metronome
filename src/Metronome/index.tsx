@@ -1,6 +1,6 @@
 import "./Metronome.css";
 import { Button, Flex } from "@radix-ui/themes";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { useScoreContext } from "../Score/ScoreProvider";
 import { VexflowScore, type VexflowScoreHandle } from "../Score/VexflowScore";
 import { calculateBeatTime } from "../lib/beat-time";
@@ -11,6 +11,8 @@ import { Timer } from "./Timer";
 import type { TicksHandle } from "./components/Ticks";
 import { useAudioTicks } from "./useAudioTick";
 import { useInputListener } from "./useInputListener";
+import { start } from "tone";
+import { useInterval } from "usehooks-ts";
 
 export interface MetronomeProps {
   className?: string;
@@ -22,43 +24,30 @@ export function Metronome({ className }: MetronomeProps) {
   const vexflowScoreRef = useRef<VexflowScoreHandle>(null);
   const ticksRef = useRef<Ticks>([]);
   const [result, setResult] = useState<ResultProps | undefined>(undefined);
-  const { score, configuration } = useScoreContext();
-  const intervalRef = useRef<ReturnType<typeof setInterval> | undefined>();
+  const { score, configuration } = useScoreContext();  
   const tickSymbolsRef = useRef<TicksHandle | null>(null);
   const { playNextTick: playNextAudioTick, reset: resetAudioTicks } =
-    useAudioTicks({
-      notes: configuration.signature,
-    });
+    useAudioTicks({ notes: configuration.signature });
   const { getPlayedNotes, resetPlayedNotes } = useInputListener();
 
   const tick = async () => {
     tickSymbolsRef.current?.next();
     ticksRef.current.push(performance.now());
     vexflowScoreRef.current?.next();
-    playNextAudioTick();
+    await playNextAudioTick();
   };
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: Need to fix this later
-  useEffect(() => {
-    const { signature: notes, bpm: beats } = configuration;
-    const beatTime = calculateBeatTime(beats, notes);
-    const oldInterval = intervalRef.current;
+  const { signature: notes, bpm: beats } = configuration;
+  const beatTime = calculateBeatTime(beats, notes);
+  
 
-    if (oldInterval) {
-      clearInterval(oldInterval);
-      intervalRef.current = undefined;
-    }
-    if (started) {
-      tick();
-      intervalRef.current = setInterval(tick, beatTime);
-    } else {
-      tickSymbolsRef.current?.clear();
-      resetAudioTicks();
-      vexflowScoreRef.current?.reset();
-    }
-  }, [started, configuration, score]);
+  // biome-ignore lint/correctness/useExhaustiveDependencies: Need to fix this later
+  useInterval(() => {
+    tick();
+  }, started ? beatTime : null); 
 
   const toggle = () => {
+    start();
     if (started) {
       setResult(
         calculateResult({

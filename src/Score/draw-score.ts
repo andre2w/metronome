@@ -63,7 +63,7 @@ export function drawScore({
   }
   
 
-  if (!score.length) {
+  if (!score.length) {  
     const stave = new Stave(0, 0, 0);
     stave.setContext(context).draw();
     Formatter.FormatAndDraw(context, stave, [], {
@@ -137,7 +137,7 @@ export function drawScore({
     
     for (const tickable of voice.getTickables()) {
       if (currentIndex === index) {
-        const originalFillStyle = context.fillStyle;
+        const originalFillStyle: typeof context["fillStyle"] = context.fillStyle;
         context.fillStyle = accent ?? ("rgba(88, 176, 51, 0.5)")
         context.fillRect(tickable.getAbsoluteX(), stave.getY(), tickable.getWidth(), stave.getHeight());
         context.fillStyle = originalFillStyle;

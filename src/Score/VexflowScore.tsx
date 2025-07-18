@@ -63,7 +63,6 @@ export const VexflowScore = forwardRef<VexflowScoreHandle, VexflowScoreProps>(
           score,
           sheetWidth,
           index: scoreIndexRef.current,
-          color: colorRef.current,
           colors: { accent: colorRef.current, background: appearance === "inherit" ? "light" : appearance }  
         });
         scoreIndexRef.current++;
