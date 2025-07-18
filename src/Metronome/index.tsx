@@ -31,10 +31,11 @@ export function Metronome({ className }: MetronomeProps) {
   const { getPlayedNotes, resetPlayedNotes } = useInputListener();
 
   const tick = async () => {
+    await playNextAudioTick();
     tickSymbolsRef.current?.next();
     ticksRef.current.push(performance.now());
     vexflowScoreRef.current?.next();
-    await playNextAudioTick();
+    
   };
 
   const { signature: notes, bpm: beats } = configuration;
