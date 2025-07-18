@@ -1,5 +1,4 @@
 import { Button, Select } from "@radix-ui/themes";
-import classes from "./InputConfiguration.module.scss";
 import {
   NO_INPUT_SELECTED,
   useInputConfigurationContext,
@@ -11,7 +10,7 @@ export function InputConfiguration() {
 
   if (!enabled) {
     return (
-      <div className={classes.enableMidi}>
+      <div>
         <Button onClick={() => enable()}>
           Enable WebMidi to start using the app
         </Button>

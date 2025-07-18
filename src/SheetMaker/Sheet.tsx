@@ -20,7 +20,7 @@ const noteLabel: Record<Note, string> = {
   HIGH_HAT_OPEN: "High hat open",
   HIGH_HAT_PEDAL: "High hat pedal",
   CRASH: "Crash",
-  RIDE: "Ride",  
+  RIDE: "Ride",
 };
 
 export function Sheet() {
@@ -57,22 +57,24 @@ export function Sheet() {
               </StaveNoteBox>
             ))}
           </div>
-          {score.map((bar, staveIndex) => {
-            return (
-              // biome-ignore lint/correctness/useJsxKeyInIterable: <explanation>
-              <Stave
-                bar={bar}
-                index={staveIndex}
-                onSelectNote={(staveNoteIndex, note) => {
-                  toggleNote({ staveIndex, staveNoteIndex, note });
-                }}
-                onRemoveStave={() => removeStave(staveIndex)}
-                onSetStickings={(staveNoteIndex, sticking) => {
-                  setSticking({ staveIndex, staveNoteIndex, sticking });
-                }}
-              />
-            );
-          })}
+          <div style={{ display: "flex", flexDirection: "row" }}>
+            {score.map((bar, staveIndex) => {
+              return (
+                // biome-ignore lint/correctness/useJsxKeyInIterable: <explanation>
+                <Stave
+                  bar={bar}
+                  index={staveIndex}
+                  onSelectNote={(staveNoteIndex, note) => {
+                    toggleNote({ staveIndex, staveNoteIndex, note });
+                  }}
+                  onRemoveStave={() => removeStave(staveIndex)}
+                  onSetStickings={(staveNoteIndex, sticking) => {
+                    setSticking({ staveIndex, staveNoteIndex, sticking });
+                  }}
+                />
+              );
+            })}
+          </div>
         </div>
       </div>
     </>

@@ -13,6 +13,19 @@ export function MetronomeConfiguration() {
   return (
     <Flex gap="5">
       <Flex direction="column">
+        <Text>Name</Text>
+        <TextField.Root
+          type="text"
+          value={configuration.name}
+          onChange={(e) =>
+            onChangeConfiguration({
+              ...configuration,
+              name: e.target.value,
+            })
+          }
+        />
+      </Flex>
+      <Flex direction="column">
         <Text>Notes</Text>
         <Select.Root
           value={String(configuration.signature)}
