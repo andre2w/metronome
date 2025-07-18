@@ -27,7 +27,7 @@ export function Metronome({ className }: MetronomeProps) {
   const { score, configuration } = useScoreContext();  
   const tickSymbolsRef = useRef<TicksHandle | null>(null);
   const { playNextTick: playNextAudioTick, reset: resetAudioTicks } =
-    useAudioTicks({ notes: configuration.signature });
+    useAudioTicks({ notes: configuration.signature, bpm: configuration.bpm });
   const { getPlayedNotes, resetPlayedNotes } = useInputListener();
 
   const tick = async () => {
