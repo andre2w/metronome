@@ -31,12 +31,13 @@ export const VexflowScore = forwardRef<VexflowScoreHandle, VexflowScoreProps>(
     // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
     useEffect(() => {
       if (boxRef.current) {
-        const selectedColor = getComputedStyle(boxRef.current).getPropertyValue("--accent-9");         
+        const selectedColor = getComputedStyle(boxRef.current).getPropertyValue(
+          `--${accentColor}-9`,
+        );
         colorRef.current = hexColorToRGB(selectedColor, 0.6);
       }
-
     }, [accentColor]);
-  
+
     useImperativeHandle(ref, () => ({
       next: () => {
         if (!scoreRef.current) {
@@ -63,7 +64,10 @@ export const VexflowScore = forwardRef<VexflowScoreHandle, VexflowScoreProps>(
           score,
           sheetWidth,
           index: scoreIndexRef.current,
-          colors: { accent: colorRef.current, background: appearance === "inherit" ? "light" : appearance }  
+          colors: {
+            accent: colorRef.current,
+            background: appearance === "inherit" ? "light" : appearance,
+          },
         });
         scoreIndexRef.current++;
       },
@@ -88,7 +92,9 @@ export const VexflowScore = forwardRef<VexflowScoreHandle, VexflowScoreProps>(
         const boxElement = boxRef.current.getBoundingClientRect();
         scoreRef.current.width = boxElement.width;
         scoreRef.current.height = boxElement.height;
-        const selectedColor = getComputedStyle(boxRef.current).getPropertyValue("--accent-9");         
+        const selectedColor = getComputedStyle(boxRef.current).getPropertyValue(
+          "--accent-9",
+        );
         colorRef.current = hexColorToRGB(selectedColor, 0.6);
       }
 
@@ -98,7 +104,16 @@ export const VexflowScore = forwardRef<VexflowScoreHandle, VexflowScoreProps>(
         scoreSize.width ?? element.getBoundingClientRect().width;
       const renderer = rendererRef.current;
 
-      drawScore({ renderer, score, sheetWidth, index: -1, colors: { accent: colorRef.current, background: appearance === "inherit" ? "light" : appearance }  });
+      drawScore({
+        renderer,
+        score,
+        sheetWidth,
+        index: -1,
+        colors: {
+          accent: colorRef.current,
+          background: appearance === "inherit" ? "light" : appearance,
+        },
+      });
     }, [score, scoreSize.width, appearance]);
 
     return (
