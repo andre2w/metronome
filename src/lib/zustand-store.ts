@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import { persist, StateStorage, createJSONStorage } from "zustand/middleware";
 import { immer } from "zustand/middleware/immer";
-import { Note, Score, Sticking } from "./types";
+import { FullScore, Note, Score, Sticking } from "./types";
 import {
   defaultMetronomeConfiguration,
   MetronomeConfigurationProps,
@@ -47,7 +47,7 @@ export interface ScoreContextValue {
     staveNoteIndex: number;
     sticking: Sticking | null;
   }) => void;
-  // loadScore: (score: FullScore) => void;
+  loadScore: (score: FullScore & { id: number }) => void;
   configuration: MetronomeConfigurationProps & { id?: number; name?: string };
   onChangeConfiguration: (
     configuration: MetronomeConfigurationProps & { name?: string },
@@ -119,6 +119,19 @@ export const useScoreStore = (() => {
           set((state) => {
             state.score = [createStave(state.configuration.signature)];
           }),
+
+        loadScore: (score: FullScore & { id: number }) => {
+          set((state) => {
+            state.score = score.score;
+            state.configuration = {
+              bpm: score.bpm,
+              graceTime: score.graceTime,
+              signature: score.signature,
+              name: score.name,
+              id: score.id,
+            };
+          });
+        },
       })),
       {
         name: "score",
