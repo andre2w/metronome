@@ -1,10 +1,12 @@
 import { Button, Dialog, Flex, Text, TextField } from "@radix-ui/themes";
 import { useState } from "react";
-import { useScoreContext } from "../Score/ScoreProvider";
 import { db } from "../lib/storage";
+import { useScoreStore } from "../lib/zustand-store";
 
 export function SaveScore() {
-  const { configuration, score } = useScoreContext();
+  const configuration = useScoreStore((state) => state.configuration);
+  const score = useScoreStore((state) => state.score);
+  // const { configuration, score } = useScoreContext();
   const [scoreName, setScoreName] = useState(configuration.name ?? "");
   const [isOpen, setIsOpen] = useState(false);
 

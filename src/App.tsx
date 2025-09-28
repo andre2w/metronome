@@ -5,7 +5,6 @@ import { InputConfiguration } from "./InputConfiguration/InputConfiguration";
 import { InputConfigurationProvider } from "./InputConfiguration/InputConfigurationContext";
 import { Metronome } from "./Metronome";
 import { MetronomeConfiguration } from "./Metronome/MetronomeConfiguration";
-import { ScoreContextProvider } from "./Score/ScoreProvider";
 import { Sheet } from "./SheetMaker/Sheet";
 import { ThemePicker } from "./components/ThemePicker";
 
@@ -21,33 +20,31 @@ function App() {
   return (
     <Theme accentColor={accentColor} appearance={appearance}>
       <InputConfigurationProvider>
-        <ScoreContextProvider>
-          <div className="container">
-            <Flex className="navbar" justify="between" align="center">
-              <InputConfiguration />
-              <ThemePicker
-                accentColor={accentColor}
-                appearance={appearance}
-                onChange={setThemePreferences}
-              />
+        <div className="container">
+          <Flex className="navbar" justify="between" align="center">
+            <InputConfiguration />
+            <ThemePicker
+              accentColor={accentColor}
+              appearance={appearance}
+              onChange={setThemePreferences}
+            />
+          </Flex>
+          <div className="grid-main">
+            <Flex
+              direction="column"
+              style={{
+                marginLeft: "50px",
+                marginRight: "50px",
+                marginBottom: "10px",
+              }}
+              gap="7"
+            >
+              <Metronome />
+              <MetronomeConfiguration />
+              <Sheet />
             </Flex>
-            <div className="grid-main">
-              <Flex
-                direction="column"
-                style={{
-                  marginLeft: "50px",
-                  marginRight: "50px",
-                  marginBottom: "10px",
-                }}
-                gap="7"
-              >
-                <Metronome />
-                <MetronomeConfiguration />
-                <Sheet />
-              </Flex>
-            </div>
           </div>
-        </ScoreContextProvider>
+        </div>
       </InputConfigurationProvider>
     </Theme>
   );

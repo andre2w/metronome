@@ -1,11 +1,11 @@
 import { Button, Text } from "@radix-ui/themes";
-import { useScoreContext } from "../Score/ScoreProvider";
 import { NOTES, type Note } from "../lib/types";
 import { Stave } from "./Stave";
 import "./Sheet.css";
 import { ListScores } from "./ListScores";
 import { SaveScore } from "./SaveScore";
 import { StaveNoteBox } from "./StaveNoteBox";
+import { useScoreStore } from "../lib/zustand-store";
 
 const noteLabel: Record<Note, string> = {
   KICK: "Kick",
@@ -24,8 +24,12 @@ const noteLabel: Record<Note, string> = {
 };
 
 export function Sheet() {
-  const { addStave, score, toggleNote, removeStave, setSticking, clear } =
-    useScoreContext();
+  const addStave = useScoreStore((state) => state.addStave);
+  const score = useScoreStore((state) => state.score);
+  const toggleNote = useScoreStore((state) => state.toggleNote);
+  const removeStave = useScoreStore((state) => state.removeStave);
+  const setSticking = useScoreStore((state) => state.setSticking);
+  const clear = useScoreStore((state) => state.clear);
 
   return (
     <>
