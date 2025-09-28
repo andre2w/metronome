@@ -27,7 +27,7 @@ export interface DrawScoreProps {
   colors: {
     background: "light" | "dark";
     accent?: string;
-  }
+  };
 }
 
 export function drawScore({
@@ -35,7 +35,7 @@ export function drawScore({
   sheetWidth,
   score,
   index,
-  colors: { accent, background }
+  colors: { accent, background },
 }: DrawScoreProps) {
   const positions = calculateWidthAndPosition({
     sheetWidth: sheetWidth - 40,
@@ -61,9 +61,8 @@ export function drawScore({
     context.fillStyle = "white";
     context.strokeStyle = "white";
   }
-  
 
-  if (!score.length) {  
+  if (!score.length) {
     const stave = new Stave(0, 0, 0);
     stave.setContext(context).draw();
     Formatter.FormatAndDraw(context, stave, [], {
@@ -74,7 +73,7 @@ export function drawScore({
   }
 
   let currentIndex = 0;
-  
+
   for (let i = 0; i < score.length; i++) {
     const position = positions[i];
     const stave = new Stave(position.x, position.y, position.width);
@@ -120,11 +119,15 @@ export function drawScore({
         const annotation = new Annotation(bar.sticking);
 
         staveNote.addModifier(annotation);
-      }      
+      }
       notes.push(staveNote);
     }
 
-    const voice = new Voice({ numBeats: 4, beatValue: 4, resolution: RESOLUTION })
+    const voice = new Voice({
+      numBeats: 4,
+      beatValue: 4,
+      resolution: RESOLUTION,
+    })
       .setMode(Voice.Mode.FULL)
       .addTickables(notes)
       .setContext(context)
@@ -132,24 +135,28 @@ export function drawScore({
 
     const formatter = new Formatter().joinVoices([voice]);
     const beams = Beam.applyAndGetBeams(voice, 1);
-    formatter.formatToStave([voice], stave, { alignRests: true, stave});
+    formatter.formatToStave([voice], stave, { alignRests: true, stave });
 
-    
     for (const tickable of voice.getTickables()) {
       if (currentIndex === index) {
-        const originalFillStyle: typeof context["fillStyle"] = context.fillStyle;
-        context.fillStyle = accent ?? ("rgba(88, 176, 51, 0.5)")
-        context.fillRect(tickable.getAbsoluteX(), stave.getY(), tickable.getWidth(), stave.getHeight());
+        const originalFillStyle: (typeof context)["fillStyle"] =
+          context.fillStyle;
+        context.fillStyle = accent ?? "rgba(88, 176, 51, 0.5)";
+        context.fillRect(
+          tickable.getAbsoluteX(),
+          stave.getY(),
+          tickable.getWidth(),
+          stave.getHeight(),
+        );
         context.fillStyle = originalFillStyle;
       }
       currentIndex++;
-    }      
+    }
 
     stave.drawWithStyle();
     voice.drawWithStyle();
     for (const beam of beams) {
       beam.setContext(context).drawWithStyle();
     }
-
   }
 }

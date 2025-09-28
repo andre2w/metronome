@@ -42,14 +42,28 @@ export interface ScoreContextValue {
 }
 const ScoreContext = createContext<ScoreContextValue>({
   score: [],
-  toggleNote: () => {},
-  addStave: () => {},
-  removeStave: () => {},
-  setSticking: () => {},
-  loadScore: () => {},
+  toggleNote: () => {
+    //
+  },
+  addStave: () => {
+    //
+  },
+  removeStave: () => {
+    //
+  },
+  setSticking: () => {
+    //
+  },
+  loadScore: () => {
+    //
+  },
   configuration: defaultMetronomeConfiguration,
-  onChangeConfiguration: () => {},
-  clear: () => {},
+  onChangeConfiguration: () => {
+    //
+  },
+  clear: () => {
+    //
+  },
 });
 
 export interface ScoreContextProviderProps {

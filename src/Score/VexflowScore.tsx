@@ -3,13 +3,10 @@ import { forwardRef, useEffect, useImperativeHandle, useRef } from "react";
 import { useResizeObserver } from "usehooks-ts";
 import { Renderer } from "vexflow";
 import { hexColorToRGB } from "../lib/color";
-import type { Score } from "../lib/types";
 import { drawScore } from "./draw-score";
 import { useScoreStore } from "../lib/zustand-store";
 
-export interface VexflowScoreProps {
-  // score: Score;
-}
+export type VexflowScoreProps = {};
 
 export interface VexflowScoreHandle {
   next: () => void;
@@ -17,7 +14,7 @@ export interface VexflowScoreHandle {
 }
 
 export const VexflowScore = forwardRef<VexflowScoreHandle, VexflowScoreProps>(
-  ({}, ref) => {
+  (_, ref) => {
     const score = useScoreStore((state) => state.score);
     const scoreRef = useRef<HTMLCanvasElement>(null);
     const boxRef = useRef<HTMLDivElement>(null);

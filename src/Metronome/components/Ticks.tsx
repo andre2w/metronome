@@ -24,27 +24,20 @@ export const Ticks = forwardRef<TicksHandle, TicksProps>((props, ref) => {
     ticksRef.current?.children.item(index)?.classList.remove("selected");
   }, []);
 
-  useImperativeHandle(
-    ref,
-    () => {
-      return {
-        next: () => {
-          deselect(selectedIndex.current);
-          selectedIndex.current = nextInLoop(
-            selectedIndex.current,
-            props.notes,
-          );
-          select(selectedIndex.current);
-        },
+  useImperativeHandle(ref, () => {
+    return {
+      next: () => {
+        deselect(selectedIndex.current);
+        selectedIndex.current = nextInLoop(selectedIndex.current, props.notes);
+        select(selectedIndex.current);
+      },
 
-        clear: () => {
-          deselect(selectedIndex.current);
-          selectedIndex.current = -1;
-        },
-      };
-    },
-    [props.notes, deselect, select],
-  );
+      clear: () => {
+        deselect(selectedIndex.current);
+        selectedIndex.current = -1;
+      },
+    };
+  }, [props.notes, deselect, select]);
 
   return (
     <Flex justify="between" gap="2" ref={ticksRef}>
