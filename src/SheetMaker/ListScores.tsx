@@ -2,13 +2,13 @@ import { Button, Dialog, Flex, Separator, Text } from "@radix-ui/themes";
 import { useLiveQuery } from "dexie-react-hooks";
 import { useCallback, useState } from "react";
 import React from "react";
-import { useScoreContext } from "../Score/ScoreProvider";
 import { db } from "../lib/storage";
 import type { FullScore } from "../lib/types";
+import { useScoreStore } from "../lib/zustand-store";
 
 export function ListScores() {
   const [isOpen, setIsOpen] = useState(false);
-  const { loadScore } = useScoreContext();
+  const loadScore = useScoreStore((state) => state.loadScore);
   const scores = useLiveQuery(async () => {
     return await db.scores.toArray();
   });
