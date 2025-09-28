@@ -5,9 +5,10 @@ import { Renderer } from "vexflow";
 import { hexColorToRGB } from "../lib/color";
 import type { Score } from "../lib/types";
 import { drawScore } from "./draw-score";
+import { useScoreStore } from "../lib/zustand-store";
 
 export interface VexflowScoreProps {
-  score: Score;
+  // score: Score;
 }
 
 export interface VexflowScoreHandle {
@@ -16,7 +17,8 @@ export interface VexflowScoreHandle {
 }
 
 export const VexflowScore = forwardRef<VexflowScoreHandle, VexflowScoreProps>(
-  ({ score }, ref) => {
+  ({}, ref) => {
+    const score = useScoreStore((state) => state.score);
     const scoreRef = useRef<HTMLCanvasElement>(null);
     const boxRef = useRef<HTMLDivElement>(null);
     const rendererRef = useRef<Renderer | undefined>();

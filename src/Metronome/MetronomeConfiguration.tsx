@@ -1,9 +1,13 @@
 import { Flex, Select, Text, TextField } from "@radix-ui/themes";
-import { useScoreContext } from "../Score/ScoreProvider";
 import { calculateBeatTime } from "../lib/beat-time";
+import { useScoreStore } from "../lib/zustand-store";
 
 export function MetronomeConfiguration() {
-  const { configuration, onChangeConfiguration } = useScoreContext();
+  const configuration = useScoreStore((state) => state.configuration);
+  const onChangeConfiguration = useScoreStore(
+    (state) => state.onChangeConfiguration,
+  );
+
   const maxGraceTime =
     calculateBeatTime(configuration.bpm, configuration.signature) - 2;
   if (configuration.graceTime > maxGraceTime) {

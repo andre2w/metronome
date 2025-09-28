@@ -221,7 +221,7 @@ export function useScoreContext() {
   return useContext(ScoreContext);
 }
 
-function createStave(notes: number) {
+export function createStave(notes: number) {
   return Array.from<NotesWithSticking>({ length: notes }).fill({
     notes: [],
   });
