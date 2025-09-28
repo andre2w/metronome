@@ -16,10 +16,14 @@ export const InputConfigurationContext = createContext<{
   enabled: boolean;
   enable: () => Promise<void>;
 }>({
-  selectDevice: () => {},
+  selectDevice: () => {
+    //
+  },
   devices: [],
   enabled: false,
-  enable: async () => {},
+  enable: async () => {
+    //
+  },
 });
 export type WebMidiApi = Awaited<ReturnType<typeof createWebMidi>>;
 
@@ -27,7 +31,9 @@ export const NO_INPUT_SELECTED = "NO_INPUT_SELECTED";
 
 export function InputConfigurationProvider({
   children,
-}: { children: ReactNode }) {
+}: {
+  children: ReactNode;
+}) {
   const [storedSelection, setStoredSelection] = useLocalStorage<
     undefined | string
   >("SELECTED_DEVICE_ID", undefined);

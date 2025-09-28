@@ -1,10 +1,14 @@
 import { create } from "zustand";
-import { persist, StateStorage, createJSONStorage } from "zustand/middleware";
+import {
+  persist,
+  type StateStorage,
+  createJSONStorage,
+} from "zustand/middleware";
 import { immer } from "zustand/middleware/immer";
-import { FullScore, Note, Score, Sticking } from "./types";
+import type { FullScore, Note, Score, Sticking } from "./types";
 import {
   defaultMetronomeConfiguration,
-  MetronomeConfigurationProps,
+  type MetronomeConfigurationProps,
 } from "../Metronome/configuration";
 import { createStave } from "../Score/ScoreProvider";
 

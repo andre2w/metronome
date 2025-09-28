@@ -13,24 +13,26 @@ export function useAudioTicks({ notes, bpm }: UseAudioTicksProps) {
   const [isLoaded, setLoaded] = useState(false);
   const sampler = useRef<Sampler | null>(null);
   const beatTime = calculateBeatTime(bpm, notes);
-  
-  useEffect(() => {    
-    sampler.current = new Sampler({
-      A1: new ToneAudioBuffer("/metronome1Count.mp3"),
-      C4: new ToneAudioBuffer("/metronomeClick.mp3"),
-    }, {
-      onload: () => {
-        setLoaded(true);
-      }
-    }).toDestination();
-  }, []);  
+
+  useEffect(() => {
+    sampler.current = new Sampler(
+      {
+        A1: new ToneAudioBuffer("/metronome1Count.mp3"),
+        C4: new ToneAudioBuffer("/metronomeClick.mp3"),
+      },
+      {
+        onload: () => {
+          setLoaded(true);
+        },
+      },
+    ).toDestination();
+  }, []);
 
   return {
     isLoaded,
     playNextTick: async () => {
-      
       indexRef.current = nextInLoop(indexRef.current, notes);
-      
+
       if (indexRef.current === 0) {
         sampler.current?.triggerAttackRelease("A1", Math.min(beatTime, 150));
       } else {
