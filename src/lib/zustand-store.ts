@@ -17,6 +17,14 @@ import {
   type MetronomeConfigurationProps,
 } from "../Metronome/configuration";
 
+const conflictingNotes: Note[][] = [
+  ["GHOST_SNARE", "SNARE", "SNARE_X_STICK", "ACCENTED_SNARE"],
+  ["HIGH_HAT", "HIGH_HAT_OPEN"],
+];
+const conflictingNotesMap = Object.fromEntries(
+  conflictingNotes.flatMap((notes) => notes.map((note) => [note, notes])),
+);
+
 const queryParamsStorage: StateStorage = {
   getItem: (key): string => {
     const urlSearchParams = new URLSearchParams(
@@ -78,7 +86,18 @@ export const useScoreStore = (() => {
         toggleNote: ({ note, staveIndex, staveNoteIndex }) =>
           set((state) => {
             const notesWithSticking = state.score[staveIndex][staveNoteIndex];
+
             if (!notesWithSticking.notes.includes(note)) {
+              const conflictingNotes = conflictingNotesMap[note];
+              if (conflictingNotes) {
+                for (let i = 0; i < notesWithSticking.notes.length; i++) {
+                  const conflictingNote = notesWithSticking.notes[i];
+                  if (conflictingNotes.includes(conflictingNote)) {
+                    notesWithSticking.notes.splice(i, 1);
+                  }
+                }
+              }
+
               notesWithSticking.notes.push(note);
             } else {
               const noteIndex = notesWithSticking.notes.indexOf(note);
