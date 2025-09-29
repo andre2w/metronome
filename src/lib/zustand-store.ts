@@ -163,10 +163,8 @@ export const useScoreStore = (() => {
   );
 })();
 
-function getInitialState() {
-  const hash: { get: (key: string) => string | null } = new URLSearchParams(
-    window.location.hash.substring(1),
-  );
+function getInitialState(): Pick<ScoreContextValue, "configuration" | "score"> {
+  const hash = new URLSearchParams(window.location.hash.substring(1));
 
   const storedScore = hash.get("score");
   if (storedScore) {
@@ -179,6 +177,7 @@ function getInitialState() {
   const graceTime = hash.get("graceTime");
   const id = hash.get("id");
 
+  console.log("Building configuration", { signature, bpm, graceTime, id });
   const configuration = {
     signature: signature
       ? Number(signature)
@@ -199,8 +198,10 @@ function getInitialState() {
   const name = hash.get("name");
 
   return {
-    ...configuration,
-    name: name ?? "",
+    configuration: {
+      ...configuration,
+      name: name ?? undefined,
+    },
     score,
   };
 }
