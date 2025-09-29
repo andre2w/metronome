@@ -66,11 +66,7 @@ export const useScoreStore = (() => {
     persist(
       immer((set) => ({
         score: initialState.score,
-        configuration: {
-          bpm: initialState.bpm,
-          graceTime: initialState.graceTime,
-          signature: initialState.signature,
-        },
+        configuration: initialState.configuration,
         addStave: () =>
           set((state) => {
             state.score.push(createStave(state.configuration.signature));
