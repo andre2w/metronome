@@ -1,8 +1,8 @@
 import { Flex, Theme, type ThemeProps } from "@radix-ui/themes";
 import { useLocalStorage } from "usehooks-ts";
 import "./App.css";
-import { InputConfiguration } from "./InputConfiguration/InputConfiguration";
-import { InputConfigurationProvider } from "./InputConfiguration/InputConfigurationContext";
+import { InputConfiguration } from "./components/InputConfiguration/InputConfiguration";
+import { InputConfigurationProvider } from "./components/InputConfiguration/InputConfigurationContext";
 import { Metronome } from "./Metronome";
 import { MetronomeConfiguration } from "./Metronome/MetronomeConfiguration";
 import { Sheet } from "./SheetMaker/Sheet";

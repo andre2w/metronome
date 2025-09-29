@@ -4,7 +4,6 @@ import { useScoreStore } from "../lib/zustand-store";
 
 export function MetronomeConfiguration() {
   const configuration = useScoreStore((state) => state.configuration);
-  console.log("Configuration", configuration);
   const onChangeConfiguration = useScoreStore(
     (state) => state.onChangeConfiguration,
   );

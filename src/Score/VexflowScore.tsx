@@ -2,7 +2,7 @@ import { useThemeContext } from "@radix-ui/themes";
 import { forwardRef, useEffect, useImperativeHandle, useRef } from "react";
 import { useResizeObserver } from "usehooks-ts";
 import { Renderer } from "vexflow";
-import { hexColorToRGB } from "../lib/color";
+import { getRgbaColorString } from "../lib/color";
 import { drawScore } from "./draw-score";
 import { useScoreStore } from "../lib/zustand-store";
 
@@ -30,10 +30,7 @@ export const VexflowScore = forwardRef<VexflowScoreHandle, VexflowScoreProps>(
     // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
     useEffect(() => {
       if (boxRef.current) {
-        const selectedColor = getComputedStyle(boxRef.current).getPropertyValue(
-          `--${accentColor}-9`,
-        );
-        colorRef.current = hexColorToRGB(selectedColor, 0.6);
+        colorRef.current = getRgbaColorString(boxRef.current);
       }
     }, [accentColor]);
 
@@ -91,10 +88,7 @@ export const VexflowScore = forwardRef<VexflowScoreHandle, VexflowScoreProps>(
         const boxElement = boxRef.current.getBoundingClientRect();
         scoreRef.current.width = boxElement.width;
         scoreRef.current.height = boxElement.height;
-        const selectedColor = getComputedStyle(boxRef.current).getPropertyValue(
-          "--accent-9",
-        );
-        colorRef.current = hexColorToRGB(selectedColor, 0.6);
+        colorRef.current = getRgbaColorString(boxRef.current);
       }
 
       const element = scoreRef.current;

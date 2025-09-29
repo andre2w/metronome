@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
 import type { NoteMessageEvent } from "webmidi";
-import { useInputConfigurationContext } from "../InputConfiguration/InputConfigurationContext";
+import { useInputConfigurationContext } from "../components/InputConfiguration/InputConfigurationContext";
 import type { NotePlayed } from "../lib/types";
 import { mappings } from "../mappings/roland-td07";
 

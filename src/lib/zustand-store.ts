@@ -5,12 +5,17 @@ import {
   createJSONStorage,
 } from "zustand/middleware";
 import { immer } from "zustand/middleware/immer";
-import type { FullScore, Note, Score, Sticking } from "./types";
+import type {
+  FullScore,
+  Note,
+  NotesWithSticking,
+  Score,
+  Sticking,
+} from "./types";
 import {
   defaultMetronomeConfiguration,
   type MetronomeConfigurationProps,
 } from "../Metronome/configuration";
-import { createStave } from "../Score/ScoreProvider";
 
 const queryParamsStorage: StateStorage = {
   getItem: (key): string => {
@@ -21,7 +26,6 @@ const queryParamsStorage: StateStorage = {
     return value ?? "";
   },
   setItem: (key, newValue): void => {
-    console.log(newValue);
     const urlSearchParams = new URLSearchParams(
       window.location.hash.substring(1),
     );
@@ -61,7 +65,6 @@ export interface ScoreContextValue {
 
 export const useScoreStore = (() => {
   const initialState = getInitialState();
-  console.log({ initialState });
   return create<ScoreContextValue>()(
     persist(
       immer((set) => ({
@@ -149,7 +152,6 @@ function getInitialState() {
   const storedScore = hash.get("score");
   if (storedScore) {
     const value = JSON.parse(JSON.parse(storedScore));
-    console.log("VALUE", value.state);
     return value.state;
   }
 
@@ -169,7 +171,6 @@ function getInitialState() {
     id: id ? Number(id) : undefined,
   };
   const scoreText = hash.get("score");
-  console.log({ scoreText });
   const initialScore: Score = scoreText
     ? typeof scoreText === "string"
       ? JSON.parse(scoreText)
@@ -183,4 +184,10 @@ function getInitialState() {
     name: name ?? "",
     score,
   };
+}
+
+export function createStave(notes: number) {
+  return Array.from<NotesWithSticking>({ length: notes }).fill({
+    notes: [],
+  });
 }
