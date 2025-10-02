@@ -139,15 +139,20 @@ export function drawScore({
 
     for (const tickable of voice.getTickables()) {
       if (currentIndex === index) {
+        const modifierShift =
+          tickable.getModifierContext()?.getLeftShift() ?? 0;
+
         const originalFillStyle: (typeof context)["fillStyle"] =
           context.fillStyle;
         context.fillStyle = accent ?? "rgba(88, 176, 51, 0.5)";
+
         context.fillRect(
-          tickable.getAbsoluteX(),
+          tickable.getAbsoluteX() + -modifierShift,
           stave.getY(),
-          tickable.getWidth(),
+          tickable.getWidth() + modifierShift,
           stave.getHeight(),
         );
+
         context.fillStyle = originalFillStyle;
       }
       currentIndex++;
