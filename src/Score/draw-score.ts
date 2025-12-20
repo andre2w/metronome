@@ -98,17 +98,26 @@ export function drawScore({
     const groups: NotesWithSticking[][] = [];
     while (groupingIndex < bars.length) {
       groups.push([]);
-      for (let i = 1; i <= size; i++) {
+      for (let i = 0; i < size; i++) {
         console.log({ groupingIndex, b: bars[groupingIndex] });
         groups.at(-1)?.push(bars[groupingIndex]);
+
+        if (size === 4 && i === 0) {
+          const nextBar = bars.at(groupingIndex + 1);
+          if (nextBar?.notes.length === 0) {
+            console.log("Duration", 8);
+          }
+        }
+
         groupingIndex++;
       }
     }
 
-    for (const [index, group] of groups.entries()) {
+    for (const [_, group] of groups.entries()) {
       const steammableNotes: StemmableNote[] = [];
       let shouldSkipNext = false;
-      let addPauses = false;
+      let addPauseEnd = false;
+      let addPauseStart = false;
       for (const [barIndex, bar] of group.entries()) {
         if (shouldSkipNext) {
           shouldSkipNext = false;
@@ -117,16 +126,9 @@ export function drawScore({
         let staveNote: StemmableNote;
         if (bar.notes.length === 0) {
           if (barIndex === 2) {
-            const prev = group.at(1);
-            const next = group.at(3);
-            if (
-              prev &&
-              prev.notes.length === 0 &&
-              next &&
-              next.notes.length > 0
-            ) {
-              addPauses = true;
-              continue;
+            const previous = group.at(1);
+            if (previous && previous.notes.length === 0) {
+              addPauseStart = true;
             }
           }
           staveNote = new GhostNote({ duration });
@@ -134,16 +136,18 @@ export function drawScore({
           const keys = bar.notes.map((note) => NOTES[note]);
           let noteDuration = duration;
           if (group.length === 4) {
-            if (barIndex === 0 || barIndex == 2) {
-              const next = group.at(barIndex + 1);
-              if (next && next?.notes.length === 0) {
-                noteDuration = "8";
-                shouldSkipNext = true;
-              }
-            }
-            if (addPauses) {
+            const next = group.at(barIndex + 1);
+            if (next && next?.notes.length === 0) {
               noteDuration = "8";
               shouldSkipNext = true;
+            }
+
+            if (barIndex === 3) {
+              const previous = group.at(2);
+              if (previous && previous.notes.length === 0) {
+                addPauseEnd = true;
+                shouldSkipNext = true;
+              }
             }
           }
           console.log({ noteDuration });
@@ -181,17 +185,13 @@ export function drawScore({
       );
       if (beamNotes.length > 1) {
         const beam = new Beam(beamNotes);
-        if (addPauses) {
-          const n = beamNotes.at(0);
-          if (n) {
-            // Dot.buildAndAttach([n]);
-            // n.addModifier(new Dot());
-          }
+        if (addPauseEnd) {
+          beam.setPartialBeamSideAt(beamNotes.length - 1, "L");
         }
-        beam.setPartialBeamSideAt(3, "L");
-        beam.setPartialBeamSideAt(2, "L");
-        beam.setPartialBeamSideAt(1, "L");
-        beam.setPartialBeamSideAt(0, "L");
+        if (addPauseStart) {
+          Dot.buildAndAttach([beamNotes[0]]);
+        }
+
         beamsExisting.push(beam);
       }
     }
