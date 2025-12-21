@@ -1,12 +1,4 @@
-import {
-  Annotation,
-  Beam,
-  Dot,
-  Formatter,
-  type Renderer,
-  Stave,
-  Voice,
-} from "vexflow";
+import { Formatter, type Renderer, Stave, Voice } from "vexflow";
 import type { Score } from "../types";
 import { calculateWidthAndPosition, groupNotes } from "./helpers";
 import { parse } from "./parser";

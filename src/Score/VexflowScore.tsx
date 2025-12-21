@@ -61,7 +61,6 @@ export const VexflowScore = forwardRef<VexflowScoreHandle, VexflowScoreProps>(
           sheetWidth,
           index: scoreIndexRef.current,
           colors: {
-            accent: colorRef.current,
             background: appearance === "inherit" ? "light" : appearance,
           },
         });
@@ -103,7 +102,6 @@ export const VexflowScore = forwardRef<VexflowScoreHandle, VexflowScoreProps>(
         sheetWidth,
         index: -1,
         colors: {
-          accent: colorRef.current,
           background: appearance === "inherit" ? "light" : appearance,
         },
       });
