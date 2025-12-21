@@ -81,15 +81,23 @@ export function calculateWidthAndPosition(
  * - 8: 1 and, 2 and, 3 and, 4 and
  * - 16: 1 e & a, 2 e & a...
  */
-export function groupNotes({ bar, duration }: { bar: Bar; duration: string }) {
+export function groupNotes({
+  bar,
+  duration,
+  offset,
+}: {
+  bar: Bar;
+  duration: string;
+  offset: number;
+}) {
   const size = duration === "4" ? 1 : duration === "8" ? 2 : 4;
 
-  return bar.reduce<NotesWithSticking[][]>(
-    (acc, curr) => {
+  return bar.reduce<(NotesWithSticking & { index: number })[][]>(
+    (acc, curr, index) => {
       if (acc[acc.length - 1].length >= size) {
         acc.push([]);
       }
-      acc.at(-1)?.push(curr);
+      acc.at(-1)?.push({ ...curr, index: index + offset });
       return acc;
     },
     [[]],

@@ -7,6 +7,7 @@ interface ReducedStaveNote {
   withDot: boolean;
   duration: "4" | "8" | "16";
   sticking?: Sticking;
+  hasCursor?: boolean;
 }
 
 /**
@@ -17,31 +18,35 @@ export function parse({
   groups,
   background,
   baseDuration,
+  cursorIndex,
 }: {
-  groups: NotesWithSticking[][];
+  groups: (NotesWithSticking & { index: number })[][];
   background: "light" | "dark";
   baseDuration: "16" | "8" | "4";
+  cursorIndex: number;
 }) {
-  const notes: StemmableNote[][] = [];
+  const notes: { note: StemmableNote; hasCursor: boolean }[][] = [];
   const beams: Beam[] = [];
   const allowDot = baseDuration === "16";
 
   for (const group of groups) {
-    const reducedNotes = group.reduce<ReducedStaveNote[]>((acc, curr) => {
-      if (acc.length === 0) {
-        acc.push({
+    const reducedNotes: ReducedStaveNote[] = [];
+    for (const bar of group) {
+      if (reducedNotes.length === 0) {
+        reducedNotes.push({
           duration: baseDuration,
-          notes: curr.notes,
-          sticking: curr.sticking,
+          notes: bar.notes,
+          sticking: bar.sticking,
           withDot: false,
+          hasCursor: bar.index === cursorIndex && bar.notes.length > 0,
         });
-        return acc;
+        continue;
       }
 
-      if (curr.notes.length === 0) {
-        const previous = acc.at(-1);
+      if (bar.notes.length === 0) {
+        const previous = reducedNotes.at(-1);
         if (!previous) {
-          return acc;
+          continue;
         }
         if (previous.duration === "16") {
           previous.duration = "8";
@@ -55,18 +60,17 @@ export function parse({
           previous.duration = "4";
         }
       } else {
-        acc.push({
+        reducedNotes.push({
           duration: baseDuration,
-          notes: curr.notes,
-          sticking: curr.sticking,
+          notes: bar.notes,
+          sticking: bar.sticking,
           withDot: false,
+          hasCursor: bar.index === cursorIndex,
         });
       }
+    }
 
-      return acc;
-    }, []);
-
-    const steammableNotes: StemmableNote[] = [];
+    const steammableNotes: { note: StemmableNote; hasCursor: boolean }[] = [];
     const beamNotes: StemmableNote[] = [];
     for (const reducedNote of reducedNotes) {
       const staveNote = createStaveNote({
@@ -75,7 +79,10 @@ export function parse({
         duration: reducedNote.duration,
         withDot: reducedNote.withDot,
       });
-      steammableNotes.push(staveNote);
+      steammableNotes.push({
+        note: staveNote,
+        hasCursor: reducedNote.hasCursor ?? false,
+      });
       if (reducedNote.notes.length > 0) {
         beamNotes.push(staveNote);
       }

@@ -79,12 +79,15 @@ export function drawScore({
 
     const bars = score[i];
     const duration = String(bars.length);
-    const groups = groupNotes({ bar: bars, duration });
+    const groups = groupNotes({ bar: bars, duration, offset: bars.length * i });
     const { notes, beams } = parse({
       background,
       groups,
       baseDuration: duration as "4" | "8" | "16",
+      cursorIndex: index,
     });
+
+    const allNotes = notes.flatMap((note) => note.map((n) => n.note));
 
     const voice = new Voice({
       numBeats: 4,
@@ -92,7 +95,7 @@ export function drawScore({
       resolution: RESOLUTION,
     })
       .setMode(Voice.Mode.FULL)
-      .addTickables(notes.flat())
+      .addTickables(allNotes)
       .setContext(context)
       .setStave(stave);
 
@@ -105,6 +108,28 @@ export function drawScore({
 
     stave.drawWithStyle();
     voice.drawWithStyle();
+
+    for (const note of notes) {
+      for (const stemmableNote of note) {
+        if (stemmableNote.hasCursor) {
+          const modifierShift =
+            stemmableNote.note.getModifierContext()?.getLeftShift() ?? 0;
+
+          const originalFillStyle: (typeof context)["fillStyle"] =
+            context.fillStyle;
+          context.fillStyle = "rgba(88, 176, 51, 0.5)";
+
+          context.fillRect(
+            stemmableNote.note.getAbsoluteX() + -modifierShift,
+            stave.getY(),
+            Math.max(stemmableNote.note.getWidth(), 15) + modifierShift,
+            stave.getHeight(),
+          );
+
+          context.fillStyle = originalFillStyle;
+        }
+      }
+    }
 
     for (const beam of beams) {
       beam.setContext(context).drawWithStyle();
