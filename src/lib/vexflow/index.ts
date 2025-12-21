@@ -19,9 +19,7 @@ import {
   createStaveNote,
   groupNotes,
 } from "./helpers";
-import { parse as parseFour } from "./strategies/four";
-import { parse as parseEigth } from "./strategies/eigth";
-import { parse as parseSixteen } from "./strategies/sixteen";
+import { parse } from "./parser";
 
 const Y_OFFSET = 50;
 const STAVE_HEIGHT = 150;
@@ -93,25 +91,13 @@ export function drawScore({
     }
 
     const bars = score[i];
-
-    const notes: StemmableNote[][] = [];
-    const beamsExisting: Beam[] = [];
     const duration = String(bars.length);
-
     const groups = groupNotes({ bar: bars, duration });
-
-    if (duration === "4") {
-      const result = parseFour({ background, groups });
-      notes.push(...result.notes);
-    } else if (duration === "8") {
-      const result = parseEigth({ background, groups });
-      notes.push(...result.notes);
-      beamsExisting.push(...result.beams);
-    } else {
-      const result = parseSixteen({ background, groups });
-      notes.push(...result.notes);
-      beamsExisting.push(...result.beams);
-    }
+    const { notes, beams } = parse({
+      background,
+      groups,
+      baseDuration: duration as "4" | "8" | "16",
+    });
 
     const voice = new Voice({
       numBeats: 4,
@@ -125,37 +111,15 @@ export function drawScore({
 
     const formatter = new Formatter().joinVoices([voice]);
     formatter.formatToStave([voice], stave, {
-      alignRests: true,
+      alignRests: false,
       stave,
       autoBeam: false,
     });
 
-    if (index >= 0) {
-      for (const tickable of voice.getTickables()) {
-        if (currentIndex === index) {
-          const modifierShift =
-            tickable.getModifierContext()?.getLeftShift() ?? 0;
-
-          const originalFillStyle: (typeof context)["fillStyle"] =
-            context.fillStyle;
-          context.fillStyle = accent ?? "rgba(88, 176, 51, 0.5)";
-
-          context.fillRect(
-            tickable.getAbsoluteX() + -modifierShift,
-            stave.getY(),
-            Math.max(tickable.getWidth(), 15) + modifierShift,
-            stave.getHeight(),
-          );
-
-          context.fillStyle = originalFillStyle;
-        }
-        currentIndex++;
-      }
-    }
-
     stave.drawWithStyle();
     voice.drawWithStyle();
-    for (const beam of beamsExisting) {
+
+    for (const beam of beams) {
       beam.setContext(context).drawWithStyle();
     }
   }

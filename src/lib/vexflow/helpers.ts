@@ -1,11 +1,13 @@
 import {
   Annotation,
+  Dot,
   ModifierPosition,
   Parenthesis,
   StaveNote,
   Stem,
 } from "vexflow";
 import { Bar, NOTES, NotesWithSticking } from "../types";
+import { REST_KEY } from "./constants";
 
 export interface CalculateWidthAndPositionProps {
   sheetWidth: number;
@@ -98,17 +100,25 @@ export function createStaveNote({
   bar,
   duration,
   background,
+  withDot = false,
 }: {
   duration: string;
   bar: NotesWithSticking;
   background: "light" | "dark";
+  withDot?: boolean;
 }) {
-  const keys = bar.notes.map((note) => NOTES[note]);
-  const staveNote = new StaveNote({ keys, duration });
-  const stem = new Stem({
-    stemDirection: 1,
-  });
-  staveNote.setStem(stem);
+  const isRest = bar.notes.length === 0;
+  const keys = isRest ? [REST_KEY] : bar.notes.map((note) => NOTES[note]);
+  const noteDuration = isRest ? `${duration}r` : duration;
+  const staveNote = new StaveNote({ keys, duration: noteDuration });
+
+  if (!isRest) {
+    const stem = new Stem({
+      stemDirection: 1,
+    });
+    staveNote.setStem(stem);
+  }
+
   if (background === "dark") {
     staveNote.setStyle({ strokeStyle: "white" });
   }
@@ -130,6 +140,9 @@ export function createStaveNote({
   if (bar.sticking) {
     const annotation = new Annotation(bar.sticking);
     staveNote.addModifier(annotation);
+  }
+  if (withDot) {
+    Dot.buildAndAttach([staveNote]);
   }
   return staveNote;
 }
