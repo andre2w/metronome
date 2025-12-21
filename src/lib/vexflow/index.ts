@@ -15,6 +15,7 @@ export interface DrawScoreProps {
   index: number;
   colors: {
     background: "light" | "dark";
+    accent?: string;
   };
 }
 
@@ -23,7 +24,7 @@ export function drawScore({
   sheetWidth,
   score,
   index,
-  colors: { background },
+  colors: { background, accent },
 }: DrawScoreProps) {
   const positions = calculateWidthAndPosition({
     sheetWidth: sheetWidth - 40,
@@ -100,31 +101,29 @@ export function drawScore({
 
     stave.drawWithStyle();
     voice.drawWithStyle();
-
-    for (const note of notes) {
-      for (const stemmableNote of note) {
-        if (stemmableNote.hasCursor) {
-          const modifierShift =
-            stemmableNote.note.getModifierContext()?.getLeftShift() ?? 0;
-
-          const originalFillStyle: (typeof context)["fillStyle"] =
-            context.fillStyle;
-          context.fillStyle = "rgba(88, 176, 51, 0.5)";
-
-          context.fillRect(
-            stemmableNote.note.getAbsoluteX() + -modifierShift,
-            stave.getY(),
-            Math.max(stemmableNote.note.getWidth(), 15) + modifierShift,
-            stave.getHeight(),
-          );
-
-          context.fillStyle = originalFillStyle;
-        }
-      }
-    }
-
     for (const beam of beams) {
       beam.setContext(context).drawWithStyle();
+    }
+
+    const cursorNote = notes
+      .flatMap((note) => note)
+      .find((note) => note.hasCursor);
+    if (cursorNote) {
+      const modifierShift =
+        cursorNote.note.getModifierContext()?.getLeftShift() ?? 0;
+
+      const originalFillStyle: (typeof context)["fillStyle"] =
+        context.fillStyle;
+      context.fillStyle = accent ?? "rgba(88, 176, 51, 0.5)";
+
+      context.fillRect(
+        cursorNote.note.getAbsoluteX() + -modifierShift,
+        stave.getY(),
+        Math.max(cursorNote.note.getWidth(), 15) + modifierShift,
+        stave.getHeight(),
+      );
+
+      context.fillStyle = originalFillStyle;
     }
   }
 }

@@ -62,6 +62,7 @@ export const VexflowScore = forwardRef<VexflowScoreHandle, VexflowScoreProps>(
           index: scoreIndexRef.current,
           colors: {
             background: appearance === "inherit" ? "light" : appearance,
+            accent: colorRef.current,
           },
         });
         scoreIndexRef.current++;
@@ -95,7 +96,7 @@ export const VexflowScore = forwardRef<VexflowScoreHandle, VexflowScoreProps>(
       const sheetWidth =
         scoreSize.width ?? element.getBoundingClientRect().width;
       const renderer = rendererRef.current;
-
+      console.log({ r: colorRef.current });
       drawScore({
         renderer,
         score,
@@ -103,9 +104,10 @@ export const VexflowScore = forwardRef<VexflowScoreHandle, VexflowScoreProps>(
         index: -1,
         colors: {
           background: appearance === "inherit" ? "light" : appearance,
+          accent: colorRef.current,
         },
       });
-    }, [score, scoreSize.width, appearance]);
+    }, [score, scoreSize.width, appearance, accentColor]);
 
     return (
       <div ref={boxRef}>
