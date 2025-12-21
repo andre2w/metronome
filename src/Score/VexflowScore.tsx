@@ -3,8 +3,8 @@ import { forwardRef, useEffect, useImperativeHandle, useRef } from "react";
 import { useResizeObserver } from "usehooks-ts";
 import { Renderer } from "vexflow";
 import { getRgbaColorString } from "../lib/color";
-import { drawScore } from "./draw-score";
 import { useScoreStore } from "../lib/zustand-store";
+import { drawScore } from "../lib/vexflow";
 
 export type VexflowScoreProps = {};
 
