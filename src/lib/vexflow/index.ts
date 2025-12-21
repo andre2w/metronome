@@ -3,22 +3,12 @@ import {
   Beam,
   Dot,
   Formatter,
-  GhostNote,
-  ModifierPosition,
-  Parenthesis,
   type Renderer,
   Stave,
-  StaveNote,
-  Stem,
-  type StemmableNote,
   Voice,
 } from "vexflow";
-import { NOTES, NotesWithSticking, type Score } from "../types";
-import {
-  calculateWidthAndPosition,
-  createStaveNote,
-  groupNotes,
-} from "./helpers";
+import type { Score } from "../types";
+import { calculateWidthAndPosition, groupNotes } from "./helpers";
 import { parse } from "./parser";
 
 const Y_OFFSET = 50;
@@ -33,7 +23,6 @@ export interface DrawScoreProps {
   index: number;
   colors: {
     background: "light" | "dark";
-    accent?: string;
   };
 }
 
@@ -42,7 +31,7 @@ export function drawScore({
   sheetWidth,
   score,
   index,
-  colors: { accent, background },
+  colors: { background },
 }: DrawScoreProps) {
   const positions = calculateWidthAndPosition({
     sheetWidth: sheetWidth - 40,
@@ -78,8 +67,6 @@ export function drawScore({
     });
     return;
   }
-
-  let currentIndex = 0;
 
   for (let i = 0; i < score.length; i++) {
     const position = positions[i];

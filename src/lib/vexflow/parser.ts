@@ -1,5 +1,5 @@
-import { Beam, StemmableNote } from "vexflow";
-import { Note, NotesWithSticking, Sticking } from "../types";
+import { Beam, type StemmableNote } from "vexflow";
+import type { Note, NotesWithSticking, Sticking } from "../types";
 import { createStaveNote } from "./helpers";
 
 interface ReducedStaveNote {
