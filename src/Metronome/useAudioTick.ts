@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { nextInLoop } from "../utils";
-import { Sampler, ToneAudioBuffer } from "tone";
+import { Sampler, ToneAudioBuffer, now } from "tone";
 import { calculateBeatTime } from "../lib/beat-time";
 
 interface UseAudioTicksProps {
@@ -34,9 +34,16 @@ export function useAudioTicks({ notes, bpm }: UseAudioTicksProps) {
       indexRef.current = nextInLoop(indexRef.current, notes);
 
       if (indexRef.current === 0) {
-        sampler.current?.triggerAttackRelease("A1", Math.min(beatTime, 150));
+        sampler.current?.triggerAttackRelease(
+          "A1",
+          Math.min(beatTime, 150),
+          now(),
+        );
       } else {
-        sampler.current?.triggerAttackRelease("C4", Math.min(beatTime, 90));
+        sampler.current?.triggerAttackRelease(
+          "C4",
+          Math.min(beatTime, 90, now()),
+        );
       }
     },
 
