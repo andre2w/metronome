@@ -14,6 +14,7 @@ export interface StaveNoteProps {
   notesWithSticking: NotesWithSticking;
   index: number;
   noteCount?: string;
+  className?: string;
 }
 
 const stickingsLoop = [null, "L", "R", "R/L"] as const;
@@ -23,6 +24,7 @@ export function StaveNote({
   notesWithSticking,
   onSetSticking,
   noteCount,
+  className,
 }: StaveNoteProps) {
   const { notes: selectedNotes, sticking } = notesWithSticking;
   const stickingIndex = Math.max(
@@ -32,7 +34,7 @@ export function StaveNote({
   const nextIndex =
     stickingIndex + 1 >= stickingsLoop.length ? 0 : stickingIndex + 1;
   return (
-    <div className="stave-note">
+    <div className={`stave-note ${className ?? ""}`}>
       <StaveNoteBox
         squared
         className="sticking"

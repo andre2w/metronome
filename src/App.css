@@ -23,5 +23,5 @@
 .grid-main {
   grid-area: main;
   overflow-y: hidden;
-  overflow-x: scroll;
+  overflow-x: hidden;
 }

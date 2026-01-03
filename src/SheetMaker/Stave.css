@@ -1,5 +1,5 @@
 .stave {
-  padding-right: 5px;
+  padding-right: var(--space-7);
 }
 
 .stave-content {
@@ -12,4 +12,8 @@
 
 .stave-notes {
   display: flex;
+}
+
+.with-space-left {
+  margin-left: var(--space-2);
 }

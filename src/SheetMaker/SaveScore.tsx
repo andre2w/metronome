@@ -6,8 +6,9 @@ import { useScoreStore } from "../lib/zustand-store";
 export function SaveScore() {
   const configuration = useScoreStore((state) => state.configuration);
   const score = useScoreStore((state) => state.score);
-  // const { configuration, score } = useScoreContext();
-  const [scoreName, setScoreName] = useState(configuration.name ?? "");
+  const onChangeConfiguration = useScoreStore(
+    (state) => state.onChangeConfiguration,
+  );
   const [isOpen, setIsOpen] = useState(false);
 
   return (
@@ -25,22 +26,30 @@ export function SaveScore() {
           </Text>
           <TextField.Root
             placeholder="What's the name of this score?"
-            value={scoreName}
-            onChange={(event) => setScoreName(event.target.value)}
+            value={configuration.name}
+            onChange={(event) =>
+              onChangeConfiguration({
+                ...configuration,
+                name: event.target.value,
+              })
+            }
           />
           <Button
             onClick={async () => {
+              if (!configuration.name) {
+                return;
+              }
+
               if (configuration.id) {
                 await db.scores.update(configuration.id, {
                   ...configuration,
                   score,
-                  name: scoreName,
                 });
               } else {
                 await db.scores.add({
                   ...configuration,
                   score,
-                  name: scoreName,
+                  name: configuration.name,
                 });
               }
               setIsOpen(false);

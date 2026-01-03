@@ -11,6 +11,7 @@
 
 .note {
   border: 1px solid var(--accent-9);
+  cursor: pointer;
 }
 
 .note-selected {

@@ -39,6 +39,7 @@ export interface StaveProps {
     barIndex: number,
     sticking: Parameters<StaveNoteProps["onSetSticking"]>[0],
   ) => void;
+  className?: string;
 }
 
 export function Stave({
@@ -51,6 +52,7 @@ export function Stave({
   const tempoCounting = counting[bar.length];
   const notes = bar.map((notesWithSticking, noteIndex) => {
     const noteCount = tempoCounting[noteIndex];
+    const withSpace = ["2", "3", "4"].includes(noteCount);
     return (
       // biome-ignore lint/correctness/useJsxKeyInIterable: <explanation>
       <StaveNote
@@ -59,6 +61,7 @@ export function Stave({
         notesWithSticking={notesWithSticking}
         onSelect={(note) => onSelectNote(noteIndex, note)}
         onSetSticking={(sticking) => onSetStickings(noteIndex, sticking)}
+        className={withSpace ? "with-space-left" : undefined}
       />
     );
   });
