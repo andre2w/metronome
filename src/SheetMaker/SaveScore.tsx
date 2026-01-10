@@ -1,7 +1,7 @@
 import { Button, Dialog, Flex, Text, TextField } from "@radix-ui/themes";
 import { useState } from "react";
 import { db } from "../lib/storage";
-import { useScoreStore } from "../lib/zustand-store";
+import { useScoreStore } from "../lib/score/state";
 
 export function SaveScore() {
   const configuration = useScoreStore((state) => state.configuration);

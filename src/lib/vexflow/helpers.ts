@@ -6,7 +6,7 @@ import {
   StaveNote,
   Stem,
 } from "vexflow";
-import { type Bar, NOTES, type NotesWithSticking } from "../types";
+import { type Bar, NOTES, type NotesWithSticking } from "../score/types";
 import { REST_KEY } from "./constants";
 
 export interface CalculateWidthAndPositionProps {

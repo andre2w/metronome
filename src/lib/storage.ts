@@ -1,5 +1,5 @@
 import Dexie, { type EntityTable } from "dexie";
-import type { FullScore } from "./types";
+import type { FullScore } from "./score/types";
 
 export const db = new Dexie("Metronome") as Dexie & {
   scores: EntityTable<FullScore & { id: number }, "id">;

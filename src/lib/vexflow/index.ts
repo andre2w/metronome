@@ -1,5 +1,5 @@
 import { Formatter, type Renderer, Stave, Voice } from "vexflow";
-import type { Score } from "../types";
+import type { Score } from "../score/types";
 import { calculateWidthAndPosition, groupNotes } from "./helpers";
 import { parse } from "./parser";
 

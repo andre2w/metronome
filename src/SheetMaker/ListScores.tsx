@@ -3,8 +3,8 @@ import { useLiveQuery } from "dexie-react-hooks";
 import { useCallback, useState } from "react";
 import React from "react";
 import { db } from "../lib/storage";
-import type { FullScore } from "../lib/types";
-import { useScoreStore } from "../lib/zustand-store";
+import type { FullScore } from "../lib/score/types";
+import { useScoreStore } from "../lib/score/state";
 
 export function ListScores() {
   const [isOpen, setIsOpen] = useState(false);

@@ -1,6 +1,6 @@
 import { Flex, Select, Text, TextField } from "@radix-ui/themes";
 import { calculateBeatTime } from "../lib/beat-time";
-import { useScoreStore } from "../lib/zustand-store";
+import { useScoreStore } from "../lib/score/state";
 
 export function MetronomeConfiguration() {
   const configuration = useScoreStore((state) => state.configuration);

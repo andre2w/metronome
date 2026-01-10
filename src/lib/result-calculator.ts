@@ -1,4 +1,4 @@
-import type { NotePlayed, Score, Ticks } from "./types";
+import type { NotePlayed, Score, Ticks } from "./score/types";
 
 export interface CalculateResultProps {
   ticks: Ticks;

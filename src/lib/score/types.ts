@@ -21,7 +21,18 @@ export const NOTES = {
 } as const;
 
 export const sticking = ["L", "R", "R/L"] as const;
+
+export const conflictingNotes: Note[][] = [
+  ["GHOST_SNARE", "SNARE", "SNARE_X_STICK", "ACCENTED_SNARE"],
+  ["HIGH_HAT", "HIGH_HAT_OPEN"],
+];
+
+export const conflictingNotesMap = Object.fromEntries(
+  conflictingNotes.flatMap((notes) => notes.map((note) => [note, notes])),
+);
+
 export type Sticking = (typeof sticking)[number];
+
 export type Note = keyof typeof NOTES;
 
 /**

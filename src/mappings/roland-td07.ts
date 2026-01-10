@@ -1,4 +1,4 @@
-import type { Note } from "../lib/types";
+import type { Note } from "../lib/score/types";
 
 export const mappings: Record<number, Note> = {
   36: "KICK",

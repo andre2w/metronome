@@ -4,7 +4,7 @@ import {
   type Note,
   type NotesWithSticking,
   type Sticking,
-} from "../lib/types";
+} from "../lib/score/types";
 import "./StaveNote.css";
 import { StaveNoteBox } from "./StaveNoteBox";
 

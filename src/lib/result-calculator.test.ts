@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert";
-import type { NotePlayed, Score } from "./types";
+import type { NotePlayed, Score } from "./score/types";
 import {
   calculateResult,
   type CalculateResultProps,

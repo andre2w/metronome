@@ -1,11 +1,11 @@
 import { Button, Text } from "@radix-ui/themes";
-import { NOTES, type Note } from "../lib/types";
+import { NOTES, type Note } from "../lib/score/types";
 import { Stave } from "./Stave";
 import "./Sheet.css";
 import { ListScores } from "./ListScores";
 import { SaveScore } from "./SaveScore";
 import { StaveNoteBox } from "./StaveNoteBox";
-import { useScoreStore } from "../lib/zustand-store";
+import { useScoreStore } from "../lib/score/state";
 
 const noteLabel: Record<Note, string> = {
   KICK: "Kick",

@@ -1,6 +1,6 @@
 import { Cross1Icon } from "@radix-ui/react-icons";
 import { Button, Text } from "@radix-ui/themes";
-import type { Bar } from "../lib/types";
+import type { Bar } from "../lib/score/types";
 import { StaveNote, type StaveNoteProps } from "./StaveNote";
 import "./Stave.css";
 

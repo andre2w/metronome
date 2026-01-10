@@ -4,7 +4,7 @@ import { useRef, useState } from "react";
 import { VexflowScore, type VexflowScoreHandle } from "../Score/VexflowScore";
 import { calculateBeatTime } from "../lib/beat-time";
 import { calculateResult } from "../lib/result-calculator";
-import type { Ticks } from "../lib/types";
+import type { Ticks } from "../lib/score/types";
 import { Result, type ResultProps } from "./Result";
 import { Timer } from "./Timer";
 import type { TicksHandle } from "./components/Ticks";
@@ -12,7 +12,7 @@ import { useAudioTicks } from "./useAudioTick";
 import { useInputListener } from "./useInputListener";
 import { start } from "tone";
 import { useInterval } from "usehooks-ts";
-import { useScoreStore } from "../lib/zustand-store";
+import { useScoreStore } from "../lib/score/state";
 
 export interface MetronomeProps {
   className?: string;
