@@ -7,7 +7,6 @@ import { calculateResult } from "../lib/result-calculator";
 import type { Ticks } from "../lib/score/types";
 import { Result, type ResultProps } from "./Result";
 import { Timer } from "./Timer";
-import type { TicksHandle } from "./components/Ticks";
 import { useAudioTicks } from "./useAudioTick";
 import { useInputListener } from "./useInputListener";
 import { start } from "tone";
@@ -26,14 +25,12 @@ export function Metronome({ className }: MetronomeProps) {
   const vexflowScoreRef = useRef<VexflowScoreHandle>(null);
   const ticksRef = useRef<Ticks>([]);
   const [result, setResult] = useState<ResultProps | undefined>(undefined);
-  const tickSymbolsRef = useRef<TicksHandle | null>(null);
   const { playNextTick: playNextAudioTick, reset: resetAudioTicks } =
     useAudioTicks({ notes: configuration.signature, bpm: configuration.bpm });
   const { getPlayedNotes, resetPlayedNotes } = useInputListener();
 
   const tick = async () => {
     await playNextAudioTick();
-    tickSymbolsRef.current?.next();
     ticksRef.current.push(performance.now());
     vexflowScoreRef.current?.next();
   };
@@ -64,7 +61,6 @@ export function Metronome({ className }: MetronomeProps) {
       resetPlayedNotes();
       ticksRef.current = [];
       selectedRef.current = -1;
-      tickSymbolsRef.current?.clear();
       resetAudioTicks();
       vexflowScoreRef.current?.reset();
       setResult(undefined);

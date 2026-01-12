@@ -1,6 +1,6 @@
 import { Button, Dialog, Flex, Text, TextField } from "@radix-ui/themes";
 import { useState } from "react";
-import { db } from "../lib/storage";
+import { db } from "../lib/score/storage";
 import { useScoreStore } from "../lib/score/state";
 
 export function SaveScore() {
