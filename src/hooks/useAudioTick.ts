@@ -1,18 +1,9 @@
 import { useEffect, useRef, useState } from "react";
-import { nextInLoop } from "../utils";
 import { Sampler, ToneAudioBuffer, now } from "tone";
-import { calculateBeatTime } from "../lib/beat-time";
 
-interface UseAudioTicksProps {
-  notes: number;
-  bpm: number;
-}
-
-export function useAudioTicks({ notes, bpm }: UseAudioTicksProps) {
-  const indexRef = useRef(-1);
+export function useAudioTicks() {
   const [isLoaded, setLoaded] = useState(false);
   const sampler = useRef<Sampler | null>(null);
-  const beatTime = calculateBeatTime(bpm, notes);
 
   useEffect(() => {
     sampler.current = new Sampler(
@@ -30,25 +21,18 @@ export function useAudioTicks({ notes, bpm }: UseAudioTicksProps) {
 
   return {
     isLoaded,
-    playNextTick: async () => {
-      indexRef.current = nextInLoop(indexRef.current, notes);
-
-      if (indexRef.current === 0) {
-        sampler.current?.triggerAttackRelease(
-          "A1",
-          Math.min(beatTime, 150),
-          now(),
-        );
-      } else {
-        sampler.current?.triggerAttackRelease(
-          "C4",
-          Math.min(beatTime, 90, now()),
-        );
-      }
+    bigTick: (duration: number) => {
+      sampler.current?.triggerAttackRelease(
+        "A1",
+        Math.min(duration, 150),
+        now(),
+      );
     },
-
-    reset: () => {
-      indexRef.current = -1;
+    smallTick: (duration: number) => {
+      sampler.current?.triggerAttackRelease(
+        "C4",
+        Math.min(duration, 90, now()),
+      );
     },
   };
 }

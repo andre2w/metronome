@@ -1,32 +1,16 @@
-import { useEffect, useRef } from "react";
+import { useEffect } from "react";
 import type { NoteMessageEvent } from "webmidi";
 import { useInputConfigurationContext } from "../components/InputConfiguration/InputConfigurationContext";
-import type { NotePlayed } from "../lib/score/types";
-import { mappings } from "../mappings/roland-td07";
 
-export function useInputListener() {
+export function useInputListener(onNote: (e: NoteMessageEvent) => void) {
   const { selectedDevice: input } = useInputConfigurationContext();
-  const notesPlayedRef = useRef<NotePlayed[]>([]);
 
   useEffect(() => {
     if (input) {
-      const listener = (e: NoteMessageEvent) => {
-        notesPlayedRef.current.push({
-          timestamp: e.timestamp,
-          note: mappings[e.note.number],
-        });
-      };
-      input.addListener("noteon", listener);
+      input.addListener("noteon", onNote);
       return () => {
-        input.removeListener("noteon", listener);
+        input.removeListener("noteon", onNote);
       };
     }
   }, [input]);
-
-  return {
-    getPlayedNotes: () => notesPlayedRef.current,
-    resetPlayedNotes: () => {
-      notesPlayedRef.current = [];
-    },
-  };
 }

@@ -1,5 +1,11 @@
 import { useThemeContext } from "@radix-ui/themes";
-import { forwardRef, useEffect, useImperativeHandle, useRef } from "react";
+import {
+  forwardRef,
+  useCallback,
+  useEffect,
+  useImperativeHandle,
+  useRef,
+} from "react";
 import { useResizeObserver } from "usehooks-ts";
 import { Renderer } from "vexflow";
 import { getRgbaColorString } from "../lib/color";
@@ -9,8 +15,8 @@ import { drawScore } from "../lib/vexflow";
 export type VexflowScoreProps = {};
 
 export interface VexflowScoreHandle {
-  next: () => void;
-  reset: () => void;
+  setCursor: (index: number) => void;
+  clearCursor: () => void;
 }
 
 export const VexflowScore = forwardRef<VexflowScoreHandle, VexflowScoreProps>(
@@ -22,57 +28,12 @@ export const VexflowScore = forwardRef<VexflowScoreHandle, VexflowScoreProps>(
     const scoreSize = useResizeObserver({
       ref: boxRef,
     });
-    const scoreIndexRef = useRef(0);
-    const flatScore = score.flat().map((n) => n.notes);
     const colorRef = useRef<string | undefined>();
     const { accentColor, appearance } = useThemeContext();
+    const lastIndexRef = useRef<number>(-1);
 
-    // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
-    useEffect(() => {
-      if (boxRef.current) {
-        colorRef.current = getRgbaColorString(boxRef.current);
-      }
-    }, [accentColor]);
-
-    useImperativeHandle(ref, () => ({
-      next: () => {
-        if (!scoreRef.current) {
-          return;
-        }
-
-        if (!rendererRef.current) {
-          rendererRef.current = new Renderer(
-            scoreRef.current,
-            Renderer.Backends.CANVAS,
-          );
-        }
-
-        if (scoreIndexRef.current >= flatScore.length) {
-          scoreIndexRef.current = 0;
-        }
-
-        const element = scoreRef.current;
-        const sheetWidth =
-          scoreSize.width ?? element.getBoundingClientRect().width;
-        const renderer = rendererRef.current;
-        drawScore({
-          renderer,
-          score,
-          sheetWidth,
-          index: scoreIndexRef.current,
-          colors: {
-            background: appearance === "inherit" ? "light" : appearance,
-            accent: colorRef.current,
-          },
-        });
-        scoreIndexRef.current++;
-      },
-      reset: () => {
-        scoreIndexRef.current = 0;
-      },
-    }));
-
-    useEffect(() => {
+    const draw = (index: number) => {
+      lastIndexRef.current = index;
       if (!scoreRef.current) {
         return;
       }
@@ -84,29 +45,39 @@ export const VexflowScore = forwardRef<VexflowScoreHandle, VexflowScoreProps>(
         );
       }
 
-      if (boxRef.current) {
-        const boxElement = boxRef.current.getBoundingClientRect();
-        scoreRef.current.width = boxElement.width;
-        scoreRef.current.height = boxElement.height;
-        colorRef.current = getRgbaColorString(boxRef.current);
-      }
-
       const element = scoreRef.current;
-
       const sheetWidth =
         scoreSize.width ?? element.getBoundingClientRect().width;
       const renderer = rendererRef.current;
-      console.log({ r: colorRef.current });
+      if (boxRef.current) {
+        colorRef.current = getRgbaColorString(boxRef.current);
+      }
       drawScore({
         renderer,
         score,
         sheetWidth,
-        index: -1,
+        index,
         colors: {
           background: appearance === "inherit" ? "light" : appearance,
           accent: colorRef.current,
         },
       });
+    };
+
+    useImperativeHandle(ref, () => ({
+      setCursor: (index: number) => {
+        draw(index);
+      },
+      clearCursor: () => {
+        draw(-1);
+      },
+    }));
+
+    useEffect(() => {
+      if (boxRef.current) {
+        colorRef.current = getRgbaColorString(boxRef.current);
+      }
+      draw(lastIndexRef.current);
     }, [score, scoreSize.width, appearance, accentColor]);
 
     return (
