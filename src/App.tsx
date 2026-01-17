@@ -4,9 +4,9 @@ import "./App.css";
 import { InputConfiguration } from "./components/InputConfiguration/InputConfiguration";
 import { InputConfigurationProvider } from "./components/InputConfiguration/InputConfigurationContext";
 import { Metronome } from "./Metronome";
-import { MetronomeConfiguration } from "./Metronome/MetronomeConfiguration";
 import { Sheet } from "./SheetMaker/Sheet";
 import { ThemePicker } from "./components/ThemePicker";
+import { MetronomeConfiguration } from "./components/metronome/metronome-configuration";
 
 function App() {
   const [{ accentColor, appearance }, setThemePreferences] = useLocalStorage(

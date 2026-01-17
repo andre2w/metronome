@@ -2,26 +2,34 @@ import { useRef, useState } from "react";
 import { useScoreStore } from "../lib/score/state";
 import { useAudioTicks } from "./useAudioTick";
 import { NotePlayed, Ticks } from "../lib/score/types";
-import { calculateBeatTime } from "../lib/beat-time";
 import { useInputListener } from "./useInputListener";
-import { mappings } from "../mappings/roland-td07";
+import { mappings } from "../lib/mappings/roland-td07";
 import { useInterval } from "usehooks-ts";
 import { start } from "tone";
 import { ResultProps } from "../Metronome/Result";
 import { calculateResult } from "../lib/result-calculator";
+import { useMetronomeStore } from "../lib/metronome-store";
+import { useShallow } from "zustand/shallow";
 
 export function useMetronome(onTick?: (index: number) => void) {
   const score = useScoreStore((state) => state.score);
   const scoreLength = score.flatMap((bars) =>
     bars.map((bar) => bar.notes),
   ).length;
-  const configuration = useScoreStore((state) => state.configuration);
+
+  const { beatTime, graceTime, signature } = useMetronomeStore(
+    useShallow((state) => ({
+      beatTime: state.beatTime,
+      graceTime: state.graceTime,
+      signature: state.signature,
+      onUpdate: state.onUpdate,
+    })),
+  );
+
   const [started, setStarted] = useState(false);
   const ticksRef = useRef<Ticks>([]);
   const { bigTick, smallTick } = useAudioTicks();
   const indexRef = useRef<number>(-1);
-  const { signature: notes, bpm: beats } = configuration;
-  const beatTime = calculateBeatTime(beats, notes);
   const notesPlayedRef = useRef<NotePlayed[]>([]);
   const [result, setResult] = useState<ResultProps | undefined>(undefined);
 
@@ -39,8 +47,7 @@ export function useMetronome(onTick?: (index: number) => void) {
     }
     ticksRef.current.push(performance.now());
     const isBigTick =
-      indexRef.current + 1 === 1 ||
-      indexRef.current % configuration.signature === 0;
+      indexRef.current + 1 === 1 || indexRef.current % signature === 0;
     if (isBigTick) {
       bigTick(beatTime);
     } else {
@@ -65,7 +72,7 @@ export function useMetronome(onTick?: (index: number) => void) {
           ticks: ticksRef.current,
           notesPlayed: notesPlayedRef.current,
           score,
-          graceTime: configuration.graceTime,
+          graceTime,
         }),
       );
     } else {

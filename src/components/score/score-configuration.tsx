@@ -1,18 +1,11 @@
 import { Flex, Select, Text, TextField } from "@radix-ui/themes";
-import { calculateBeatTime } from "../lib/beat-time";
-import { useScoreStore } from "../lib/score/state";
+import { useScoreStore } from "../../lib/score/state";
 
-export function MetronomeConfiguration() {
+export function ScoreConfiguration() {
   const configuration = useScoreStore((state) => state.configuration);
   const onChangeConfiguration = useScoreStore(
     (state) => state.onChangeConfiguration,
   );
-
-  const maxGraceTime =
-    calculateBeatTime(configuration.bpm, configuration.signature) - 2;
-  if (configuration.graceTime > maxGraceTime) {
-    onChangeConfiguration({ ...configuration, graceTime: maxGraceTime });
-  }
 
   return (
     <Flex gap="5">
@@ -33,12 +26,19 @@ export function MetronomeConfiguration() {
         <Text>Notes</Text>
         <Select.Root
           value={String(configuration.signature)}
-          onValueChange={(value) =>
-            onChangeConfiguration({
-              ...configuration,
-              signature: Number(value),
-            })
-          }
+          onValueChange={(value) => {
+            const newSignature = Number(value);
+            if (
+              newSignature === 4 ||
+              newSignature === 8 ||
+              newSignature === 16
+            ) {
+              onChangeConfiguration({
+                ...configuration,
+                signature: newSignature,
+              });
+            }
+          }}
           defaultValue="4"
         >
           <Select.Trigger />
@@ -60,21 +60,7 @@ export function MetronomeConfiguration() {
               bpm: Number(e.target.value),
             })
           }
-          step={1}
-        />
-      </Flex>
-      <Flex direction="column">
-        <Text>Grace time</Text>
-        <TextField.Root
-          type="number"
-          value={configuration.graceTime}
-          onChange={(e) =>
-            onChangeConfiguration({
-              ...configuration,
-              graceTime: e.target.value ? Number(e.target.value) : 0,
-            })
-          }
-          step={100}
+          step={5}
         />
       </Flex>
     </Flex>
