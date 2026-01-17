@@ -47,9 +47,9 @@ export function getInitialState(): Pick<
 
   console.log("Building configuration", { signature, bpm, graceTime, id });
   const configuration = {
-    signature: signature
+    signature: (signature
       ? Number(signature)
-      : defaultMetronomeConfiguration.signature,
+      : defaultMetronomeConfiguration.signature) as 4 | 8 | 16,
     bpm: bpm ? Number(bpm) : defaultMetronomeConfiguration.bpm,
     graceTime: graceTime
       ? Number(graceTime)

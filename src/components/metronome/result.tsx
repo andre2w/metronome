@@ -1,5 +1,5 @@
 import { Flex, Heading } from "@radix-ui/themes";
-import "./Result.css";
+import "./result.css";
 
 export interface ResultProps {
   right: number;

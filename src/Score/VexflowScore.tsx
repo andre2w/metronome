@@ -1,11 +1,5 @@
 import { useThemeContext } from "@radix-ui/themes";
-import {
-  forwardRef,
-  useCallback,
-  useEffect,
-  useImperativeHandle,
-  useRef,
-} from "react";
+import { forwardRef, useEffect, useImperativeHandle, useRef } from "react";
 import { useResizeObserver } from "usehooks-ts";
 import { Renderer } from "vexflow";
 import { getRgbaColorString } from "../lib/color";

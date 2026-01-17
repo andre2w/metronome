@@ -73,7 +73,7 @@ export interface NotePlayed {
 export interface FullScore {
   score: Score;
   name: string;
-  signature: number;
+  signature: 4 | 8 | 16;
   bpm: number;
   graceTime: number;
 }

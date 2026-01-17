@@ -7,7 +7,7 @@ import { Metronome } from "./components/metronome/metronome";
 import { Sheet } from "./SheetMaker/Sheet";
 import { ThemePicker } from "./components/ThemePicker";
 import { useRef } from "react";
-import { VexflowScore, VexflowScoreHandle } from "./Score/VexflowScore";
+import { VexflowScore, type VexflowScoreHandle } from "./Score/VexflowScore";
 
 function App() {
   const vexflowScoreRef = useRef<VexflowScoreHandle>(null);

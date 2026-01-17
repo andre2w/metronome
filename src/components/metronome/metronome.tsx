@@ -1,7 +1,7 @@
 import { Button, Flex } from "@radix-ui/themes";
-import { Result } from "../../Metronome/Result";
-import { Timer } from "../../Metronome/Timer";
-import { useMetronome } from "../../hooks/useMetronome";
+import { Result } from "./result";
+import { Timer } from "./timer";
+import { useMetronome } from "../../hooks/use-metronome";
 import { MetronomeConfiguration } from "./metronome-configuration";
 
 export interface MetronomeProps {

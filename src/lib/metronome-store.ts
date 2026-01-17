@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import { calculateBeatTime } from "./beat-time";
 
-interface MetronomeConfigurationValues {
+export interface MetronomeConfigurationValues {
   /**
    *  Beats per minute
    */

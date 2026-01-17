@@ -1,12 +1,12 @@
 import { useRef, useState } from "react";
 import { useScoreStore } from "../lib/score/state";
-import { useAudioTicks } from "./useAudioTick";
-import { NotePlayed, Ticks } from "../lib/score/types";
-import { useInputListener } from "./useInputListener";
+import { useAudioTicks } from "./use-audio-ticks";
+import type { NotePlayed, Ticks } from "../lib/score/types";
+import { useInputListener } from "./use-input-listener";
 import { mappings } from "../lib/mappings/roland-td07";
 import { useInterval } from "usehooks-ts";
 import { start } from "tone";
-import { ResultProps } from "../Metronome/Result";
+import type { ResultProps } from "../components/metronome/result";
 import { calculateResult } from "../lib/result-calculator";
 import { useMetronomeStore } from "../lib/metronome-store";
 import { useShallow } from "zustand/shallow";

@@ -1,4 +1,4 @@
-import type { MetronomeConfigurationProps } from "../../../Metronome/configuration";
+import type { MetronomeConfigurationValues } from "../../metronome-store";
 import type { FullScore, Note, Score, Sticking } from "../types";
 
 export interface ScoreContextValue {
@@ -16,9 +16,15 @@ export interface ScoreContextValue {
     sticking: Sticking | null;
   }) => void;
   loadScore: (score: FullScore & { id: number }) => void;
-  configuration: MetronomeConfigurationProps & { id?: number; name?: string };
+  configuration: Pick<
+    MetronomeConfigurationValues,
+    "bpm" | "signature" | "graceTime"
+  > & { id?: number; name?: string };
   onChangeConfiguration: (
-    configuration: MetronomeConfigurationProps & { name?: string },
+    configuration: Pick<
+      MetronomeConfigurationValues,
+      "bpm" | "signature" | "graceTime"
+    > & { name?: string },
   ) => void;
   clear: () => void;
 }
