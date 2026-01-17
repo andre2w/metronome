@@ -3,12 +3,14 @@ import { useLocalStorage } from "usehooks-ts";
 import "./App.css";
 import { InputConfiguration } from "./components/InputConfiguration/InputConfiguration";
 import { InputConfigurationProvider } from "./components/InputConfiguration/InputConfigurationContext";
-import { Metronome } from "./Metronome";
+import { Metronome } from "./components/metronome/metronome";
 import { Sheet } from "./SheetMaker/Sheet";
 import { ThemePicker } from "./components/ThemePicker";
-import { MetronomeConfiguration } from "./components/metronome/metronome-configuration";
+import { useRef } from "react";
+import { VexflowScore, VexflowScoreHandle } from "./Score/VexflowScore";
 
 function App() {
+  const vexflowScoreRef = useRef<VexflowScoreHandle>(null);
   const [{ accentColor, appearance }, setThemePreferences] = useLocalStorage(
     "theme-preferences",
     {
@@ -39,8 +41,12 @@ function App() {
               }}
               gap="7"
             >
-              <Metronome />
-              <MetronomeConfiguration />
+              <Metronome
+                onTick={(index) => {
+                  vexflowScoreRef.current?.setCursor(index);
+                }}
+              />
+              <VexflowScore ref={vexflowScoreRef} />
               <Sheet />
             </Flex>
           </div>

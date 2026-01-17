@@ -6,6 +6,7 @@ import { ListScores } from "./ListScores";
 import { SaveScore } from "./SaveScore";
 import { StaveNoteBox } from "./StaveNoteBox";
 import { useScoreStore } from "../lib/score/state";
+import { ScoreConfiguration } from "../components/score/score-configuration";
 
 const noteLabel: Record<Note, string> = {
   KICK: "Kick",
@@ -34,6 +35,10 @@ export function Sheet() {
   return (
     <>
       <div className="sheet-maker">
+        <div style={{ marginBottom: "10px" }}>
+          <ScoreConfiguration />
+        </div>
+
         <div className="add">
           <Button onClick={addStave}>Add stave</Button>
           <SaveScore />

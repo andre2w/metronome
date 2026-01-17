@@ -1,8 +1,8 @@
 import type { StateStorage } from "zustand/middleware";
-import { defaultMetronomeConfiguration } from "../../../Metronome/configuration";
 import type { Score } from "../types";
 import type { ScoreContextValue } from "./types";
 import { createStave } from "./utils";
+import { defaultMetronomeConfiguration } from "../../metronome-store";
 
 export const urlHashStorage: StateStorage = {
   getItem: (key): string => {
