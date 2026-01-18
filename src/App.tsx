@@ -1,11 +1,11 @@
 import { Flex, Theme, type ThemeProps } from "@radix-ui/themes";
 import { useLocalStorage } from "usehooks-ts";
 import "./App.css";
-import { InputConfiguration } from "./components/InputConfiguration/InputConfiguration";
-import { InputConfigurationProvider } from "./components/InputConfiguration/InputConfigurationContext";
+import { InputConfiguration } from "./components/input-configuration/input-configuration";
+import { InputConfigurationProvider } from "./components/input-configuration/input-configuration-context";
 import { Metronome } from "./components/metronome/metronome";
 import { Sheet } from "./components/score/sheet";
-import { ThemePicker } from "./components/ThemePicker";
+import { ThemePicker } from "./components/theme-picker";
 import { useRef } from "react";
 import {
   VexflowScore,

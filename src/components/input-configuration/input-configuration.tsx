@@ -2,7 +2,7 @@ import { Button, Select } from "@radix-ui/themes";
 import {
   NO_INPUT_SELECTED,
   useInputConfigurationContext,
-} from "./InputConfigurationContext";
+} from "./input-configuration-context";
 
 export function InputConfiguration() {
   const { devices, enable, enabled, selectDevice, selectedDevice } =
