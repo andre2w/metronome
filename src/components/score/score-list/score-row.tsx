@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { FullScore } from "../../../lib/score/types";
+import type { FullScore } from "../../../lib/score/types";
 import { Flex } from "@radix-ui/themes";
 import { DeleteScore } from "./score-row-delete";
 import { ScoreRowView } from "./score-row-view";

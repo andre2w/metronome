@@ -1,8 +1,8 @@
 import { Cross1Icon } from "@radix-ui/react-icons";
 import { Button, Text } from "@radix-ui/themes";
 import type { Bar } from "../../../lib/score/types";
-import "./Stave.css";
-import { Note, NoteProps } from "./note";
+import "./stave.css";
+import { Note, type NoteProps } from "./note";
 
 const counting: { [k: number]: string[] } = {
   4: ["1", "2", "3", "4"],

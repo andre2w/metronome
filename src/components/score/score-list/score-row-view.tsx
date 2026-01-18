@@ -1,5 +1,5 @@
 import { Button, Flex, Text } from "@radix-ui/themes";
-import { FullScore } from "../../../lib/score/types";
+import type { FullScore } from "../../../lib/score/types";
 
 interface ScoreRowViewProps {
   score: FullScore;
