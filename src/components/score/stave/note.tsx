@@ -4,11 +4,11 @@ import {
   type Note,
   type NotesWithSticking,
   type Sticking,
-} from "../lib/score/types";
-import "./StaveNote.css";
-import { StaveNoteBox } from "./StaveNoteBox";
+} from "../../../lib/score/types";
+import "./note.css";
+import { NoteBox } from "./note-box";
 
-export interface StaveNoteProps {
+export interface NoteProps {
   onSelect: (note: Note) => void;
   onSetSticking: (sticking: Sticking | null) => void;
   notesWithSticking: NotesWithSticking;
@@ -19,13 +19,13 @@ export interface StaveNoteProps {
 
 const stickingsLoop = [null, "L", "R", "R/L"] as const;
 
-export function StaveNote({
+export function Note({
   onSelect,
   notesWithSticking,
   onSetSticking,
   noteCount,
   className,
-}: StaveNoteProps) {
+}: NoteProps) {
   const { notes: selectedNotes, sticking } = notesWithSticking;
   const stickingIndex = Math.max(
     stickingsLoop.findIndex((s) => s === sticking),
@@ -35,7 +35,7 @@ export function StaveNote({
     stickingIndex + 1 >= stickingsLoop.length ? 0 : stickingIndex + 1;
   return (
     <div className={`stave-note ${className ?? ""}`}>
-      <StaveNoteBox
+      <NoteBox
         squared
         className="sticking"
         onClick={() => {
@@ -45,11 +45,11 @@ export function StaveNote({
         <Text weight={sticking ? "bold" : "light"}>
           {sticking ?? noteCount}
         </Text>
-      </StaveNoteBox>
+      </NoteBox>
       {Object.keys(NOTES).map((note) => {
         const isSelected = selectedNotes.includes(note as Note);
         return (
-          <StaveNoteBox
+          <NoteBox
             key={note}
             squared
             className={`note ${isSelected ? "note-selected" : ""}`}

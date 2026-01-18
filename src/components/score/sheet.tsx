@@ -1,0 +1,74 @@
+import { Text } from "@radix-ui/themes";
+import { NOTES, type Note } from "../../lib/score/types";
+import { Stave } from "./stave/stave";
+import "./sheet.css";
+import { useScoreStore } from "../../lib/score/state";
+import { ScoreConfiguration } from "./score-configuration";
+import { ScoreControls } from "./score-controls";
+import { NoteBox } from "./stave/note-box";
+
+const noteLabel: Record<Note, string> = {
+  KICK: "Kick",
+  SNARE: "Snare",
+  SNARE_X_STICK: "Snare cross-stick",
+  GHOST_SNARE: "Snare (Ghosted)",
+  ACCENTED_SNARE: "Snare (Accented)",
+  TOM_1: "Tom 1",
+  TOM_2: "Tom 2",
+  TOM_3: "Tom 3",
+  HIGH_HAT: "High hat",
+  HIGH_HAT_OPEN: "High hat open",
+  HIGH_HAT_PEDAL: "High hat pedal",
+  CRASH: "Crash",
+  RIDE: "Ride",
+};
+
+export function Sheet() {
+  const score = useScoreStore((state) => state.score);
+  const toggleNote = useScoreStore((state) => state.toggleNote);
+  const removeStave = useScoreStore((state) => state.removeStave);
+  const setSticking = useScoreStore((state) => state.setSticking);
+
+  return (
+    <div className="sheet-maker">
+      <div style={{ marginBottom: "10px" }}>
+        <ScoreConfiguration />
+      </div>
+      <ScoreControls />
+      <div className="sheet">
+        <div className="parts">
+          <NoteBox className="part-name">
+            <Text as="p" wrap="nowrap" align="right">
+              Stickings
+            </Text>
+          </NoteBox>
+          {Object.keys(NOTES).map((note) => (
+            <NoteBox key={note} className="part-name">
+              <Text as="p" wrap="nowrap" align="right">
+                {noteLabel[note as Note]}
+              </Text>
+            </NoteBox>
+          ))}
+        </div>
+        <div style={{ display: "flex", flexDirection: "row" }}>
+          {score.map((bar, staveIndex) => {
+            return (
+              // biome-ignore lint/correctness/useJsxKeyInIterable: <explanation>
+              <Stave
+                bar={bar}
+                index={staveIndex}
+                onSelectNote={(staveNoteIndex, note) => {
+                  toggleNote({ staveIndex, staveNoteIndex, note });
+                }}
+                onRemoveStave={() => removeStave(staveIndex)}
+                onSetStickings={(staveNoteIndex, sticking) => {
+                  setSticking({ staveIndex, staveNoteIndex, sticking });
+                }}
+              />
+            );
+          })}
+        </div>
+      </div>
+    </div>
+  );
+}

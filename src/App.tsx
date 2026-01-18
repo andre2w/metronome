@@ -4,10 +4,13 @@ import "./App.css";
 import { InputConfiguration } from "./components/InputConfiguration/InputConfiguration";
 import { InputConfigurationProvider } from "./components/InputConfiguration/InputConfigurationContext";
 import { Metronome } from "./components/metronome/metronome";
-import { Sheet } from "./SheetMaker/Sheet";
+import { Sheet } from "./components/score/sheet";
 import { ThemePicker } from "./components/ThemePicker";
 import { useRef } from "react";
-import { VexflowScore, type VexflowScoreHandle } from "./Score/VexflowScore";
+import {
+  VexflowScore,
+  type VexflowScoreHandle,
+} from "./components/score/vexflow-score";
 
 function App() {
   const vexflowScoreRef = useRef<VexflowScoreHandle>(null);

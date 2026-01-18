@@ -23,6 +23,6 @@ db.version(2)
         // biome-ignore lint/performance/noDelete: <explanation>
         delete score.beats;
         // biome-ignore lint/performance/noDelete: <explanation>
-        delete score.signature;
+        delete score.notes;
       });
   });

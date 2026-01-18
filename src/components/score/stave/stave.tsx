@@ -1,8 +1,8 @@
 import { Cross1Icon } from "@radix-ui/react-icons";
 import { Button, Text } from "@radix-ui/themes";
-import type { Bar } from "../lib/score/types";
-import { StaveNote, type StaveNoteProps } from "./StaveNote";
+import type { Bar } from "../../../lib/score/types";
 import "./Stave.css";
+import { Note, NoteProps } from "./note";
 
 const counting: { [k: number]: string[] } = {
   4: ["1", "2", "3", "4"],
@@ -32,12 +32,12 @@ export interface StaveProps {
   index: number;
   onSelectNote: (
     barIndex: number,
-    note: Parameters<StaveNoteProps["onSelect"]>[0],
+    note: Parameters<NoteProps["onSelect"]>[0],
   ) => void;
   onRemoveStave: () => void;
   onSetStickings: (
     barIndex: number,
-    sticking: Parameters<StaveNoteProps["onSetSticking"]>[0],
+    sticking: Parameters<NoteProps["onSetSticking"]>[0],
   ) => void;
   className?: string;
 }
@@ -55,7 +55,7 @@ export function Stave({
     const withSpace = ["2", "3", "4"].includes(noteCount);
     return (
       // biome-ignore lint/correctness/useJsxKeyInIterable: <explanation>
-      <StaveNote
+      <Note
         noteCount={noteCount}
         index={index}
         notesWithSticking={notesWithSticking}

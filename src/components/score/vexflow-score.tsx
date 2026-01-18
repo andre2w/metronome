@@ -2,9 +2,9 @@ import { useThemeContext } from "@radix-ui/themes";
 import { forwardRef, useEffect, useImperativeHandle, useRef } from "react";
 import { useResizeObserver } from "usehooks-ts";
 import { Renderer } from "vexflow";
-import { getRgbaColorString } from "../lib/color";
-import { useScoreStore } from "../lib/score/state";
-import { drawScore } from "../lib/vexflow";
+import { getRgbaColorString } from "../../lib/color";
+import { useScoreStore } from "../../lib/score/state";
+import { drawScore } from "../../lib/vexflow";
 
 export type VexflowScoreProps = {};
 

@@ -1,21 +1,21 @@
 import { Box, type BoxProps } from "@radix-ui/themes";
 import type { Key, ReactNode } from "react";
-import "./StaveNoteBox.css";
+import "./note-box.css";
 
-export interface StaveNoteBoxProps {
+export interface NoteBoxProps {
   children?: ReactNode;
   key?: Key;
   squared?: boolean;
   onClick?: BoxProps["onClick"];
   className?: string;
 }
-export function StaveNoteBox({
+export function NoteBox({
   children,
   key,
   squared,
   onClick,
   className,
-}: StaveNoteBoxProps) {
+}: NoteBoxProps) {
   return (
     <Box
       key={key}

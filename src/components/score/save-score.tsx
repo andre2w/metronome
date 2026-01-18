@@ -1,13 +1,16 @@
 import { Button, Dialog, Flex, Text, TextField } from "@radix-ui/themes";
 import { useState } from "react";
-import { db } from "../lib/score/storage";
-import { useScoreStore } from "../lib/score/state";
+import { useScoreStore } from "../../lib/score/state";
+import { useShallow } from "zustand/shallow";
+import { db } from "../../lib/score/storage";
 
 export function SaveScore() {
-  const configuration = useScoreStore((state) => state.configuration);
-  const score = useScoreStore((state) => state.score);
-  const onChangeConfiguration = useScoreStore(
-    (state) => state.onChangeConfiguration,
+  const { configuration, score, onChangeConfiguration } = useScoreStore(
+    useShallow(({ configuration, score, onChangeConfiguration }) => ({
+      configuration,
+      score,
+      onChangeConfiguration,
+    })),
   );
   const [isOpen, setIsOpen] = useState(false);
 
