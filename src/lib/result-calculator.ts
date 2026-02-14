@@ -1,4 +1,4 @@
-import type { NotePlayed, Score, Ticks } from "./score/types";
+import type { Bar, NotePlayed, Notes, Score, Ticks } from "./score/types";
 
 export interface CalculateResultProps {
   ticks: Ticks;
@@ -19,7 +19,6 @@ export function calculateResult({
   let notesPlayedIndex = 0;
   let scoreIndex = 0;
   let barIndex = 0;
-  notesPlayed.sort((a, b) => a.timestamp - b.timestamp);
 
   if (!score.length) {
     return { missed: 0, right: 0 };
@@ -74,4 +73,42 @@ export function calculateResult({
   }
 
   return { missed, right };
+}
+
+export interface IsNoteRightProps {
+  tick: number;
+  notesPlayed: NotePlayed[];
+  notesRange: { start: number; end: number };
+  notes: Notes;
+  graceTime: number;
+}
+export function isNoteRight({
+  tick,
+  notesPlayed,
+  notesRange,
+  notes,
+  graceTime,
+}: IsNoteRightProps) {
+  if (notes.length !== notesRange.end - notesRange.start) {
+    return false;
+  }
+  const minTime = tick - graceTime;
+  const maxTime = tick + graceTime;
+
+  const expectedNotes = new Set(notes);
+
+  for (let i = notesRange.start; i < notesRange.end; i++) {
+    const currentNote = notesPlayed[i];
+    if (
+      expectedNotes.has(currentNote.note) &&
+      minTime <= currentNote.timestamp &&
+      maxTime >= currentNote.timestamp
+    ) {
+      expectedNotes.delete(currentNote.note);
+    } else {
+      return false;
+    }
+  }
+
+  return true;
 }

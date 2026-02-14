@@ -7,15 +7,14 @@ import { mappings } from "../lib/mappings/roland-td07";
 import { useInterval } from "usehooks-ts";
 import { start } from "tone";
 import type { ResultProps } from "../components/metronome/result";
-import { calculateResult } from "../lib/result-calculator";
+import { calculateResult, isNoteRight } from "../lib/result-calculator";
 import { useMetronomeStore } from "../lib/metronome-store";
 import { useShallow } from "zustand/shallow";
 
 export function useMetronome(onTick?: (index: number) => void) {
   const score = useScoreStore((state) => state.score);
-  const scoreLength = score.flatMap((bars) =>
-    bars.map((bar) => bar.notes),
-  ).length;
+  const flatScore = score.flatMap((bars) => bars.map((bar) => bar.notes));
+  const scoreLength = flatScore.length;
 
   const { beatTime, graceTime, signature } = useMetronomeStore(
     useShallow((state) => ({
@@ -32,6 +31,8 @@ export function useMetronome(onTick?: (index: number) => void) {
   const indexRef = useRef<number>(-1);
   const notesPlayedRef = useRef<NotePlayed[]>([]);
   const [result, setResult] = useState<ResultProps | undefined>(undefined);
+  const windowRef = useRef<number[]>([]);
+  const countRef = useRef<number>(0);
 
   useInputListener((e) => {
     notesPlayedRef.current.push({
@@ -48,12 +49,29 @@ export function useMetronome(onTick?: (index: number) => void) {
     ticksRef.current.push(performance.now());
     const isBigTick =
       indexRef.current + 1 === 1 || indexRef.current % signature === 0;
+
     if (isBigTick) {
       bigTick(beatTime);
     } else {
       smallTick(beatTime);
     }
+
     onTick?.(indexRef.current);
+    windowRef.current.push(notesPlayedRef.current.length);
+    const noteResult = isNoteRight({
+      tick: ticksRef.current[ticksRef.current.length - 2],
+      graceTime: graceTime,
+      notes: flatScore[indexRef.current],
+      notesPlayed: notesPlayedRef.current,
+      notesRange: {
+        start: windowRef.current[windowRef.current.length - 2],
+        end: windowRef.current[windowRef.current.length - 1],
+      },
+    });
+
+    if (noteResult) {
+      countRef.current = countRef.current + 1;
+    }
   };
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: Need to fix this later
@@ -79,6 +97,8 @@ export function useMetronome(onTick?: (index: number) => void) {
       notesPlayedRef.current = [];
       ticksRef.current = [];
       indexRef.current = -1;
+      windowRef.current = [];
+      countRef.current = 0;
       setResult(undefined);
     }
     setStarted((v) => !v);

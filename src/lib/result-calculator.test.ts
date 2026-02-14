@@ -3,6 +3,7 @@ import assert from "node:assert";
 import type { NotePlayed, Score } from "./score/types";
 import {
   calculateResult,
+  isNoteRight,
   type CalculateResultProps,
 } from "./result-calculator";
 
@@ -319,7 +320,7 @@ test("when there is no score", () => {
   );
 });
 
-test("real world example", { only: true }, () => {
+test("real world example", () => {
   const props: CalculateResultProps = {
     ticks: [
       31710.5, 32460, 33210.200000047684, 33959.80000001192, 34710.60000002384,
@@ -427,4 +428,82 @@ test("real world example", { only: true }, () => {
   }
 
   assert.deepStrictEqual(calculateResult(props), { missed: 9, right: 9 });
+});
+
+test("calculate partial results", (t) => {
+  t.test("calculate partial result based on range", () => {
+    const notesPlayed: NotePlayed[] = [
+      { timestamp: 10, note: "SNARE" },
+      { timestamp: 15, note: "SNARE" },
+      { timestamp: 20, note: "SNARE" },
+      { timestamp: 25, note: "SNARE" },
+      { timestamp: 30, note: "SNARE" },
+      { timestamp: 35, note: "SNARE" },
+      { timestamp: 40, note: "SNARE" },
+      { timestamp: 50, note: "SNARE" },
+    ];
+
+    assert.ok(
+      isNoteRight({
+        tick: 16,
+        notesPlayed,
+        notes: ["SNARE"],
+        graceTime: 3,
+        notesRange: { start: 1, end: 2 },
+      }),
+    );
+  });
+
+  t.test(
+    "make a miss when there are more notes played in the time range",
+    () => {
+      const notesPlayed: NotePlayed[] = [
+        { timestamp: 10, note: "SNARE" },
+        { timestamp: 15, note: "SNARE" },
+        { timestamp: 16, note: "SNARE" },
+        { timestamp: 20, note: "SNARE" },
+        { timestamp: 25, note: "SNARE" },
+        { timestamp: 30, note: "SNARE" },
+        { timestamp: 35, note: "SNARE" },
+        { timestamp: 40, note: "SNARE" },
+        { timestamp: 50, note: "SNARE" },
+      ];
+
+      assert.ok(
+        !isNoteRight({
+          tick: 15,
+          notesPlayed,
+          notes: ["SNARE"],
+          graceTime: 3,
+          notesRange: { start: 1, end: 3 },
+        }),
+      );
+    },
+  );
+
+  t.test(
+    "make a miss when there are less notes played in the time range",
+    () => {
+      const notesPlayed: NotePlayed[] = [
+        { timestamp: 10, note: "SNARE" },
+        { timestamp: 15, note: "SNARE" },
+        { timestamp: 20, note: "SNARE" },
+        { timestamp: 25, note: "SNARE" },
+        { timestamp: 30, note: "SNARE" },
+        { timestamp: 35, note: "SNARE" },
+        { timestamp: 40, note: "SNARE" },
+        { timestamp: 50, note: "SNARE" },
+      ];
+
+      assert.ok(
+        !isNoteRight({
+          tick: 15,
+          notesPlayed,
+          notes: ["SNARE", "HIGH_HAT"],
+          graceTime: 3,
+          notesRange: { start: 1, end: 3 },
+        }),
+      );
+    },
+  );
 });
