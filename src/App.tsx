@@ -9,13 +9,10 @@ import { Sheet } from "./SheetMaker/Sheet";
 import { ThemePicker } from "./components/ThemePicker";
 
 function App() {
-  const [{ accentColor, appearance }, setThemePreferences] = useLocalStorage(
-    "theme-preferences",
-    {
-      appearance: "dark" as "light" | "dark",
-      accentColor: "indigo" as ThemeProps["accentColor"],
-    },
-  );
+  const [{ accentColor, appearance }, setThemePreferences] = useLocalStorage("theme-preferences", {
+    appearance: "dark" as "light" | "dark",
+    accentColor: "indigo" as ThemeProps["accentColor"],
+  });
 
   return (
     <Theme accentColor={accentColor} appearance={appearance}>

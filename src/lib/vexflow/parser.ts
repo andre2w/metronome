@@ -52,10 +52,7 @@ export function parse({
           previous.duration = "8";
         } else if (previous.duration === "8" && !previous.withDot && allowDot) {
           previous.withDot = true;
-        } else if (
-          previous.duration === "8" &&
-          (previous.withDot || !allowDot)
-        ) {
+        } else if (previous.duration === "8" && (previous.withDot || !allowDot)) {
           previous.withDot = false;
           previous.duration = "4";
         }

@@ -27,8 +27,10 @@ export function Metronome({ className }: MetronomeProps) {
   const ticksRef = useRef<Ticks>([]);
   const [result, setResult] = useState<ResultProps | undefined>(undefined);
   const tickSymbolsRef = useRef<TicksHandle | null>(null);
-  const { playNextTick: playNextAudioTick, reset: resetAudioTicks } =
-    useAudioTicks({ notes: configuration.signature, bpm: configuration.bpm });
+  const { playNextTick: playNextAudioTick, reset: resetAudioTicks } = useAudioTicks({
+    notes: configuration.signature,
+    bpm: configuration.bpm,
+  });
   const { getPlayedNotes, resetPlayedNotes } = useInputListener();
 
   const tick = async () => {

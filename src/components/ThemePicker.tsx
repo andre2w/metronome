@@ -39,11 +39,7 @@ export interface ThemePickerProps {
   }: Pick<ThemePickerProps, "appearance" | "accentColor">) => void;
 }
 
-export function ThemePicker({
-  appearance,
-  accentColor,
-  onChange,
-}: ThemePickerProps) {
+export function ThemePicker({ appearance, accentColor, onChange }: ThemePickerProps) {
   return (
     <Flex flexGrow="1" justify="end" gap="1">
       <IconButton

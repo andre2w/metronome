@@ -1,10 +1,5 @@
 import { Text } from "@radix-ui/themes";
-import {
-  NOTES,
-  type Note,
-  type NotesWithSticking,
-  type Sticking,
-} from "../lib/types";
+import { NOTES, type Note, type NotesWithSticking, type Sticking } from "../lib/types";
 import "./StaveNote.css";
 import { StaveNoteBox } from "./StaveNoteBox";
 
@@ -31,8 +26,7 @@ export function StaveNote({
     stickingsLoop.findIndex((s) => s === sticking),
     0,
   );
-  const nextIndex =
-    stickingIndex + 1 >= stickingsLoop.length ? 0 : stickingIndex + 1;
+  const nextIndex = stickingIndex + 1 >= stickingsLoop.length ? 0 : stickingIndex + 1;
   return (
     <div className={`stave-note ${className ?? ""}`}>
       <StaveNoteBox
@@ -42,9 +36,7 @@ export function StaveNote({
           onSetSticking?.(stickingsLoop[nextIndex]);
         }}
       >
-        <Text weight={sticking ? "bold" : "light"}>
-          {sticking ?? noteCount}
-        </Text>
+        <Text weight={sticking ? "bold" : "light"}>{sticking ?? noteCount}</Text>
       </StaveNoteBox>
       {Object.keys(NOTES).map((note) => {
         const isSelected = selectedNotes.includes(note as Note);

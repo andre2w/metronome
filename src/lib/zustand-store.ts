@@ -1,17 +1,7 @@
 import { create } from "zustand";
-import {
-  persist,
-  type StateStorage,
-  createJSONStorage,
-} from "zustand/middleware";
+import { persist, type StateStorage, createJSONStorage } from "zustand/middleware";
 import { immer } from "zustand/middleware/immer";
-import type {
-  FullScore,
-  Note,
-  NotesWithSticking,
-  Score,
-  Sticking,
-} from "./types";
+import type { FullScore, Note, NotesWithSticking, Score, Sticking } from "./types";
 import {
   defaultMetronomeConfiguration,
   type MetronomeConfigurationProps,
@@ -27,23 +17,17 @@ const conflictingNotesMap = Object.fromEntries(
 
 const queryParamsStorage: StateStorage = {
   getItem: (key): string => {
-    const urlSearchParams = new URLSearchParams(
-      window.location.hash.substring(1),
-    );
+    const urlSearchParams = new URLSearchParams(window.location.hash.substring(1));
     const value = urlSearchParams.get(key);
     return value ?? "";
   },
   setItem: (key, newValue): void => {
-    const urlSearchParams = new URLSearchParams(
-      window.location.hash.substring(1),
-    );
+    const urlSearchParams = new URLSearchParams(window.location.hash.substring(1));
     urlSearchParams.set(key, JSON.stringify(newValue));
     location.hash = urlSearchParams.toString();
   },
   removeItem: (key): void => {
-    const urlSearchParams = new URLSearchParams(
-      window.location.hash.substring(1),
-    );
+    const urlSearchParams = new URLSearchParams(window.location.hash.substring(1));
     urlSearchParams.delete(key);
     location.hash = urlSearchParams.toString();
   },
@@ -52,11 +36,7 @@ const queryParamsStorage: StateStorage = {
 export interface ScoreContextValue {
   score: Score;
   addStave: () => void;
-  toggleNote: (props: {
-    staveIndex: number;
-    staveNoteIndex: number;
-    note: Note;
-  }) => void;
+  toggleNote: (props: { staveIndex: number; staveNoteIndex: number; note: Note }) => void;
   removeStave: (staveIndex: number) => void;
   setSticking: (props: {
     staveIndex: number;
@@ -65,9 +45,7 @@ export interface ScoreContextValue {
   }) => void;
   loadScore: (score: FullScore & { id: number }) => void;
   configuration: MetronomeConfigurationProps & { id?: number; name?: string };
-  onChangeConfiguration: (
-    configuration: MetronomeConfigurationProps & { name?: string },
-  ) => void;
+  onChangeConfiguration: (configuration: MetronomeConfigurationProps & { name?: string }) => void;
   clear: () => void;
 }
 
@@ -179,13 +157,9 @@ function getInitialState(): Pick<ScoreContextValue, "configuration" | "score"> {
 
   console.log("Building configuration", { signature, bpm, graceTime, id });
   const configuration = {
-    signature: signature
-      ? Number(signature)
-      : defaultMetronomeConfiguration.signature,
+    signature: signature ? Number(signature) : defaultMetronomeConfiguration.signature,
     bpm: bpm ? Number(bpm) : defaultMetronomeConfiguration.bpm,
-    graceTime: graceTime
-      ? Number(graceTime)
-      : defaultMetronomeConfiguration.graceTime,
+    graceTime: graceTime ? Number(graceTime) : defaultMetronomeConfiguration.graceTime,
     id: id ? Number(id) : undefined,
   };
   const scoreText = hash.get("score");

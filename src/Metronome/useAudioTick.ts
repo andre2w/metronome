@@ -34,16 +34,9 @@ export function useAudioTicks({ notes, bpm }: UseAudioTicksProps) {
       indexRef.current = nextInLoop(indexRef.current, notes);
 
       if (indexRef.current === 0) {
-        sampler.current?.triggerAttackRelease(
-          "A1",
-          Math.min(beatTime, 150),
-          now(),
-        );
+        sampler.current?.triggerAttackRelease("A1", Math.min(beatTime, 150), now());
       } else {
-        sampler.current?.triggerAttackRelease(
-          "C4",
-          Math.min(beatTime, 90, now()),
-        );
+        sampler.current?.triggerAttackRelease("C4", Math.min(beatTime, 90, now()));
       }
     },
 

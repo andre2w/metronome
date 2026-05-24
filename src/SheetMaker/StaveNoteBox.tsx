@@ -9,13 +9,7 @@ export interface StaveNoteBoxProps {
   onClick?: BoxProps["onClick"];
   className?: string;
 }
-export function StaveNoteBox({
-  children,
-  key,
-  squared,
-  onClick,
-  className,
-}: StaveNoteBoxProps) {
+export function StaveNoteBox({ children, key, squared, onClick, className }: StaveNoteBoxProps) {
   return (
     <Box
       key={key}

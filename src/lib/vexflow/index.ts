@@ -34,10 +34,7 @@ export function drawScore({
     startY: Y_OFFSET,
     startX: 20,
   });
-  const height = positions.reduce(
-    (prev, curr) => Math.max(prev, curr.y + STAVE_HEIGHT),
-    Y_OFFSET,
-  );
+  const height = positions.reduce((prev, curr) => Math.max(prev, curr.y + STAVE_HEIGHT), Y_OFFSET);
 
   renderer.resize(sheetWidth, height);
   const context = renderer.getContext();
@@ -105,15 +102,11 @@ export function drawScore({
       beam.setContext(context).drawWithStyle();
     }
 
-    const cursorNote = notes
-      .flatMap((note) => note)
-      .find((note) => note.hasCursor);
+    const cursorNote = notes.flatMap((note) => note).find((note) => note.hasCursor);
     if (cursorNote) {
-      const modifierShift =
-        cursorNote.note.getModifierContext()?.getLeftShift() ?? 0;
+      const modifierShift = cursorNote.note.getModifierContext()?.getLeftShift() ?? 0;
 
-      const originalFillStyle: (typeof context)["fillStyle"] =
-        context.fillStyle;
+      const originalFillStyle: (typeof context)["fillStyle"] = context.fillStyle;
       context.fillStyle = accent ?? "rgba(88, 176, 51, 0.5)";
 
       context.fillRect(

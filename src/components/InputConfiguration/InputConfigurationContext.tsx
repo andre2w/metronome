@@ -1,11 +1,4 @@
-import {
-  type ReactNode,
-  createContext,
-  useCallback,
-  useContext,
-  useEffect,
-  useState,
-} from "react";
+import { type ReactNode, createContext, useCallback, useContext, useEffect, useState } from "react";
 import { useLocalStorage } from "usehooks-ts";
 import { type Input, WebMidi } from "webmidi";
 
@@ -29,14 +22,11 @@ export type WebMidiApi = Awaited<ReturnType<typeof createWebMidi>>;
 
 export const NO_INPUT_SELECTED = "NO_INPUT_SELECTED";
 
-export function InputConfigurationProvider({
-  children,
-}: {
-  children: ReactNode;
-}) {
-  const [storedSelection, setStoredSelection] = useLocalStorage<
-    undefined | string
-  >("SELECTED_DEVICE_ID", undefined);
+export function InputConfigurationProvider({ children }: { children: ReactNode }) {
+  const [storedSelection, setStoredSelection] = useLocalStorage<undefined | string>(
+    "SELECTED_DEVICE_ID",
+    undefined,
+  );
   const [selectedDevice, setSelectedDevice] = useState<Input | undefined>();
   const [webmidi, setWebMidi] = useState<WebMidiApi | undefined>(undefined);
 

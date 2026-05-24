@@ -4,12 +4,9 @@ import { useScoreStore } from "../lib/zustand-store";
 
 export function MetronomeConfiguration() {
   const configuration = useScoreStore((state) => state.configuration);
-  const onChangeConfiguration = useScoreStore(
-    (state) => state.onChangeConfiguration,
-  );
+  const onChangeConfiguration = useScoreStore((state) => state.onChangeConfiguration);
 
-  const maxGraceTime =
-    calculateBeatTime(configuration.bpm, configuration.signature) - 2;
+  const maxGraceTime = calculateBeatTime(configuration.bpm, configuration.signature) - 2;
   if (configuration.graceTime > maxGraceTime) {
     onChangeConfiguration({ ...configuration, graceTime: maxGraceTime });
   }

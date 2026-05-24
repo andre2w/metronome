@@ -7,12 +7,7 @@ export interface CalculateResultProps {
   graceTime: number;
 }
 
-export function calculateResult({
-  ticks,
-  notesPlayed,
-  score,
-  graceTime,
-}: CalculateResultProps) {
+export function calculateResult({ ticks, notesPlayed, score, graceTime }: CalculateResultProps) {
   let right = 0;
   let missed = 0;
   let tickIndex = 0;

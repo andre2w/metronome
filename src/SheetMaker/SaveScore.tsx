@@ -6,9 +6,7 @@ import { useScoreStore } from "../lib/zustand-store";
 export function SaveScore() {
   const configuration = useScoreStore((state) => state.configuration);
   const score = useScoreStore((state) => state.score);
-  const onChangeConfiguration = useScoreStore(
-    (state) => state.onChangeConfiguration,
-  );
+  const onChangeConfiguration = useScoreStore((state) => state.onChangeConfiguration);
   const [isOpen, setIsOpen] = useState(false);
 
   return (

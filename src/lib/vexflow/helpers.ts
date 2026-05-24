@@ -1,11 +1,4 @@
-import {
-  Annotation,
-  Dot,
-  ModifierPosition,
-  Parenthesis,
-  StaveNote,
-  Stem,
-} from "vexflow";
+import { Annotation, Dot, ModifierPosition, Parenthesis, StaveNote, Stem } from "vexflow";
 import { type Bar, NOTES, type NotesWithSticking } from "../types";
 import { REST_KEY } from "./constants";
 
@@ -24,9 +17,7 @@ export interface StavePosition {
   width: number;
 }
 
-export function calculateWidthAndPosition(
-  props: CalculateWidthAndPositionProps,
-): StavePosition[] {
+export function calculateWidthAndPosition(props: CalculateWidthAndPositionProps): StavePosition[] {
   if (props.staveCount < 1) {
     return [];
   }
@@ -39,9 +30,7 @@ export function calculateWidthAndPosition(
   let x = props.startX ?? 0;
 
   function fixLastLine() {
-    const lineWidth = lines
-      .at(-1)
-      ?.reduce((total, stave) => total + stave.width, 0);
+    const lineWidth = lines.at(-1)?.reduce((total, stave) => total + stave.width, 0);
     const staveCount = lines.at(-1)?.length;
     if (lineWidth && staveCount) {
       const staveDifference = Math.floor(props.sheetWidth / staveCount);
@@ -55,9 +44,7 @@ export function calculateWidthAndPosition(
   }
 
   for (let i = 0; i < props.staveCount; i++) {
-    const lineWidth = lines
-      .at(-1)
-      ?.reduce((total, stave) => total + stave.width, 0);
+    const lineWidth = lines.at(-1)?.reduce((total, stave) => total + stave.width, 0);
     if (lineWidth && lineWidth + props.staveWidth > props.sheetWidth) {
       fixLastLine();
       lines.push([]);

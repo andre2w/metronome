@@ -40,9 +40,7 @@ export function ListScores() {
                     deleteScore(score.id);
                   }}
                 />
-                {index < scores.length - 1 && (
-                  <Separator size="4" orientation="horizontal" />
-                )}
+                {index < scores.length - 1 && <Separator size="4" orientation="horizontal" />}
               </React.Fragment>
             );
           })}

@@ -7,33 +7,13 @@ import "./Stave.css";
 const counting: { [k: number]: string[] } = {
   4: ["1", "2", "3", "4"],
   8: ["1", "&", "2", "&", "3", "&", "4", "&"],
-  16: [
-    "1",
-    "e",
-    "&",
-    "a",
-    "2",
-    "e",
-    "&",
-    "a",
-    "3",
-    "e",
-    "&",
-    "a",
-    "4",
-    "e",
-    "&",
-    "a",
-  ],
+  16: ["1", "e", "&", "a", "2", "e", "&", "a", "3", "e", "&", "a", "4", "e", "&", "a"],
 };
 
 export interface StaveProps {
   bar: Bar;
   index: number;
-  onSelectNote: (
-    barIndex: number,
-    note: Parameters<StaveNoteProps["onSelect"]>[0],
-  ) => void;
+  onSelectNote: (barIndex: number, note: Parameters<StaveNoteProps["onSelect"]>[0]) => void;
   onRemoveStave: () => void;
   onSetStickings: (
     barIndex: number,
@@ -42,13 +22,7 @@ export interface StaveProps {
   className?: string;
 }
 
-export function Stave({
-  bar,
-  index,
-  onSelectNote,
-  onRemoveStave,
-  onSetStickings,
-}: StaveProps) {
+export function Stave({ bar, index, onSelectNote, onRemoveStave, onSetStickings }: StaveProps) {
   const tempoCounting = counting[bar.length];
   const notes = bar.map((notesWithSticking, noteIndex) => {
     const noteCount = tempoCounting[noteIndex];
