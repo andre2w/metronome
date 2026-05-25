@@ -1,38 +1,46 @@
 {
   "languages": {
     "TypeScript": {
+      "language_servers": [
+        "tsgo",
+        "oxfmt",
+        "oxlint",
+        "!vtsls",
+        "!typescript-language-server",
+      ],
       "document_symbols": "on",
       "format_on_save": "on",
       "prettier": {
-        "allowed": false
+        "allowed": false,
       },
       "formatter": [
         { "language_server": { "name": "oxfmt" } },
-        { "code_action": "source.fixAll.oxc" }
-      ]
+        { "code_action": "source.fixAll.oxc" },
+      ],
     },
     "TSX": {
+      "language_servers": ["tsgo", "!vtsls", "!typescript-language-server"],
       "document_symbols": "on",
       "format_on_save": "on",
       "prettier": {
-        "allowed": false
+        "allowed": false,
       },
       "formatter": [
         { "language_server": { "name": "oxfmt" } },
-        { "code_action": "source.fixAll.oxc" }
-      ]
+        { "code_action": "source.fixAll.oxc" },
+      ],
     },
     "JavaScript": {
       "document_symbols": "on",
       "format_on_save": "on",
       "prettier": {
-        "allowed": false
+        "allowed": false,
       },
       "formatter": [
         { "language_server": { "name": "oxfmt" } },
-        { "code_action": "source.fixAll.oxc" }
-      ]
-    }
+        { "code_action": "source.fixAll.oxc" },
+      ],
+    },
   },
   "lsp": {
     "oxlint": {
@@ -41,16 +49,32 @@
           "disableNestedConfig": false,
           "fixKind": "safe_fix",
           "run": "onType",
-          "unusedDisableDirectives": "deny"
-        }
-      }
+          "unusedDisableDirectives": "deny",
+        },
+      },
     },
     "oxfmt": {
       "initialization_options": {
         "settings": {
-          "fmt.configPath": null
-        }
-      }
-    }
-  }
+          "fmt.configPath": null,
+          "run": "onSave",
+        },
+      },
+    },
+    "vtsls": {
+      "settings": {
+        "typescript": {
+          "implementationsCodeLens": {
+            "enabled": true,
+            "showOnAllClassMethods": true,
+            "showOnInterfaceMethods": true,
+          },
+          "referencesCodeLens": {
+            "enabled": true,
+            "showOnAllFunctions": true,
+          },
+        },
+      },
+    },
+  },
 }
