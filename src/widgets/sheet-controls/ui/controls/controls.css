@@ -4,36 +4,63 @@
 }
 
 .sheet-maker {
-  margin-top: auto;
-  margin-bottom: 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 16px 20px;
+  border: 1px solid var(--gray-a6);
+  background-color: var(--color-background);
   overflow-y: hidden;
-  overflow-x: scroll;
+  overflow-x: auto;
+}
+
+.sheet-maker-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--code-font-family);
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  font-size: 11px;
+  color: var(--gray-11);
+}
+
+.sheet-maker-header::before {
+  content: "/ ";
+  color: var(--bs-accent);
+  font-weight: 600;
 }
 
 .sheet {
   display: flex;
   flex-direction: row;
-  margin-top: var(--space-2);
-  margin-bottom: var(--space-3);
 }
 
 .parts {
   align-self: flex-end;
-  /* position: sticky; */
-  /* left: 0; */
+  position: sticky;
+  left: 0;
   background-color: var(--color-background);
-  margin-right: var(--space-2);
+  margin-right: 12px;
+  padding-right: 12px;
+  border-right: 1px solid var(--gray-a6);
 }
 
 .part-name {
   display: flex;
   align-items: center;
   justify-content: flex-end;
+  font-family: var(--code-font-family);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 11px;
+  color: var(--gray-11);
 }
 
 .add {
   position: sticky;
   left: 0;
   display: flex;
-  gap: var(--space-2);
+  flex-wrap: wrap;
+  gap: 8px;
 }

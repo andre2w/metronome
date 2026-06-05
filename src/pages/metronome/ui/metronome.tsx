@@ -1,5 +1,4 @@
 import "./metronome.css";
-import { Button, Flex } from "@radix-ui/themes";
 import { useRef, useState } from "react";
 import { calculateBeatTime } from "../model/beat-time";
 import { calculateResult } from "../model/result-calculator";
@@ -15,6 +14,7 @@ import { SheetRenderer } from "~/widgets/sheet-renderer";
 import { VexflowScoreHandle } from "~/widgets/sheet-renderer/ui/sheet-renderer";
 import { SheetControls } from "~/widgets/sheet-controls";
 import { useScoreStoreShallow } from "~/entities/score/model/state/score-store-provider";
+import { MetronomeConfiguration } from "./metronome-configuration";
 
 export interface MetronomeProps {
   className?: string;
@@ -80,15 +80,34 @@ export function Metronome({ className }: MetronomeProps) {
 
   return (
     <>
-      <div className={className}>
-        {/* style={{ marginBottom: "var(--space-2)" }} */}
-        <Flex justify="between">
-          <Button onClick={() => toggle()}>{started ? "STOP" : "START"}</Button>
-          <Timer started={started} />
-        </Flex>
+      <section className={`metronome ${className ?? ""}`}>
+        <div className="metronome-row">
+          <div className="metronome-panel metronome-panel-config">
+            <header className="page-section-header">Configuration</header>
+            <MetronomeConfiguration />
+          </div>
 
-        {result && <Result right={result.right} missed={result.missed} />}
-      </div>
+          <div className="metronome-panel metronome-panel-transport">
+            <header className="page-section-header">Transport</header>
+            <div className="metronome-controls">
+              <button
+                type="button"
+                className="metronome-cta"
+                data-state={started ? "running" : "idle"}
+                onClick={() => toggle()}
+              >
+                {started ? "Stop" : "Start"}
+              </button>
+              <Timer started={started} />
+            </div>
+          </div>
+
+          <div className="metronome-panel metronome-panel-result">
+            <header className="page-section-header">Result</header>
+            <Result right={result?.right ?? 0} missed={result?.missed ?? 0} />
+          </div>
+        </div>
+      </section>
       <SheetRenderer ref={vexflowScoreRef} />
       <SheetControls />
     </>

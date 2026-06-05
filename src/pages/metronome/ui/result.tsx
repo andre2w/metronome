@@ -1,4 +1,3 @@
-import { Flex, Heading } from "@radix-ui/themes";
 import "./result.css";
 
 export interface ResultProps {
@@ -8,9 +7,19 @@ export interface ResultProps {
 
 export function Result(result: ResultProps) {
   return (
-    <Flex className="result">
-      <Heading as="h4">Right: {result.right}</Heading>
-      <Heading as="h4">Missed: {result.missed}</Heading>
-    </Flex>
+    <div className="result">
+      <div className="result-cell">
+        <span className="result-cell-label">Hit</span>
+        <span className="result-cell-value" data-tone="hit">
+          {result.right}
+        </span>
+      </div>
+      <div className="result-cell">
+        <span className="result-cell-label">Missed</span>
+        <span className="result-cell-value" data-tone="miss">
+          {result.missed}
+        </span>
+      </div>
+    </div>
   );
 }

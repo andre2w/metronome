@@ -1,4 +1,37 @@
 .result {
-  justify-content: space-around;
-  margin-top: var(--space-2);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 24px;
+  flex: 1;
+  font-family: var(--code-font-family);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+}
+
+.result-cell {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.result-cell-label {
+  font-size: 11px;
+  color: var(--gray-11);
+}
+
+.result-cell-value {
+  font-family: var(--heading-font-family);
+  font-size: 32px;
+  letter-spacing: -0.02em;
+  text-transform: none;
+  color: var(--gray-12);
+}
+
+.result-cell-value[data-tone="hit"] {
+  color: var(--bs-accent);
+}
+
+.result-cell-value[data-tone="miss"] {
+  color: var(--gray-11);
 }

@@ -7,13 +7,24 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  font-family: var(--code-font-family);
+  font-size: 12px;
+  color: var(--gray-11);
 }
 
 .note {
-  border: 1px solid var(--accent-9);
+  border: 1px solid var(--gray-a8);
+  background-color: transparent;
   cursor: pointer;
+  transition: background-color 80ms linear;
 }
 
-.note-selected {
-  background: var(--accent-9);
+.note:hover {
+  background-color: var(--gray-a3);
+}
+
+.note-selected,
+.note-selected:hover {
+  background-color: var(--bs-accent);
+  border-color: var(--bs-accent);
 }

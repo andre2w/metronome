@@ -28,35 +28,25 @@ const accentColors = [
   "lime",
   "mint",
   "sky",
-];
+] as const satisfies readonly ThemeProps["accentColor"][];
 
 export interface ThemePickerProps {
   appearance: "light" | "dark";
   accentColor: ThemeProps["accentColor"];
-  onChange: ({
-    accentColor,
-    appearance,
-  }: Pick<ThemePickerProps, "appearance" | "accentColor">) => void;
+  onChange: (preferences: {
+    appearance: "light" | "dark";
+    accentColor: ThemeProps["accentColor"];
+  }) => void;
 }
 
 export function ThemePicker({ appearance, accentColor, onChange }: ThemePickerProps) {
   return (
-    <Flex flexGrow="1" justify="end" gap="1">
-      <IconButton
-        onClick={() =>
-          onChange({
-            appearance: appearance === "dark" ? "light" : "dark",
-            accentColor,
-          })
-        }
-      >
-        {appearance === "light" ? <SunIcon /> : <MoonIcon />}
-      </IconButton>
+    <Flex align="center" gap="2">
       <Select.Root
         onValueChange={(value) =>
           onChange({
             appearance,
-            accentColor: (value ?? "indigo") as ThemeProps["accentColor"],
+            accentColor: (value ?? "yellow") as ThemeProps["accentColor"],
           })
         }
         value={accentColor}
@@ -70,6 +60,18 @@ export function ThemePicker({ appearance, accentColor, onChange }: ThemePickerPr
           ))}
         </Select.Content>
       </Select.Root>
+      <IconButton
+        variant="surface"
+        onClick={() =>
+          onChange({
+            accentColor,
+            appearance: appearance === "dark" ? "light" : "dark",
+          })
+        }
+        aria-label={`Switch to ${appearance === "dark" ? "light" : "dark"} mode`}
+      >
+        {appearance === "light" ? <SunIcon /> : <MoonIcon />}
+      </IconButton>
     </Flex>
   );
 }

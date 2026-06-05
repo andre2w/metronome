@@ -22,7 +22,7 @@ export function Timer({ started }: TimerProps) {
   const seconds = Math.ceil(elapsed > 60 ? elapsed % 60 : elapsed);
 
   return (
-    <div>
+    <div className="metronome-timer">
       {formatToDoubleDigits(minutes)}:{formatToDoubleDigits(seconds)}
     </div>
   );

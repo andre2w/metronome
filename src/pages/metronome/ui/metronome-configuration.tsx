@@ -1,7 +1,8 @@
-import { Flex, Select, Text, TextField } from "@radix-ui/themes";
+import { Select, TextField } from "@radix-ui/themes";
 import { calculateBeatTime } from "../model/beat-time";
 import { useScoreStore } from "../../../entities/score/model/state/score-store-provider";
 import { useShallow } from "zustand/react/shallow";
+import "./metronome-configuration.css";
 
 export function MetronomeConfiguration() {
   const { configuration, onChangeConfiguration } = useScoreStore(
@@ -17,10 +18,11 @@ export function MetronomeConfiguration() {
   }
 
   return (
-    <Flex gap="5">
-      <Flex direction="column">
-        <Text>Name</Text>
+    <div className="metronome-config">
+      <label className="metronome-config-field">
+        <span className="metronome-config-label">Name</span>
         <TextField.Root
+          size="1"
           type="text"
           value={configuration.name}
           onChange={(e) =>
@@ -30,10 +32,11 @@ export function MetronomeConfiguration() {
             })
           }
         />
-      </Flex>
-      <Flex direction="column">
-        <Text>Notes</Text>
+      </label>
+      <label className="metronome-config-field">
+        <span className="metronome-config-label">Signature</span>
         <Select.Root
+          size="1"
           value={String(configuration.signature)}
           onValueChange={(value) =>
             onChangeConfiguration({
@@ -50,10 +53,11 @@ export function MetronomeConfiguration() {
             <Select.Item value="16">1/16</Select.Item>
           </Select.Content>
         </Select.Root>
-      </Flex>
-      <Flex direction="column">
-        <Text>BPM</Text>
+      </label>
+      <label className="metronome-config-field">
+        <span className="metronome-config-label">BPM</span>
         <TextField.Root
+          size="1"
           type="number"
           value={configuration.bpm}
           onChange={(e) =>
@@ -64,10 +68,11 @@ export function MetronomeConfiguration() {
           }
           step={1}
         />
-      </Flex>
-      <Flex direction="column">
-        <Text>Grace time</Text>
+      </label>
+      <label className="metronome-config-field">
+        <span className="metronome-config-label">Grace (ms)</span>
         <TextField.Root
+          size="1"
           type="number"
           value={configuration.graceTime}
           onChange={(e) =>
@@ -78,7 +83,7 @@ export function MetronomeConfiguration() {
           }
           step={100}
         />
-      </Flex>
-    </Flex>
+      </label>
+    </div>
   );
 }

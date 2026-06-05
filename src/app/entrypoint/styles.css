@@ -1,0 +1,143 @@
+/* theme overrides for Radix Themes
+ * Palette: yellow #f0fb29, blue #aee3fd, dark #202020, white #fff
+ * Type: IBM Plex Sans (body), IBM Plex Mono (labels, UI chrome)
+ * Shape: sharp corners, thick borders, all-caps mono labels
+ */
+
+:root,
+.radix-themes {
+  --bs-dark: #202020;
+  --bs-darker: #161616;
+  --bs-light: #fafafa;
+  --bs-line: rgba(255, 255, 255, 0.12);
+  --bs-line-strong: rgba(255, 255, 255, 0.6);
+
+  /* Accent tokens — driven by the active Radix accent color so the picker
+   * controls every brand-colored surface (hover, selection, glyphs). */
+  --bs-accent: var(--accent-9);
+  --bs-accent-soft: var(--accent-10);
+  --bs-accent-contrast: var(--accent-contrast);
+  /* Legacy aliases kept for any stray reference */
+  --bs-yellow: var(--bs-accent);
+  --bs-yellow-soft: var(--bs-accent-soft);
+  --bs-blue: #aee3fd;
+
+  --default-font-family: "IBM Plex Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --code-font-family: "IBM Plex Mono", Menlo, Monaco, Consolas, monospace;
+  --strong-font-family: "IBM Plex Sans", "Helvetica Neue", Helvetica, sans-serif;
+  --heading-font-family: "IBM Plex Sans", "Helvetica Neue", Helvetica, sans-serif;
+  --em-font-family: "IBM Plex Sans", "Helvetica Neue", Helvetica, sans-serif;
+
+  --heading-letter-spacing: -0.02em;
+  --default-font-weight-medium: 500;
+
+  /* Force square corners across Radix components */
+  --radius-1: 0px;
+  --radius-2: 0px;
+  --radius-3: 0px;
+  --radius-4: 0px;
+  --radius-5: 0px;
+  --radius-6: 0px;
+  --radius-full: 0px;
+}
+
+/* Light/dark base surfaces tuned */
+.radix-themes:where([data-is-root-theme="true"]) {
+  background-color: var(--color-page-background);
+}
+
+.dark,
+.dark-theme,
+:root.dark {
+  --color-background: var(--bs-darker);
+  --color-page-background: var(--bs-darker);
+}
+
+.light,
+.light-theme {
+  --color-background: var(--bs-light);
+  --color-page-background: var(--bs-light);
+}
+
+html,
+body,
+#root {
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  font-family: var(--default-font-family);
+  background-color: var(--color-page-background);
+}
+
+/* Headings: tight tracking */
+.rt-Heading,
+h1,
+h2,
+h3,
+h4,
+h5 {
+  font-family: var(--heading-font-family);
+  letter-spacing: var(--heading-letter-spacing);
+  font-weight: 500;
+}
+
+/* Buttons: square, mono, uppercase */
+.rt-Button,
+.rt-reset.rt-Button {
+  font-family: var(--code-font-family);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-weight: 500;
+  border-radius: 0;
+}
+
+/* Solid buttons get the dark-on-accent CTA look, with text color
+ * automatically picked by Radix to stay readable on any accent. */
+.rt-Button.rt-variant-solid {
+  background-color: var(--bs-accent);
+  color: var(--bs-accent-contrast);
+}
+.rt-Button.rt-variant-solid:hover {
+  background-color: var(--bs-accent-soft);
+}
+
+/* Inputs and selects */
+.rt-TextFieldInput,
+.rt-TextFieldRoot,
+.rt-SelectTrigger,
+.rt-reset.rt-SelectTrigger {
+  border-radius: 0;
+  font-family: var(--code-font-family);
+  letter-spacing: 0.02em;
+}
+
+.rt-IconButton {
+  border-radius: 0;
+}
+
+/* Dialogs sharp corners */
+.rt-DialogContent,
+.rt-DialogOverlay {
+  border-radius: 0;
+}
+
+/* Mono utility classes used by the layout */
+.bs-mono {
+  font-family: var(--code-font-family);
+  letter-spacing: 0.04em;
+}
+
+.bs-label {
+  font-family: var(--code-font-family);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-size: 12px;
+  color: var(--gray-11);
+}
+
+.bs-divider-mark::before {
+  content: "■";
+  display: inline-block;
+  margin-right: 8px;
+  color: var(--bs-accent);
+}

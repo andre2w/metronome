@@ -4,10 +4,26 @@
 
 .stave-content {
   display: flex;
-  justify-content: center;
-  border-bottom: 1px solid var(--accent-9);
-  margin-bottom: 5px;
+  justify-content: space-between;
   align-items: center;
+  border-bottom: 1px solid var(--gray-a6);
+  padding: 4px 6px;
+  margin-bottom: 6px;
+  font-family: var(--code-font-family);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 11px;
+  color: var(--gray-11);
+}
+
+.stave-content::before {
+  content: "■";
+  margin-right: 8px;
+  color: var(--bs-accent);
+}
+
+.stave-content > :first-of-type {
+  flex: 1;
 }
 
 .stave-notes {

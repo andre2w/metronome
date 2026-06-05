@@ -21,54 +21,49 @@ export function Controls() {
   );
 
   return (
-    <>
-      <div className="sheet-maker">
-        <div className="add">
-          <Button onClick={addStave}>Add stave</Button>
-          <SaveScore />
-          <ListScores />
-          <Button
-            onClick={() => {
-              clear();
-            }}
-          >
-            New Score
-          </Button>
-        </div>
-        <div className="sheet">
-          <div className="parts">
-            <StaveNoteBox className="part-name">
+    <section className="sheet-maker">
+      <header className="sheet-maker-header">Score Editor</header>
+      <div className="add">
+        <Button onClick={addStave}>Add stave</Button>
+        <SaveScore />
+        <ListScores />
+        <Button variant="surface" onClick={() => clear()}>
+          New score
+        </Button>
+      </div>
+      <div className="sheet">
+        <div className="parts">
+          <StaveNoteBox className="part-name">
+            <Text as="p" wrap="nowrap" align="right">
+              Stickings
+            </Text>
+          </StaveNoteBox>
+          {Object.keys(NOTES).map((note) => (
+            <StaveNoteBox key={note} className="part-name">
               <Text as="p" wrap="nowrap" align="right">
-                Stickings
+                {noteLabel[note as Note]}
               </Text>
             </StaveNoteBox>
-            {Object.keys(NOTES).map((note) => (
-              <StaveNoteBox key={note} className="part-name">
-                <Text as="p" wrap="nowrap" align="right">
-                  {noteLabel[note as Note]}
-                </Text>
-              </StaveNoteBox>
-            ))}
-          </div>
-          <div style={{ display: "flex", flexDirection: "row" }}>
-            {score.map((bar, staveIndex) => {
-              return (
-                <Stave
-                  bar={bar}
-                  index={staveIndex}
-                  onSelectNote={(staveNoteIndex, note) => {
-                    toggleNote({ staveIndex, staveNoteIndex, note });
-                  }}
-                  onRemoveStave={() => removeStave(staveIndex)}
-                  onSetStickings={(staveNoteIndex, sticking) => {
-                    setSticking({ staveIndex, staveNoteIndex, sticking });
-                  }}
-                />
-              );
-            })}
-          </div>
+          ))}
+        </div>
+        <div style={{ display: "flex", flexDirection: "row" }}>
+          {score.map((bar, staveIndex) => {
+            return (
+              <Stave
+                bar={bar}
+                index={staveIndex}
+                onSelectNote={(staveNoteIndex, note) => {
+                  toggleNote({ staveIndex, staveNoteIndex, note });
+                }}
+                onRemoveStave={() => removeStave(staveIndex)}
+                onSetStickings={(staveNoteIndex, sticking) => {
+                  setSticking({ staveIndex, staveNoteIndex, sticking });
+                }}
+              />
+            );
+          })}
         </div>
       </div>
-    </>
+    </section>
   );
 }
