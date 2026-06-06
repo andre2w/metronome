@@ -1,13 +1,14 @@
-import { Theme, type ThemeProps } from "@radix-ui/themes";
+import { Theme, ThemeProps } from "@radix-ui/themes";
+import { createRootRoute, Outlet } from "@tanstack/react-router";
+import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
 import { useLocalStorage } from "usehooks-ts";
-import "./styles.css";
-import "./app.css";
-import { InputConfigurationProvider } from "../../entities/midi-input/ui/input-configuration-context";
-import { InputConfiguration } from "../../entities/midi-input/ui/input-configuration";
+import { InputConfiguration } from "~/entities/midi-input/ui/input-configuration";
+import { InputConfigurationProvider } from "~/entities/midi-input/ui/input-configuration-context";
 import { ThemePicker } from "./theme-picker";
-import { Metronome } from "~/pages/metronome";
+import "./styles.css";
+import "./root.css";
 
-function App() {
+function RootLayout() {
   const [{ appearance, accentColor }, setThemePreferences] = useLocalStorage("theme-preferences", {
     appearance: "dark" as "light" | "dark",
     accentColor: "yellow" as ThemeProps["accentColor"],
@@ -38,12 +39,13 @@ function App() {
             </div>
           </header>
           <main className="page">
-            <Metronome />
+            <Outlet />
           </main>
         </div>
+        <TanStackRouterDevtools />
       </InputConfigurationProvider>
     </Theme>
   );
 }
 
-export default App;
+export const Route = createRootRoute({ component: RootLayout });

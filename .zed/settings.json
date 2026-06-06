@@ -19,7 +19,13 @@
       ],
     },
     "TSX": {
-      "language_servers": ["tsgo", "!vtsls", "!typescript-language-server"],
+      "language_servers": [
+        "tsgo",
+        "oxfmt",
+        "oxc",
+        "!vtsls",
+        "!typescript-language-server",
+      ],
       "document_symbols": "on",
       "format_on_save": "on",
       "prettier": {
