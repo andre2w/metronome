@@ -28,6 +28,7 @@
     "use-immer": "^0.11.0",
     "usehooks-ts": "^3.1.1",
     "vexflow": "^5.0.0",
+    "wavesurfer.js": "^7.12.7",
     "webmidi": "^3.1.16",
     "zustand": "^5.0.14"
   },

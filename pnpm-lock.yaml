@@ -56,6 +56,9 @@ importers:
       vexflow:
         specifier: ^5.0.0
         version: 5.0.0
+      wavesurfer.js:
+        specifier: ^7.12.7
+        version: 7.12.7
       webmidi:
         specifier: ^3.1.16
         version: 3.1.16
@@ -2495,6 +2498,9 @@ packages:
       jsdom:
         optional: true
 
+  wavesurfer.js@7.12.7:
+    resolution: {integrity: sha512-TIe7hB6OCZysNOZ2cn2NR8Qpko22POWel6rauNcqOammFoH65NYQUM35unNLLMIlUMVYvjJ6w/TTl/G/m+w0nA==}
+
   webmidi@3.1.16:
     resolution: {integrity: sha512-I6NnCfBUXNbV8q6EU+DPtr1u1EgjzDrFKHQQS2OgaHzcuQRFhRHgogfKpKSpxD0IgXhZHz8+k/OpGfZoWbvWAQ==}
     engines: {node: '>=8.5'}
@@ -4656,6 +4662,8 @@ snapshots:
       '@types/node': 24.12.4
     transitivePeerDependencies:
       - msw
+
+  wavesurfer.js@7.12.7: {}
 
   webmidi@3.1.16:
     dependencies:
