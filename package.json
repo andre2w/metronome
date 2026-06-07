@@ -9,7 +9,7 @@
     "lint": "oxlint && oxfmt --check",
     "lint:fix": "oxlint --fix && oxfmt",
     "preview": "vite preview",
-    "test": "tsx --test"
+    "test": "vitest"
   },
   "dependencies": {
     "@radix-ui/react-icons": "^1.3.2",

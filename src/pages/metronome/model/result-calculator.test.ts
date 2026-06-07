@@ -180,19 +180,19 @@ describe("calculateResult", () => {
     const ticks = [10, 20, 30, 40, 50, 60, 70, 80];
     const notesPlayed: NotePlayed[] = [
       { timestamp: 9, note: { note: "SNARE" } },
-      { timestamp: 12, note: { note: "HIGH_HAT" } },
+      { timestamp: 12, note: { note: "HIGH_HAT", modifier: "HIGH_HAT_OPEN" } },
       { timestamp: 20, note: { note: "SNARE" } },
       { timestamp: 30, note: { note: "SNARE" } },
       { timestamp: 40, note: { note: "SNARE" } },
       { timestamp: 49, note: { note: "SNARE" } },
-      { timestamp: 51, note: { note: "HIGH_HAT" } },
+      { timestamp: 51, note: { note: "HIGH_HAT", modifier: "HIGH_HAT_OPEN" } },
       { timestamp: 60, note: { note: "SNARE" } },
       { timestamp: 70, note: { note: "SNARE" } },
       { timestamp: 80, note: { note: "SNARE" } },
     ];
     const score: Score = [
       [
-        { notes: [{ note: "SNARE" }, { note: "HIGH_HAT" }] },
+        { notes: [{ note: "SNARE" }, { note: "HIGH_HAT", modifier: "HIGH_HAT_OPEN" }] },
         { notes: [{ note: "SNARE" }] },
         { notes: [{ note: "SNARE" }] },
         { notes: [{ note: "SNARE" }] },
