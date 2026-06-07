@@ -62,7 +62,7 @@ export function StaveNoteBox({
                   toggleNote({
                     note: { note, modifier: modifier },
                     staveIndex: index.staveIndex,
-                    staveNoteIndex: index.staveIndex,
+                    staveNoteIndex: index.barIndex,
                   });
                 }}
               >
