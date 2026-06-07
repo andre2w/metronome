@@ -1,15 +1,13 @@
-import { Button, Text } from "@radix-ui/themes";
-import { NOTES, type Note } from "../../../../entities/score/model/types";
+import { Box, Button, Text } from "@radix-ui/themes";
 import { Stave } from "./stave";
 import "./controls.css";
 import { ListScores } from "../list-scores";
 import { SaveScore } from "../save-score";
-import { StaveNoteBox } from "./stave-note-box";
 import { useScoreStoreShallow } from "~/entities/score/model/state/score-store-provider";
-import { noteLabel } from "../../model/constants";
+import { NOTES } from "~/entities/score/model/notes";
 
 export function Controls() {
-  const { addStave, clear, removeStave, score, setSticking, toggleNote } = useScoreStoreShallow(
+  const { addStave, clear, removeStave, score } = useScoreStoreShallow(
     ({ addStave, score, toggleNote, removeStave, setSticking, clear }) => ({
       addStave,
       score,
@@ -33,17 +31,17 @@ export function Controls() {
       </div>
       <div className="sheet">
         <div className="parts">
-          <StaveNoteBox className="part-name">
+          <Box height="35px" className="part-name">
             <Text as="p" wrap="nowrap" align="right">
               Stickings
             </Text>
-          </StaveNoteBox>
-          {Object.keys(NOTES).map((note) => (
-            <StaveNoteBox key={note} className="part-name">
+          </Box>
+          {Object.entries(NOTES).map(([part, data]) => (
+            <Box height="35px" key={part} className="part-name">
               <Text as="p" wrap="nowrap" align="right">
-                {noteLabel[note as Note]}
+                {`${data.label}${Object.hasOwn(data, "modifiers") ? " *" : ""}`}
               </Text>
-            </StaveNoteBox>
+            </Box>
           ))}
         </div>
         <div style={{ display: "flex", flexDirection: "row" }}>
@@ -51,14 +49,8 @@ export function Controls() {
             return (
               <Stave
                 bar={bar}
-                index={staveIndex}
-                onSelectNote={(staveNoteIndex, note) => {
-                  toggleNote({ staveIndex, staveNoteIndex, note });
-                }}
+                staveIndex={staveIndex}
                 onRemoveStave={() => removeStave(staveIndex)}
-                onSetStickings={(staveNoteIndex, sticking) => {
-                  setSticking({ staveIndex, staveNoteIndex, sticking });
-                }}
               />
             );
           })}

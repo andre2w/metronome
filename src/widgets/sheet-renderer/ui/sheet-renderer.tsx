@@ -87,7 +87,6 @@ export const SheetRenderer = forwardRef<VexflowScoreHandle, VexflowScoreProps>((
 
     const sheetWidth = scoreSize.width ?? element.getBoundingClientRect().width;
     const renderer = rendererRef.current;
-    console.log({ r: colorRef.current });
     drawScore({
       renderer,
       score,

@@ -8,7 +8,6 @@ import { useShallow } from "zustand/react/shallow";
 const ScoreContext = createContext(
   createScoreStore({
     initialState: getInitialStateFromHash(),
-    conflictingNotesMap: {},
   }),
 );
 
@@ -20,7 +19,6 @@ export function ScoreProvider({ children }: ScoreProviderProps) {
   const [scoreStore] = useState(() => {
     return createScoreStore({
       initialState: getInitialStateFromHash(),
-      conflictingNotesMap: {},
     });
   });
 

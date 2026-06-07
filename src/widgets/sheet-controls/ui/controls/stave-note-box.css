@@ -1,4 +1,22 @@
 .stave-note-box {
   margin-right: var(--space-note-right);
   margin-top: var(--space-note-top);
+  border-color: var(--bs-accent);
+}
+
+.note {
+  border: 1px solid var(--gray-a8);
+  background-color: transparent;
+  cursor: pointer;
+  transition: background-color 80ms linear;
+}
+
+.note:hover {
+  background-color: var(--gray-a3);
+}
+
+.note-selected,
+.note-selected:hover {
+  background-color: var(--bs-accent);
+  border-color: var(--bs-accent);
 }

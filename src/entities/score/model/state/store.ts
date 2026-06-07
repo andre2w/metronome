@@ -4,14 +4,13 @@ import { immer } from "zustand/middleware/immer";
 import { InitialState } from "./initial-state";
 import { createStave, ScoreContextValue } from "./score-state";
 import { queryParamsStorage } from "./query-params-storage";
-import { FullScore, Note } from "../types";
+import { FullScore } from "../types";
 
 export interface CreateScoreStoreProps {
   initialState: InitialState;
-  conflictingNotesMap: Partial<Record<Note, Note[]>>;
 }
 
-export function createScoreStore({ initialState, conflictingNotesMap }: CreateScoreStoreProps) {
+export function createScoreStore({ initialState }: CreateScoreStoreProps) {
   return createStore<ScoreContextValue>()(
     persist(
       immer((set) => ({
@@ -26,22 +25,20 @@ export function createScoreStore({ initialState, conflictingNotesMap }: CreateSc
           set((state) => {
             const notesWithSticking = state.score[staveIndex][staveNoteIndex];
 
-            if (!notesWithSticking.notes.includes(note)) {
-              const conflictingNotes = conflictingNotesMap[note];
-              if (conflictingNotes) {
-                for (let i = 0; i < notesWithSticking.notes.length; i++) {
-                  const conflictingNote = notesWithSticking.notes[i];
-                  if (conflictingNotes.includes(conflictingNote)) {
-                    notesWithSticking.notes.splice(i, 1);
-                  }
-                }
-              }
-
+            if (!notesWithSticking.notes.some((n) => n.note === note.note)) {
               notesWithSticking.notes.push(note);
             } else {
-              const noteIndex = notesWithSticking.notes.indexOf(note);
+              const noteIndex = notesWithSticking.notes.findIndex((n) => n.note === note.note);
               if (noteIndex >= 0) {
+                /**
+                 * Replace the existing note with one with the modifier
+                 */
+                const shouldReplace =
+                  notesWithSticking.notes.at(noteIndex)?.modifier !== note.modifier;
                 notesWithSticking.notes.splice(noteIndex, 1);
+                if (shouldReplace) {
+                  notesWithSticking.notes.push(note);
+                }
               }
             }
           }),

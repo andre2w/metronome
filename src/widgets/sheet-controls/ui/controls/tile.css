@@ -1,0 +1,19 @@
+.tile {
+  border: 1px solid;
+  cursor: pointer;
+  transition: background-color 80ms linear;
+}
+
+.not-selected {
+  border-color: var(--gray-a8);
+  background-color: transparent;
+}
+.not-selected:hover {
+  background-color: var(--gray-a3);
+}
+
+.selected,
+.selected:hover {
+  background-color: var(--bs-accent);
+  border-color: var(--bs-accent);
+}

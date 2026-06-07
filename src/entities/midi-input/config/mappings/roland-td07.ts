@@ -1,23 +1,23 @@
-import type { Note } from "../../../score/model/types";
+import { BaseNote } from "~/entities/score/model/notes";
 
-export const mappings: Record<number, Note> = {
-  36: "KICK",
-  38: "SNARE",
-  40: "SNARE", // SNARE RIM
-  37: "SNARE_X_STICK",
-  48: "TOM_1",
-  45: "TOM_2",
-  43: "TOM_3",
-  46: "HIGH_HAT_OPEN",
-  26: "HIGH_HAT_OPEN",
-  42: "HIGH_HAT",
-  22: "HIGH_HAT",
-  44: "HIGH_HAT_PEDAL",
-  49: "CRASH", // 1
-  55: "CRASH", // 1
-  57: "CRASH", // 2
-  52: "CRASH", // 2
-  51: "RIDE",
-  59: "RIDE",
-  53: "RIDE",
+export const mappings: Record<number, { note: BaseNote; modifier?: string }> = {
+  36: { note: "KICK" },
+  38: { note: "SNARE" },
+  40: { note: "SNARE" }, // SNARE RIM
+  37: { note: "SNARE", modifier: "SNARE_X_STICK" },
+  48: { note: "TOM_1" },
+  45: { note: "TOM_2" },
+  43: { note: "TOM_3" },
+  46: { note: "HIGH_HAT", modifier: "HIGH_HAT_OPEN" },
+  26: { note: "HIGH_HAT", modifier: "HIGH_HAT_OPEN" },
+  42: { note: "HIGH_HAT" },
+  22: { note: "HIGH_HAT" },
+  44: { note: "HIGH_HAT_PEDAL" },
+  49: { note: "CRASH" }, // 1
+  55: { note: "CRASH" }, // 1
+  57: { note: "CRASH" }, // 2
+  52: { note: "CRASH" }, // 2
+  51: { note: "RIDE" },
+  59: { note: "RIDE" },
+  53: { note: "RIDE" },
 };

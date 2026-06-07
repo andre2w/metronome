@@ -38,7 +38,7 @@ export function calculateResult({ ticks, notesPlayed, score, graceTime }: Calcul
       }
 
       if (note.timestamp >= start && note.timestamp <= end) {
-        notesInTime.push(note.note);
+        notesInTime.push(note.note.note);
         notesPlayedIndex++;
       } else if (start > note.timestamp) {
         notesPlayedIndex++;
@@ -60,7 +60,7 @@ export function calculateResult({ ticks, notesPlayed, score, graceTime }: Calcul
 
     if (
       notesInTime.length === expectedNotes.length &&
-      expectedNotes.every((n) => notesInTime.includes(n))
+      expectedNotes.every((n) => notesInTime.includes(n.note))
     ) {
       right++;
     } else {

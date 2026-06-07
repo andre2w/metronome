@@ -2,33 +2,27 @@ import { Cross1Icon } from "@radix-ui/react-icons";
 import { Button, Text } from "@radix-ui/themes";
 import type { Bar } from "../../../../entities/score/model/types";
 import "./stave.css";
-import { StaveNote, StaveNoteProps } from "./stave-note";
+import { StaveNote } from "./stave-note";
 import { counting } from "../../model/constants";
 
 export interface StaveProps {
   bar: Bar;
-  index: number;
-  onSelectNote: (barIndex: number, note: Parameters<StaveNoteProps["onSelect"]>[0]) => void;
+  staveIndex: number;
   onRemoveStave: () => void;
-  onSetStickings: (
-    barIndex: number,
-    sticking: Parameters<StaveNoteProps["onSetSticking"]>[0],
-  ) => void;
   className?: string;
 }
 
-export function Stave({ bar, index, onSelectNote, onRemoveStave, onSetStickings }: StaveProps) {
+export function Stave({ bar, staveIndex: index, onRemoveStave }: StaveProps) {
   const tempoCounting = counting[bar.length];
-  const notes = bar.map((notesWithSticking, noteIndex) => {
-    const noteCount = tempoCounting[noteIndex];
+  const notes = bar.map((notesWithSticking, barIndex) => {
+    const noteCount = tempoCounting[barIndex];
     const withSpace = ["2", "3", "4"].includes(noteCount);
     return (
       <StaveNote
         noteCount={noteCount}
-        index={index}
+        barIndex={barIndex}
+        staveIndex={index}
         notesWithSticking={notesWithSticking}
-        onSelect={(note) => onSelectNote(noteIndex, note)}
-        onSetSticking={(sticking) => onSetStickings(noteIndex, sticking)}
         className={withSpace ? "with-space-left" : undefined}
       />
     );

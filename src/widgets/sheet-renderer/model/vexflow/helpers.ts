@@ -1,6 +1,7 @@
 import { Annotation, Dot, ModifierPosition, Parenthesis, StaveNote, Stem } from "vexflow";
-import { type Bar, NOTES, type NotesWithSticking } from "../../../../entities/score/model/types";
+import { Note, type Bar, type NotesWithSticking } from "../../../../entities/score/model/types";
 import { REST_KEY } from "./constants";
+import { NoteData, NOTES } from "~/entities/score/model/notes";
 
 export interface CalculateWidthAndPositionProps {
   sheetWidth: number;
@@ -103,7 +104,7 @@ export function createStaveNote({
   withDot?: boolean;
 }) {
   const isRest = bar.notes.length === 0;
-  const keys = isRest ? [REST_KEY] : bar.notes.map((note) => NOTES[note]);
+  const keys = isRest ? [REST_KEY] : bar.notes.map((note) => getNoteValue(note));
   const noteDuration = isRest ? `${duration}r` : duration;
   const staveNote = new StaveNote({ keys, duration: noteDuration });
 
@@ -118,20 +119,36 @@ export function createStaveNote({
     staveNote.setStyle({ strokeStyle: "white" });
   }
 
-  if (bar.notes.includes("HIGH_HAT_OPEN")) {
-    const annotation = new Annotation("O");
+  for (const { note, modifier } of bar.notes) {
+    if (!modifier) {
+      continue;
+    }
+    const noteData: NoteData = NOTES[note];
 
-    staveNote.addModifier(annotation);
+    if (noteData.modifiers && Object.hasOwn(noteData.modifiers, modifier)) {
+      const modifierData = noteData.modifiers[modifier];
+      switch (modifierData.modifier.type) {
+        case "annotation":
+          staveNote.addModifier(new Annotation(modifierData.modifier.value));
+          break;
+        case "parenthesis":
+          if (modifierData.modifier.which === "both") {
+            staveNote.addModifier(new Parenthesis(ModifierPosition.LEFT), 0);
+            staveNote.addModifier(new Parenthesis(ModifierPosition.RIGHT), 0);
+          }
+          if (modifierData.modifier.which === "left") {
+            staveNote.addModifier(new Parenthesis(ModifierPosition.LEFT), 0);
+          }
+          if (modifierData.modifier.which === "right") {
+            staveNote.addModifier(new Parenthesis(ModifierPosition.RIGHT), 0);
+          }
+          break;
+        case "value-override":
+          break;
+      }
+    }
   }
-  if (bar.notes.includes("GHOST_SNARE")) {
-    staveNote.addModifier(new Parenthesis(ModifierPosition.LEFT), 0);
-    staveNote.addModifier(new Parenthesis(ModifierPosition.RIGHT), 0);
-  }
-  if (bar.notes.includes("ACCENTED_SNARE")) {
-    const annotation = new Annotation(">");
 
-    staveNote.addModifier(annotation);
-  }
   if (bar.sticking) {
     const annotation = new Annotation(bar.sticking);
     staveNote.addModifier(annotation);
@@ -140,4 +157,16 @@ export function createStaveNote({
     Dot.buildAndAttach([staveNote]);
   }
   return staveNote;
+}
+
+function getNoteValue(note: Note): string {
+  const baseValue: NoteData = NOTES[note.note];
+  if (note.modifier && baseValue.modifiers && baseValue.modifiers[note.modifier]) {
+    const modifier = baseValue.modifiers[note.modifier];
+    if (modifier.modifier.type === "value-override") {
+      return modifier.modifier.value;
+    }
+  }
+
+  return baseValue.value;
 }

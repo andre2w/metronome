@@ -55,6 +55,8 @@
   letter-spacing: 0.08em;
   font-size: 11px;
   color: var(--gray-11);
+  margin-right: var(--space-note-right);
+  margin-top: var(--space-note-top);
 }
 
 .add {
@@ -63,4 +65,8 @@
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
+}
+
+.sticking {
+  border: unset;
 }

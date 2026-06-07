@@ -1,58 +1,48 @@
 import { Text } from "@radix-ui/themes";
-import {
-  NOTES,
-  type Note,
-  type NotesWithSticking,
-  type Sticking,
-} from "../../../../entities/score/model/types";
+import { type NotesWithSticking } from "../../../../entities/score/model/types";
 import "./stave-note.css";
 import { StaveNoteBox } from "./stave-note-box";
+import { BaseNote, NOTES } from "~/entities/score/model/notes";
+import { Tile } from "./tile";
 
 export interface StaveNoteProps {
-  onSelect: (note: Note) => void;
-  onSetSticking: (sticking: Sticking | null) => void;
   notesWithSticking: NotesWithSticking;
-  index: number;
+  staveIndex: number;
+  barIndex: number;
   noteCount?: string;
   className?: string;
 }
 
-const stickingsLoop = [null, "L", "R", "R/L"] as const;
+// const stickingsLoop = [null, "L", "R", "R/L"] as const;
 
 export function StaveNote({
-  onSelect,
   notesWithSticking,
-  onSetSticking,
   noteCount,
   className,
+  staveIndex,
+  barIndex,
 }: StaveNoteProps) {
   const { notes: selectedNotes, sticking } = notesWithSticking;
-  const stickingIndex = Math.max(
-    stickingsLoop.findIndex((s) => s === sticking),
-    0,
-  );
-  const nextIndex = stickingIndex + 1 >= stickingsLoop.length ? 0 : stickingIndex + 1;
+  // const stickingIndex = Math.max(
+  //   stickingsLoop.findIndex((s) => s === sticking),
+  //   0,
+  // );
+  // const nextIndex = stickingIndex + 1 >= stickingsLoop.length ? 0 : stickingIndex + 1;
+
   return (
     <div className={`stave-note ${className ?? ""}`}>
-      <StaveNoteBox
-        squared
-        className="sticking"
-        onClick={() => {
-          onSetSticking?.(stickingsLoop[nextIndex]);
-        }}
-      >
+      <Tile className="sticking">
         <Text weight={sticking ? "bold" : "light"}>{sticking ?? noteCount}</Text>
-      </StaveNoteBox>
+      </Tile>
       {Object.keys(NOTES).map((note) => {
-        const isSelected = selectedNotes.includes(note as Note);
+        const selectedNote = selectedNotes.find((n) => n.note === note);
         return (
           <StaveNoteBox
             key={note}
-            squared
-            className={`note ${isSelected ? "note-selected" : ""}`}
-            onClick={() => {
-              onSelect?.(note as Note);
-            }}
+            isSelected={!!selectedNote}
+            note={note as BaseNote}
+            modifier={selectedNote?.modifier}
+            index={{ staveIndex: staveIndex, barIndex }}
           />
         );
       })}

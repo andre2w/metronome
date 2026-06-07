@@ -8,52 +8,52 @@
 // You should NOT make any changes in this file as it will be overwritten.
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
-import { Route as rootRouteImport } from "./app/entrypoint/root";
-import { Route as DotPagesMetronomeRouteRouteImport } from "./pages/metronome/route";
+import { Route as rootRouteImport } from "./app/entrypoint/root"
+import { Route as DotPagesMetronomeRouteRouteImport } from "./pages/metronome/route"
 
 const DotPagesMetronomeRouteRoute = DotPagesMetronomeRouteRouteImport.update({
   id: "/",
   path: "/",
   getParentRoute: () => rootRouteImport,
-} as any);
+} as any)
 
 export interface FileRoutesByFullPath {
-  "/": typeof DotPagesMetronomeRouteRoute;
+  "/": typeof DotPagesMetronomeRouteRoute
 }
 export interface FileRoutesByTo {
-  "/": typeof DotPagesMetronomeRouteRoute;
+  "/": typeof DotPagesMetronomeRouteRoute
 }
 export interface FileRoutesById {
-  __root__: typeof rootRouteImport;
-  "/": typeof DotPagesMetronomeRouteRoute;
+  __root__: typeof rootRouteImport
+  "/": typeof DotPagesMetronomeRouteRoute
 }
 export interface FileRouteTypes {
-  fileRoutesByFullPath: FileRoutesByFullPath;
-  fullPaths: "/";
-  fileRoutesByTo: FileRoutesByTo;
-  to: "/";
-  id: "__root__" | "/";
-  fileRoutesById: FileRoutesById;
+  fileRoutesByFullPath: FileRoutesByFullPath
+  fullPaths: "/"
+  fileRoutesByTo: FileRoutesByTo
+  to: "/"
+  id: "__root__" | "/"
+  fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
-  DotPagesMetronomeRouteRoute: typeof DotPagesMetronomeRouteRoute;
+  DotPagesMetronomeRouteRoute: typeof DotPagesMetronomeRouteRoute
 }
 
 declare module "@tanstack/react-router" {
   interface FileRoutesByPath {
     "/": {
-      id: "/";
-      path: "/";
-      fullPath: "/";
-      preLoaderRoute: typeof DotPagesMetronomeRouteRouteImport;
-      parentRoute: typeof rootRouteImport;
-    };
+      id: "/"
+      path: "/"
+      fullPath: "/"
+      preLoaderRoute: typeof DotPagesMetronomeRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   DotPagesMetronomeRouteRoute: DotPagesMetronomeRouteRoute,
-};
+}
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
-  ._addFileTypes<FileRouteTypes>();
+  ._addFileTypes<FileRouteTypes>()
