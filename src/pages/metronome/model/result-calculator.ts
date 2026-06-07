@@ -1,4 +1,4 @@
-import type { NotePlayed, Score, Ticks } from "../../../entities/score/model/types";
+import type { Note, NotePlayed, Score, Ticks } from "../../../entities/score/model/types";
 
 export interface CalculateResultProps {
   ticks: Ticks;
@@ -29,7 +29,7 @@ export function calculateResult({ ticks, notesPlayed, score, graceTime }: Calcul
     const start = timestamp - graceTime;
     const end = timestamp + graceTime;
 
-    const notesInTime: string[] = [];
+    const notesInTime: Note[] = [];
 
     while (notesPlayedIndex < notesPlayed.length) {
       const note = notesPlayed[notesPlayedIndex];
@@ -38,7 +38,7 @@ export function calculateResult({ ticks, notesPlayed, score, graceTime }: Calcul
       }
 
       if (note.timestamp >= start && note.timestamp <= end) {
-        notesInTime.push(note.note.note);
+        notesInTime.push(note.note);
         notesPlayedIndex++;
       } else if (start > note.timestamp) {
         notesPlayedIndex++;
@@ -58,10 +58,12 @@ export function calculateResult({ ticks, notesPlayed, score, graceTime }: Calcul
     }
     tickIndex++;
 
-    if (
-      notesInTime.length === expectedNotes.length &&
-      expectedNotes.every((n) => notesInTime.includes(n.note))
-    ) {
+    const matchAllExpectedNotes = expectedNotes.every((n) =>
+      notesInTime.some(
+        (noteInTime) => n.note === noteInTime.note && n.modifier === noteInTime.modifier,
+      ),
+    );
+    if (notesInTime.length === expectedNotes.length && matchAllExpectedNotes) {
       right++;
     } else {
       missed++;
