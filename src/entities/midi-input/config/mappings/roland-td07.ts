@@ -1,6 +1,6 @@
-import { BaseNote } from "~/entities/score/model/notes";
+import { BaseKeys } from "~/entities/score/model/notes";
 
-export const mappings: Record<number, { note: BaseNote; modifier?: string }> = {
+export const mappings: Record<number, { note: BaseKeys; modifier?: string }> = {
   36: { note: "KICK" },
   38: { note: "SNARE" },
   40: { note: "SNARE" }, // SNARE RIM

@@ -1,4 +1,5 @@
-import type { NotePlayed, Score } from "../../../entities/score/model/types";
+import { NotePlayed } from "~/shared/lib/score/note-played";
+import type { Score } from "../../../entities/score/model/types";
 import { calculateResult, type CalculateResultProps } from "./result-calculator";
 import { describe, test, expect } from "vitest";
 

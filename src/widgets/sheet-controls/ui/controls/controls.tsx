@@ -4,7 +4,7 @@ import "./controls.css";
 import { ListScores } from "../list-scores";
 import { SaveScore } from "../save-score";
 import { useScoreStoreShallow } from "~/entities/score/model/state/score-store-provider";
-import { NOTES } from "~/entities/score/model/notes";
+import { useConfiguration } from "~/shared/lib/configuration/configuration-provider";
 
 export function Controls() {
   const { addStave, clear, removeStave, score } = useScoreStoreShallow(
@@ -17,6 +17,7 @@ export function Controls() {
       clear,
     }),
   );
+  const configuration = useConfiguration();
 
   return (
     <section className="sheet-maker">
@@ -36,7 +37,7 @@ export function Controls() {
               Stickings
             </Text>
           </Box>
-          {Object.entries(NOTES).map(([part, data]) => (
+          {Object.entries(configuration.keys()).map(([part, data]) => (
             <Box height="35px" key={part} className="part-name">
               <Text as="p" wrap="nowrap" align="right">
                 {`${data.label}${Object.hasOwn(data, "modifiers") ? " *" : ""}`}

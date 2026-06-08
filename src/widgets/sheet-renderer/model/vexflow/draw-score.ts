@@ -2,6 +2,7 @@ import { Formatter, type Renderer, Stave, Voice } from "vexflow";
 import type { Score } from "../../../../entities/score/model/types";
 import { calculateWidthAndPosition, groupNotes } from "./helpers";
 import { parse } from "./parser";
+import { Configuration } from "~/shared/lib/configuration/configuration-provider";
 
 const Y_OFFSET = 50;
 const STAVE_HEIGHT = 150;
@@ -17,6 +18,7 @@ export interface DrawScoreProps {
     background: "light" | "dark";
     accent?: string;
   };
+  configuration: Configuration;
 }
 
 export function drawScore({
@@ -25,6 +27,7 @@ export function drawScore({
   score,
   index,
   colors: { background, accent },
+  configuration,
 }: DrawScoreProps) {
   const positions = calculateWidthAndPosition({
     sheetWidth: sheetWidth - 40,
@@ -60,6 +63,9 @@ export function drawScore({
 
   for (let i = 0; i < score.length; i++) {
     const position = positions[i];
+    if (!position) {
+      throw new Error(`No position found for index: ${i}`);
+    }
     const stave = new Stave(position.x, position.y, position.width);
     stave.setContext(context);
 
@@ -68,6 +74,9 @@ export function drawScore({
     }
 
     const bars = score[i];
+    if (!bars) {
+      throw new Error(`Invalid bars at index: ${i}`);
+    }
     const duration = String(bars.length);
     const groups = groupNotes({ bar: bars, duration, offset: bars.length * i });
     const { notes, beams } = parse({
@@ -75,6 +84,7 @@ export function drawScore({
       groups,
       baseDuration: duration as "4" | "8" | "16",
       cursorIndex: index,
+      configuration,
     });
 
     const allNotes = notes.flatMap((note) => note.map((n) => n.note));

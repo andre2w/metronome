@@ -3,7 +3,7 @@
 // For vexflow is NOTE/
 // https://github.com/0xfe/vexflow/blob/master/src/stavenote.ts#L407
 
-import { BaseNote } from "./notes";
+import { Key } from "~/shared/lib/score/key-data";
 
 // How to declare a note: https://github.com/0xfe/vexflow/blob/master/src/note.ts#L64
 // export const NOTES = {
@@ -24,12 +24,11 @@ import { BaseNote } from "./notes";
 
 export const sticking = ["L", "R", "R/L"] as const;
 export type Sticking = (typeof sticking)[number];
-export type Note = { note: BaseNote; modifier?: string };
 
 /**
  * Is one or more parts of the drum that must be played at a moment
  */
-export type Notes = Note[];
+export type Notes = Key[];
 export type NotesWithSticking = { notes: Notes; sticking?: Sticking };
 /**
  * It's 4 groups of notes - a bar can be 1/4 1/8 1/16
@@ -46,20 +45,6 @@ export type Score = Bar[];
  * is supposed to be played
  */
 export type Ticks = number[];
-
-/**
- * Is the capture of a note played through the midi interface
- */
-export interface NotePlayed {
-  /**
-   * timestamp of when the note was played
-   */
-  timestamp: number;
-  /**
-   * note is the note number
-   */
-  note: Note;
-}
 
 export interface FullScore {
   score: Score;

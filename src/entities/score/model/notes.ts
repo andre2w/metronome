@@ -1,12 +1,12 @@
 import { Modifier } from "./modifiers";
 
-export interface NoteData {
+export interface KeyData {
   value: string;
   label: string;
   modifiers?: Record<string, { label: string; modifier: Modifier }>;
 }
 
-export const NOTES = {
+export const KEYS = {
   KICK: { label: "Kick", value: "f/4" },
   SNARE: {
     label: "Snare",
@@ -42,18 +42,6 @@ export const NOTES = {
   HIGH_HAT_PEDAL: { label: "High Hat Pedal", value: "d/4/x2" },
   RIDE: { label: "Ride", value: "f/5/x2" },
   CRASH: { label: "Crash", value: "a/5/x2" },
-} as const satisfies Record<string, NoteData>;
+} as const satisfies Record<string, KeyData>;
 
-export type BaseNote = keyof typeof NOTES;
-
-export type WithModifiers<Part> = Part extends BaseNote
-  ? (typeof NOTES)[Part] extends { modifiers: infer Modifiers }
-    ? Part | keyof Modifiers
-    : Part
-  : never;
-
-export type DrumPart<Part, Notes extends Record<string, NoteData>> = Part extends keyof Notes
-  ? WithModifiers<Part>
-  : never;
-
-export type NoteOrModifier = DrumPart<keyof typeof NOTES, typeof NOTES>;
+export type BaseKeys = keyof typeof KEYS;

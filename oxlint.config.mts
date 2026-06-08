@@ -1,6 +1,13 @@
 import { defineConfig } from "oxlint";
 
 export default defineConfig({
+  ignorePatterns: [
+    ".zed/**/*",
+    "dist/**",
+    "vexflow.html",
+    "src/routeTree.gen.ts",
+    "node_modules/**/*",
+  ],
   options: {
     typeAware: true,
     typeCheck: true,

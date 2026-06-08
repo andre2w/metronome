@@ -23,7 +23,11 @@ export function createScoreStore({ initialState }: CreateScoreStoreProps) {
 
         toggleNote: ({ note, staveIndex, staveNoteIndex }) =>
           set((state) => {
-            const notesWithSticking = state.score[staveIndex][staveNoteIndex];
+            const notesWithSticking = state.score?.[staveIndex]?.[staveNoteIndex];
+
+            if (!notesWithSticking) {
+              throw new Error(`Cloudn't find Bar for index ${staveIndex} - ${staveNoteIndex}`);
+            }
 
             if (!notesWithSticking.notes.some((n) => n.note === note.note)) {
               notesWithSticking.notes.push(note);
@@ -53,10 +57,16 @@ export function createScoreStore({ initialState }: CreateScoreStoreProps) {
 
         setSticking: ({ staveIndex, staveNoteIndex, sticking }) =>
           set((state) => {
+            const notesWithSticking = state.score?.[staveIndex]?.[staveNoteIndex];
+
+            if (!notesWithSticking) {
+              throw new Error(`Cloudn't find Bar for index ${staveIndex} - ${staveNoteIndex}`);
+            }
+
             if (sticking !== null) {
-              state.score[staveIndex][staveNoteIndex].sticking = sticking;
+              notesWithSticking.sticking = sticking;
             } else {
-              state.score[staveIndex][staveNoteIndex].sticking = undefined;
+              notesWithSticking.sticking = undefined;
             }
           }),
 
@@ -66,8 +76,8 @@ export function createScoreStore({ initialState }: CreateScoreStoreProps) {
 
             if (
               state.score.length === 1 &&
-              state.score[0].length !== state.configuration.signature &&
-              state.score[0].every((n) => n.notes.length === 0)
+              state.score?.[0]?.length !== state.configuration.signature &&
+              state.score?.[0]?.every((n) => n.notes.length === 0)
             ) {
               state.score = [createStave(state.configuration.signature)];
             }

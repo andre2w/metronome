@@ -14,8 +14,16 @@ export interface StaveProps {
 
 export function Stave({ bar, staveIndex: index, onRemoveStave }: StaveProps) {
   const tempoCounting = counting[bar.length];
+  if (!tempoCounting) {
+    throw new Error(`No count for length: ${bar.length}`);
+  }
   const notes = bar.map((notesWithSticking, barIndex) => {
     const noteCount = tempoCounting[barIndex];
+
+    if (!noteCount) {
+      throw new Error(`No counting for bar at ${barIndex}`);
+    }
+
     const withSpace = ["2", "3", "4"].includes(noteCount);
     return (
       <StaveNote

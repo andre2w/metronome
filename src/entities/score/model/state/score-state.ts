@@ -1,10 +1,11 @@
-import { FullScore, Note, NotesWithSticking, Score, Sticking } from "../types";
+import { Key } from "~/shared/lib/score/key-data";
+import { FullScore, NotesWithSticking, Score, Sticking } from "../types";
 import { MetronomeConfigurationProps } from "~/entities/score/model/state/defaults";
 
 export interface ScoreContextValue {
   score: Score;
   addStave: () => void;
-  toggleNote: (props: { staveIndex: number; staveNoteIndex: number; note: Note }) => void;
+  toggleNote: (props: { staveIndex: number; staveNoteIndex: number; note: Key }) => void;
   removeStave: (staveIndex: number) => void;
   setSticking: (props: {
     staveIndex: number;

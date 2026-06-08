@@ -1,4 +1,6 @@
-import type { Note, NotePlayed, Score, Ticks } from "../../../entities/score/model/types";
+import { NotePlayed } from "~/shared/lib/score/note-played";
+import type { Score, Ticks } from "../../../entities/score/model/types";
+import { Key } from "~/shared/lib/score/key-data";
 
 export interface CalculateResultProps {
   ticks: Ticks;
@@ -29,7 +31,7 @@ export function calculateResult({ ticks, notesPlayed, score, graceTime }: Calcul
     const start = timestamp - graceTime;
     const end = timestamp + graceTime;
 
-    const notesInTime: Note[] = [];
+    const notesInTime: Key[] = [];
 
     while (notesPlayedIndex < notesPlayed.length) {
       const note = notesPlayed[notesPlayedIndex];
@@ -47,9 +49,19 @@ export function calculateResult({ ticks, notesPlayed, score, graceTime }: Calcul
       }
     }
 
-    const expectedNotes = score[scoreIndex][barIndex].notes;
+    const expectedNotes = score[scoreIndex]?.[barIndex]?.notes;
+    if (!expectedNotes) {
+      throw new Error(`Could not find notes for index ${scoreIndex} - ${barIndex}`);
+    }
+
     barIndex++;
-    if (barIndex >= score[scoreIndex].length) {
+    const barLength = score[scoreIndex]?.length;
+
+    if (!barLength) {
+      throw new Error(`No bar for index: ${scoreIndex}`);
+    }
+
+    if (barIndex >= barLength) {
       barIndex = 0;
       scoreIndex++;
       if (scoreIndex >= score.length) {

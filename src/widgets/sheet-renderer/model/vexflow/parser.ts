@@ -1,9 +1,11 @@
 import { Beam, type StemmableNote } from "vexflow";
-import type { Note, NotesWithSticking, Sticking } from "../../../../entities/score/model/types";
+import type { NotesWithSticking, Sticking } from "../../../../entities/score/model/types";
 import { createStaveNote } from "./helpers";
+import { Configuration } from "~/shared/lib/configuration/configuration-provider";
+import { Key } from "~/shared/lib/score/key-data";
 
 interface ReducedStaveNote {
-  notes: Note[];
+  notes: Key[];
   withDot: boolean;
   duration: "4" | "8" | "16";
   sticking?: Sticking;
@@ -19,11 +21,13 @@ export function parse({
   background,
   baseDuration,
   cursorIndex,
+  configuration,
 }: {
   groups: (NotesWithSticking & { index: number })[][];
   background: "light" | "dark";
   baseDuration: "16" | "8" | "4";
   cursorIndex: number;
+  configuration: Configuration;
 }) {
   const notes: { note: StemmableNote; hasCursor: boolean }[][] = [];
   const beams: Beam[] = [];
@@ -75,6 +79,7 @@ export function parse({
         bar: { notes: reducedNote.notes, sticking: reducedNote.sticking },
         duration: reducedNote.duration,
         withDot: reducedNote.withDot,
+        configuration,
       });
       steammableNotes.push({
         note: staveNote,

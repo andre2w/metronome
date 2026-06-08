@@ -11,6 +11,9 @@ function p3ValueToRBGValue(color: number) {
 
 function parseDisplayP3Color(color: string) {
   const [_, r, g, b] = color.split(" ");
+  if (!r || !g || !b) {
+    throw new Error(`Could not parse rgb color: ${r}, ${g}, ${b}`);
+  }
   return `rgba(${p3ValueToRBGValue(Number(r))}, ${p3ValueToRBGValue(Number(g))}, ${p3ValueToRBGValue(Number(b.replace(")", "")))}, 0.6)`;
 }
 

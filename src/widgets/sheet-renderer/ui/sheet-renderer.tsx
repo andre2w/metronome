@@ -5,6 +5,7 @@ import { Renderer } from "vexflow";
 import { getRgbaColorString } from "../model/vexflow/color";
 import { drawScore } from "../model";
 import { useScoreStore } from "~/entities/score/model/state/score-store-provider";
+import { useConfiguration } from "~/shared/lib/configuration/configuration-provider";
 
 export type VexflowScoreProps = {};
 
@@ -25,6 +26,7 @@ export const SheetRenderer = forwardRef<VexflowScoreHandle, VexflowScoreProps>((
   const flatScore = score.flat().map((n) => n.notes);
   const colorRef = useRef<string | undefined>(undefined);
   const { accentColor, appearance } = useThemeContext();
+  const configuration = useConfiguration();
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
@@ -59,6 +61,7 @@ export const SheetRenderer = forwardRef<VexflowScoreHandle, VexflowScoreProps>((
           background: appearance === "inherit" ? "light" : appearance,
           accent: colorRef.current,
         },
+        configuration,
       });
       scoreIndexRef.current++;
     },
@@ -96,6 +99,7 @@ export const SheetRenderer = forwardRef<VexflowScoreHandle, VexflowScoreProps>((
         background: appearance === "inherit" ? "light" : appearance,
         accent: colorRef.current,
       },
+      configuration,
     });
   }, [score, scoreSize.width, appearance, accentColor]);
 

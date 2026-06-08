@@ -7,6 +7,9 @@ import { InputConfigurationProvider } from "~/entities/midi-input/ui/input-confi
 import { ThemePicker } from "./theme-picker";
 import "./styles.css";
 import "./root.css";
+import { ConfigurationContextProvider } from "~/shared/lib/configuration/configuration-provider";
+import { mappings } from "~/entities/midi-input/config/mappings/roland-td07";
+import { KEYS } from "~/entities/score/model/notes";
 
 function RootLayout() {
   const [{ appearance, accentColor }, setThemePreferences] = useLocalStorage("theme-preferences", {
@@ -22,28 +25,30 @@ function RootLayout() {
       scaling="100%"
       appearance={appearance}
     >
-      <InputConfigurationProvider>
-        <div className="app-shell">
-          <header className="navbar">
-            <div className="navbar-brand">
-              <span className="navbar-wordmark">metronome</span>
-              <span className="navbar-tagline">/ DRUM PRACTICE CONSOLE</span>
-            </div>
-            <div className="navbar-section">
-              <InputConfiguration />
-              <ThemePicker
-                appearance={appearance}
-                accentColor={accentColor}
-                onChange={setThemePreferences}
-              />
-            </div>
-          </header>
-          <main className="page">
-            <Outlet />
-          </main>
-        </div>
-        <TanStackRouterDevtools />
-      </InputConfigurationProvider>
+      <ConfigurationContextProvider keyMap={KEYS} mappings={mappings}>
+        <InputConfigurationProvider>
+          <div className="app-shell">
+            <header className="navbar">
+              <div className="navbar-brand">
+                <span className="navbar-wordmark">metronome</span>
+                <span className="navbar-tagline">/ DRUM PRACTICE CONSOLE</span>
+              </div>
+              <div className="navbar-section">
+                <InputConfiguration />
+                <ThemePicker
+                  appearance={appearance}
+                  accentColor={accentColor}
+                  onChange={setThemePreferences}
+                />
+              </div>
+            </header>
+            <main className="page">
+              <Outlet />
+            </main>
+          </div>
+          <TanStackRouterDevtools />
+        </InputConfigurationProvider>
+      </ConfigurationContextProvider>
     </Theme>
   );
 }

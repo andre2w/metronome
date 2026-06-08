@@ -2,3 +2,4 @@ node_modules/
 tsconfig.app.tsbuildinfo
 dist/
 tsconfig.node.tsbuildinfo
+.tanstack/

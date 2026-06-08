@@ -1,15 +1,15 @@
 import { ContextMenu } from "@radix-ui/themes";
-import type { Key, ReactNode } from "react";
+import type { ReactNode } from "react";
 import "./stave-note-box.css";
-import { type BaseNote, NoteData, NOTES } from "~/entities/score/model/notes";
 import { useScoreStore } from "~/entities/score/model/state/score-store-provider";
 import { Tile } from "./tile";
+import { useConfiguration } from "~/shared/lib/configuration/configuration-provider";
+import { Key, KeyData } from "~/shared/lib/score/key-data";
 
 export interface StaveNoteBoxProps {
   children?: ReactNode;
-  key?: Key;
   className?: string;
-  note?: BaseNote;
+  note: string;
   index?: {
     staveIndex: number;
     barIndex: number;
@@ -17,22 +17,17 @@ export interface StaveNoteBoxProps {
   isSelected: boolean;
   modifier?: string;
 }
-export function StaveNoteBox({
-  children,
-  key,
-  note,
-  index,
-  isSelected,
-  modifier,
-}: StaveNoteBoxProps) {
+export function StaveNoteBox({ children, note, index, isSelected, modifier }: StaveNoteBoxProps) {
   const toggleNote = useScoreStore((state) => state.toggleNote);
-  const noteData: NoteData | undefined = note ? NOTES[note] : undefined;
+  const configuration = useConfiguration();
+  const noteData: KeyData | undefined = note ? configuration.getKeyData(note) : undefined;
+  console.log("NoteData", noteData, note);
 
   const onClick =
     index && note
       ? () => {
           toggleNote({
-            note: { note, modifier },
+            note: { note: note, modifier },
             staveIndex: index.staveIndex,
             staveNoteIndex: index.barIndex,
           });
@@ -41,7 +36,7 @@ export function StaveNoteBox({
 
   const noteBox = (
     <Tile
-      key={key}
+      key={`${index?.staveIndex ?? 0}#${index?.barIndex ?? 0}#${note}`}
       className="stave-note-box"
       onClick={onClick}
       variant={isSelected ? "selected" : undefined}
