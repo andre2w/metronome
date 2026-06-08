@@ -4,6 +4,7 @@ import "./stave-note.css";
 import { StaveNoteBox } from "./stave-note-box";
 import { BaseNote, NOTES } from "~/entities/score/model/notes";
 import { Tile } from "./tile";
+import { useScoreStore } from "~/entities/score/model/state/score-store-provider";
 
 export interface StaveNoteProps {
   notesWithSticking: NotesWithSticking;
@@ -13,7 +14,7 @@ export interface StaveNoteProps {
   className?: string;
 }
 
-// const stickingsLoop = [null, "L", "R", "R/L"] as const;
+const stickingsLoop = [null, "L", "R", "R/L"] as const;
 
 export function StaveNote({
   notesWithSticking,
@@ -23,15 +24,21 @@ export function StaveNote({
   barIndex,
 }: StaveNoteProps) {
   const { notes: selectedNotes, sticking } = notesWithSticking;
-  // const stickingIndex = Math.max(
-  //   stickingsLoop.findIndex((s) => s === sticking),
-  //   0,
-  // );
-  // const nextIndex = stickingIndex + 1 >= stickingsLoop.length ? 0 : stickingIndex + 1;
+  const setSticking = useScoreStore((state) => state.setSticking);
+  const stickingIndex = Math.max(
+    stickingsLoop.findIndex((s) => s === sticking),
+    0,
+  );
+  const nextIndex = stickingIndex + 1 >= stickingsLoop.length ? 0 : stickingIndex + 1;
 
   return (
     <div className={`stave-note ${className ?? ""}`}>
-      <Tile className="sticking">
+      <Tile
+        className="sticking"
+        onClick={() => {
+          setSticking({ staveIndex, staveNoteIndex: barIndex, sticking: stickingsLoop[nextIndex] });
+        }}
+      >
         <Text weight={sticking ? "bold" : "light"}>{sticking ?? noteCount}</Text>
       </Tile>
       {Object.keys(NOTES).map((note) => {
