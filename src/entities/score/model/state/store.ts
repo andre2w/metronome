@@ -5,12 +5,14 @@ import { InitialState } from "./initial-state";
 import { createStave, ScoreContextValue } from "./score-state";
 import { queryParamsStorage } from "./query-params-storage";
 import { FullScore } from "../types";
+import { StateStorage } from "zustand/middleware";
 
 export interface CreateScoreStoreProps {
   initialState: InitialState;
+  storage: StateStorage;
 }
 
-export function createScoreStore({ initialState }: CreateScoreStoreProps) {
+export function createScoreStore({ initialState, storage }: CreateScoreStoreProps) {
   return createStore<ScoreContextValue>()(
     persist(
       immer((set) => ({
@@ -103,7 +105,7 @@ export function createScoreStore({ initialState }: CreateScoreStoreProps) {
       })),
       {
         name: "score",
-        storage: createJSONStorage(() => queryParamsStorage),
+        storage: createJSONStorage(() => storage),
       },
     ),
   );

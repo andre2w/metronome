@@ -4,10 +4,12 @@ import { getInitialStateFromHash } from "./initial-state";
 import { useStore } from "zustand/react";
 import { ScoreContextValue } from "./score-state";
 import { useShallow } from "zustand/react/shallow";
+import { queryParamsStorage } from "./query-params-storage";
 
 const ScoreContext = createContext(
   createScoreStore({
     initialState: getInitialStateFromHash(),
+    storage: queryParamsStorage,
   }),
 );
 
@@ -19,6 +21,7 @@ export function ScoreProvider({ children }: ScoreProviderProps) {
   const [scoreStore] = useState(() => {
     return createScoreStore({
       initialState: getInitialStateFromHash(),
+      storage: queryParamsStorage,
     });
   });
 

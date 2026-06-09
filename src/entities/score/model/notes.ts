@@ -1,4 +1,4 @@
-import { Modifier } from "./modifiers";
+import { Modifier } from "~/shared/lib/score/modifier";
 
 export interface KeyData {
   value: string;
