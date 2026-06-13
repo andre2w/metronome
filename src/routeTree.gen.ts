@@ -1,5 +1,3 @@
-/* eslint-disable */
-
 // @ts-nocheck
 
 // noinspection JSUnusedGlobalSymbols
@@ -9,8 +7,14 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from "./app/entrypoint/root"
+import { Route as DotPagesWaveformRouteRouteImport } from "./pages/waveform/route"
 import { Route as DotPagesMetronomeRouteRouteImport } from "./pages/metronome/route"
 
+const DotPagesWaveformRouteRoute = DotPagesWaveformRouteRouteImport.update({
+  id: "/waveform",
+  path: "/waveform",
+  getParentRoute: () => rootRouteImport,
+} as any)
 const DotPagesMetronomeRouteRoute = DotPagesMetronomeRouteRouteImport.update({
   id: "/",
   path: "/",
@@ -19,28 +23,39 @@ const DotPagesMetronomeRouteRoute = DotPagesMetronomeRouteRouteImport.update({
 
 export interface FileRoutesByFullPath {
   "/": typeof DotPagesMetronomeRouteRoute
+  "/waveform": typeof DotPagesWaveformRouteRoute
 }
 export interface FileRoutesByTo {
   "/": typeof DotPagesMetronomeRouteRoute
+  "/waveform": typeof DotPagesWaveformRouteRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   "/": typeof DotPagesMetronomeRouteRoute
+  "/waveform": typeof DotPagesWaveformRouteRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: "/"
+  fullPaths: "/" | "/waveform"
   fileRoutesByTo: FileRoutesByTo
-  to: "/"
-  id: "__root__" | "/"
+  to: "/" | "/waveform"
+  id: "__root__" | "/" | "/waveform"
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   DotPagesMetronomeRouteRoute: typeof DotPagesMetronomeRouteRoute
+  DotPagesWaveformRouteRoute: typeof DotPagesWaveformRouteRoute
 }
 
 declare module "@tanstack/react-router" {
   interface FileRoutesByPath {
+    "/waveform": {
+      id: "/waveform"
+      path: "/waveform"
+      fullPath: "/waveform"
+      preLoaderRoute: typeof DotPagesWaveformRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     "/": {
       id: "/"
       path: "/"
@@ -53,6 +68,7 @@ declare module "@tanstack/react-router" {
 
 const rootRouteChildren: RootRouteChildren = {
   DotPagesMetronomeRouteRoute: DotPagesMetronomeRouteRoute,
+  DotPagesWaveformRouteRoute: DotPagesWaveformRouteRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

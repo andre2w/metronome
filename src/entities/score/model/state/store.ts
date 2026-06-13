@@ -3,7 +3,6 @@ import { createJSONStorage, persist } from "zustand/middleware";
 import { immer } from "zustand/middleware/immer";
 import { InitialState } from "./initial-state";
 import { createStave, ScoreContextValue } from "./score-state";
-import { queryParamsStorage } from "./query-params-storage";
 import { FullScore } from "../types";
 import { StateStorage } from "zustand/middleware";
 

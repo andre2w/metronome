@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "tsgo -b && vite build",
-    "lint": "oxlint && oxfmt --check",
+    "lint": "oxlint --quiet && oxfmt --check",
     "lint:fix": "oxlint --fix && oxfmt",
     "preview": "vite preview",
     "test": "vitest"

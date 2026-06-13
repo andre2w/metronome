@@ -4,7 +4,7 @@ import "./stave-note-box.css";
 import { useScoreStore } from "~/entities/score/model/state/score-store-provider";
 import { Tile } from "./tile";
 import { useConfiguration } from "~/shared/lib/configuration/configuration-provider";
-import { Key, KeyData } from "~/shared/lib/score/key-data";
+import { KeyData } from "~/shared/lib/score/key-data";
 
 export interface StaveNoteBoxProps {
   children?: ReactNode;
