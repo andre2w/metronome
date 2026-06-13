@@ -8,7 +8,7 @@ const randomColor = () => `rgba(${random(0, 255)}, ${random(0, 255)}, ${random(0
 
 export function WaveformView() {
   const { init, loadFile, isLoaded, waveSurferRef, regions } = useWaveform();
-  const [displayControls, setDisplayControls] = useState(false);
+  const [_, setDisplayControls] = useState(false);
 
   useEffect(() => {
     const handler = (ev: KeyboardEvent) => {

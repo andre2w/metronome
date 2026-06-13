@@ -50,7 +50,7 @@ describe("store", () => {
       });
 
       const stave = createStave(16);
-      stave[0].keys.push({ note: "HIGH_HAT" });
+      stave[0]!.keys.push({ note: "HIGH_HAT" });
       expect(store.getState().score).toEqual([stave]);
 
       store.getState().toggleNote({
@@ -58,7 +58,7 @@ describe("store", () => {
         staveIndex: 0,
         note: { note: "SNARE" },
       });
-      stave[0].keys.push({ note: "SNARE" });
+      stave[0]!.keys.push({ note: "SNARE" });
       expect(store.getState().score).toEqual([stave]);
 
       store.getState().toggleNote({
@@ -66,7 +66,7 @@ describe("store", () => {
         staveIndex: 0,
         note: { note: "HIGH_HAT" },
       });
-      stave[1].keys.push({ note: "HIGH_HAT" });
+      stave[1]!.keys.push({ note: "HIGH_HAT" });
       expect(store.getState().score).toEqual([stave]);
     });
 
@@ -84,7 +84,7 @@ describe("store", () => {
       });
 
       const stave = createStave(16);
-      stave[0].keys.push({ note: "HIGH_HAT" });
+      stave[0]!.keys.push({ note: "HIGH_HAT" });
       expect(store.getState().score).toEqual([stave]);
 
       store.getState().toggleNote({
@@ -109,7 +109,7 @@ describe("store", () => {
       });
 
       const stave = createStave(16);
-      stave[0].keys.push({ note: "HIGH_HAT" });
+      stave[0]!.keys.push({ note: "HIGH_HAT" });
       expect(store.getState().score).toEqual([stave]);
 
       store.getState().toggleNote({
@@ -118,7 +118,7 @@ describe("store", () => {
         note: { note: "HIGH_HAT", modifier: "HIGH_HAT_OPEN" },
       });
       const staveWithModifier = createStave(16);
-      staveWithModifier[0].keys.push({ note: "HIGH_HAT", modifier: "HIGH_HAT_OPEN" });
+      staveWithModifier[0]!.keys.push({ note: "HIGH_HAT", modifier: "HIGH_HAT_OPEN" });
       expect(store.getState().score).toEqual([staveWithModifier]);
     });
   });
@@ -145,9 +145,9 @@ describe("store", () => {
       });
 
       const firstStave = createStave(16);
-      firstStave[0].keys.push({ note: "HIGH_HAT" });
+      firstStave[0]!.keys.push({ note: "HIGH_HAT" });
       const secondStave = createStave(16);
-      secondStave[0].keys.push({ note: "SNARE" });
+      secondStave[0]!.keys.push({ note: "SNARE" });
       expect(store.getState().score).toEqual([firstStave, secondStave]);
 
       store.getState().removeStave(0);
