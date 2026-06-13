@@ -20,6 +20,6 @@ export interface ScoreContextValue {
 
 export function createStave(notes: number) {
   return Array.from<NotesWithSticking>({ length: notes }).fill({
-    notes: [],
+    keys: [],
   });
 }

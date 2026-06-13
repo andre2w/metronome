@@ -116,9 +116,9 @@ export function createStaveNote({
   withDot?: boolean;
   configuration: Configuration;
 }) {
-  const isRest = bar.notes.length === 0;
+  const isRest = bar.keys.length === 0;
   console.log("BAR", bar);
-  const keys = isRest ? [REST_KEY] : bar.notes.map((key) => configuration.getKeyValue(key));
+  const keys = isRest ? [REST_KEY] : bar.keys.map((key) => configuration.getKeyValue(key));
   const noteDuration = isRest ? `${duration}r` : duration;
   const staveNote = new StaveNote({ keys, duration: noteDuration });
 
@@ -133,7 +133,7 @@ export function createStaveNote({
     staveNote.setStyle({ strokeStyle: "white" });
   }
 
-  for (const { note, modifier } of bar.notes) {
+  for (const { note, modifier } of bar.keys) {
     if (!modifier) {
       continue;
     }

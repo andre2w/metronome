@@ -6,30 +6,14 @@
 import { Key } from "~/shared/lib/score/key-data";
 
 // How to declare a note: https://github.com/0xfe/vexflow/blob/master/src/note.ts#L64
-// export const NOTES = {
-//   KICK: "f/4",
-//   SNARE: "c/5",
-//   GHOST_SNARE: "c/5",
-//   SNARE_X_STICK: "c/5/x2",
-//   ACCENTED_SNARE: "c/5",
-//   TOM_1: "e/5",
-//   TOM_2: "d/5",
-//   TOM_3: "a/4",
-//   HIGH_HAT: "g/5/x2",
-//   HIGH_HAT_OPEN: "g/5/x2",
-//   HIGH_HAT_PEDAL: "d/4/x2",
-//   RIDE: "f/5/x2",
-//   CRASH: "a/5/x2",
-// } as const;
-
 export const sticking = ["L", "R", "R/L"] as const;
 export type Sticking = (typeof sticking)[number];
 
 /**
  * Is one or more parts of the drum that must be played at a moment
  */
-export type Notes = Key[];
-export type NotesWithSticking = { notes: Notes; sticking?: Sticking };
+export type Keys = Key[];
+export type NotesWithSticking = { keys: Keys; sticking?: Sticking };
 /**
  * It's 4 groups of notes - a bar can be 1/4 1/8 1/16
  */

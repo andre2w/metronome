@@ -18,16 +18,16 @@ describe("calculateResult", () => {
     ];
     const score: Score = [
       [
-        { notes: [{ note: "SNARE" }] },
-        { notes: [{ note: "SNARE" }] },
-        { notes: [{ note: "SNARE" }] },
-        { notes: [{ note: "SNARE" }] },
+        { keys: [{ note: "SNARE" }] },
+        { keys: [{ note: "SNARE" }] },
+        { keys: [{ note: "SNARE" }] },
+        { keys: [{ note: "SNARE" }] },
       ],
       [
-        { notes: [{ note: "SNARE" }] },
-        { notes: [{ note: "SNARE" }] },
-        { notes: [{ note: "SNARE" }] },
-        { notes: [{ note: "SNARE" }] },
+        { keys: [{ note: "SNARE" }] },
+        { keys: [{ note: "SNARE" }] },
+        { keys: [{ note: "SNARE" }] },
+        { keys: [{ note: "SNARE" }] },
       ],
     ];
 
@@ -53,16 +53,16 @@ describe("calculateResult", () => {
     ];
     const score: Score = [
       [
-        { notes: [{ note: "SNARE" }, { note: "HIGH_HAT" }] },
-        { notes: [{ note: "SNARE" }] },
-        { notes: [{ note: "SNARE" }] },
-        { notes: [{ note: "SNARE" }] },
+        { keys: [{ note: "SNARE" }, { note: "HIGH_HAT" }] },
+        { keys: [{ note: "SNARE" }] },
+        { keys: [{ note: "SNARE" }] },
+        { keys: [{ note: "SNARE" }] },
       ],
       [
-        { notes: [{ note: "SNARE" }, { note: "HIGH_HAT" }] },
-        { notes: [{ note: "SNARE" }] },
-        { notes: [{ note: "SNARE" }] },
-        { notes: [{ note: "SNARE" }] },
+        { keys: [{ note: "SNARE" }, { note: "HIGH_HAT" }] },
+        { keys: [{ note: "SNARE" }] },
+        { keys: [{ note: "SNARE" }] },
+        { keys: [{ note: "SNARE" }] },
       ],
     ];
 
@@ -87,16 +87,16 @@ describe("calculateResult", () => {
     ];
     const score: Score = [
       [
-        { notes: [{ note: "SNARE" }, { note: "HIGH_HAT" }] },
-        { notes: [{ note: "SNARE" }] },
-        { notes: [{ note: "SNARE" }] },
-        { notes: [{ note: "SNARE" }] },
+        { keys: [{ note: "SNARE" }, { note: "HIGH_HAT" }] },
+        { keys: [{ note: "SNARE" }] },
+        { keys: [{ note: "SNARE" }] },
+        { keys: [{ note: "SNARE" }] },
       ],
       [
-        { notes: [{ note: "SNARE" }, { note: "HIGH_HAT" }] },
-        { notes: [{ note: "SNARE" }] },
-        { notes: [{ note: "SNARE" }] },
-        { notes: [{ note: "SNARE" }] },
+        { keys: [{ note: "SNARE" }, { note: "HIGH_HAT" }] },
+        { keys: [{ note: "SNARE" }] },
+        { keys: [{ note: "SNARE" }] },
+        { keys: [{ note: "SNARE" }] },
       ],
     ];
 
@@ -123,16 +123,16 @@ describe("calculateResult", () => {
     ];
     const score: Score = [
       [
-        { notes: [{ note: "SNARE" }, { note: "HIGH_HAT" }] },
-        { notes: [{ note: "SNARE" }] },
-        { notes: [{ note: "SNARE" }] },
-        { notes: [{ note: "SNARE" }] },
+        { keys: [{ note: "SNARE" }, { note: "HIGH_HAT" }] },
+        { keys: [{ note: "SNARE" }] },
+        { keys: [{ note: "SNARE" }] },
+        { keys: [{ note: "SNARE" }] },
       ],
       [
-        { notes: [{ note: "SNARE" }, { note: "HIGH_HAT" }] },
-        { notes: [{ note: "SNARE" }] },
-        { notes: [{ note: "SNARE" }] },
-        { notes: [{ note: "SNARE" }] },
+        { keys: [{ note: "SNARE" }, { note: "HIGH_HAT" }] },
+        { keys: [{ note: "SNARE" }] },
+        { keys: [{ note: "SNARE" }] },
+        { keys: [{ note: "SNARE" }] },
       ],
     ];
 
@@ -158,16 +158,16 @@ describe("calculateResult", () => {
     ];
     const score: Score = [
       [
-        { notes: [{ note: "SNARE" }, { note: "HIGH_HAT" }] },
-        { notes: [{ note: "SNARE" }] },
-        { notes: [{ note: "SNARE" }] },
-        { notes: [{ note: "SNARE" }] },
+        { keys: [{ note: "SNARE" }, { note: "HIGH_HAT" }] },
+        { keys: [{ note: "SNARE" }] },
+        { keys: [{ note: "SNARE" }] },
+        { keys: [{ note: "SNARE" }] },
       ],
       [
-        { notes: [{ note: "SNARE" }, { note: "HIGH_HAT" }] },
-        { notes: [{ note: "SNARE" }] },
-        { notes: [{ note: "SNARE" }] },
-        { notes: [{ note: "SNARE" }] },
+        { keys: [{ note: "SNARE" }, { note: "HIGH_HAT" }] },
+        { keys: [{ note: "SNARE" }] },
+        { keys: [{ note: "SNARE" }] },
+        { keys: [{ note: "SNARE" }] },
       ],
     ];
 
@@ -193,10 +193,10 @@ describe("calculateResult", () => {
     ];
     const score: Score = [
       [
-        { notes: [{ note: "SNARE" }, { note: "HIGH_HAT", modifier: "HIGH_HAT_OPEN" }] },
-        { notes: [{ note: "SNARE" }] },
-        { notes: [{ note: "SNARE" }] },
-        { notes: [{ note: "SNARE" }] },
+        { keys: [{ note: "SNARE" }, { note: "HIGH_HAT", modifier: "HIGH_HAT_OPEN" }] },
+        { keys: [{ note: "SNARE" }] },
+        { keys: [{ note: "SNARE" }] },
+        { keys: [{ note: "SNARE" }] },
       ],
     ];
 
@@ -222,22 +222,22 @@ describe("calculateResult", () => {
     ];
     const score: Score = [
       [
-        { notes: [{ note: "SNARE" }, { note: "HIGH_HAT" }] },
-        { notes: [{ note: "SNARE" }] },
-        { notes: [{ note: "SNARE" }] },
-        { notes: [{ note: "SNARE" }] },
+        { keys: [{ note: "SNARE" }, { note: "HIGH_HAT" }] },
+        { keys: [{ note: "SNARE" }] },
+        { keys: [{ note: "SNARE" }] },
+        { keys: [{ note: "SNARE" }] },
       ],
       [
-        { notes: [{ note: "SNARE" }, { note: "HIGH_HAT" }] },
-        { notes: [{ note: "SNARE" }] },
-        { notes: [{ note: "SNARE" }] },
-        { notes: [{ note: "SNARE" }] },
+        { keys: [{ note: "SNARE" }, { note: "HIGH_HAT" }] },
+        { keys: [{ note: "SNARE" }] },
+        { keys: [{ note: "SNARE" }] },
+        { keys: [{ note: "SNARE" }] },
       ],
       [
-        { notes: [{ note: "SNARE" }, { note: "HIGH_HAT" }] },
-        { notes: [{ note: "SNARE" }] },
-        { notes: [{ note: "SNARE" }] },
-        { notes: [{ note: "SNARE" }] },
+        { keys: [{ note: "SNARE" }, { note: "HIGH_HAT" }] },
+        { keys: [{ note: "SNARE" }] },
+        { keys: [{ note: "SNARE" }] },
+        { keys: [{ note: "SNARE" }] },
       ],
     ];
 
@@ -261,16 +261,16 @@ describe("calculateResult", () => {
     ];
     const score: Score = [
       [
-        { notes: [{ note: "SNARE" }] },
-        { notes: [{ note: "SNARE" }] },
-        { notes: [{ note: "SNARE" }] },
-        { notes: [{ note: "SNARE" }] },
+        { keys: [{ note: "SNARE" }] },
+        { keys: [{ note: "SNARE" }] },
+        { keys: [{ note: "SNARE" }] },
+        { keys: [{ note: "SNARE" }] },
       ],
       [
-        { notes: [{ note: "SNARE" }] },
-        { notes: [{ note: "SNARE" }] },
-        { notes: [{ note: "SNARE" }] },
-        { notes: [{ note: "SNARE" }] },
+        { keys: [{ note: "SNARE" }] },
+        { keys: [{ note: "SNARE" }] },
+        { keys: [{ note: "SNARE" }] },
+        { keys: [{ note: "SNARE" }] },
       ],
     ];
 
@@ -285,16 +285,16 @@ describe("calculateResult", () => {
     const notesPlayed: NotePlayed[] = [];
     const score: Score = [
       [
-        { notes: [{ note: "SNARE" }] },
-        { notes: [{ note: "SNARE" }] },
-        { notes: [{ note: "SNARE" }] },
-        { notes: [{ note: "SNARE" }] },
+        { keys: [{ note: "SNARE" }] },
+        { keys: [{ note: "SNARE" }] },
+        { keys: [{ note: "SNARE" }] },
+        { keys: [{ note: "SNARE" }] },
       ],
       [
-        { notes: [{ note: "SNARE" }] },
-        { notes: [{ note: "SNARE" }] },
-        { notes: [{ note: "SNARE" }] },
-        { notes: [{ note: "SNARE" }] },
+        { keys: [{ note: "SNARE" }] },
+        { keys: [{ note: "SNARE" }] },
+        { keys: [{ note: "SNARE" }] },
+        { keys: [{ note: "SNARE" }] },
       ],
     ];
 
@@ -399,10 +399,10 @@ describe("calculateResult", () => {
       ],
       score: [
         [
-          { notes: [{ note: "SNARE" }] },
-          { notes: [{ note: "SNARE" }] },
-          { notes: [{ note: "SNARE" }] },
-          { notes: [{ note: "SNARE" }] },
+          { keys: [{ note: "SNARE" }] },
+          { keys: [{ note: "SNARE" }] },
+          { keys: [{ note: "SNARE" }] },
+          { keys: [{ note: "SNARE" }] },
         ],
       ],
       graceTime: 100,

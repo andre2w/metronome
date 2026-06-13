@@ -24,7 +24,7 @@ export function StaveNote({
   barIndex,
 }: StaveNoteProps) {
   const configuration = useConfiguration();
-  const { notes: selectedNotes, sticking } = notesWithSticking;
+  const { keys: selectedNotes, sticking } = notesWithSticking;
   const setSticking = useScoreStore((state) => state.setSticking);
   const stickingIndex = Math.max(
     stickingsLoop.findIndex((s) => s === sticking),

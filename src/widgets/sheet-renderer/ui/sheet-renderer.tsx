@@ -23,7 +23,7 @@ export const SheetRenderer = forwardRef<VexflowScoreHandle, VexflowScoreProps>((
     ref: boxRef as RefObject<HTMLDivElement>,
   });
   const scoreIndexRef = useRef(0);
-  const flatScore = score.flat().map((n) => n.notes);
+  const flatScore = score.flat().map((n) => n.keys);
   const colorRef = useRef<string | undefined>(undefined);
   const { accentColor, appearance } = useThemeContext();
   const configuration = useConfiguration();

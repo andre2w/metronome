@@ -39,15 +39,15 @@ export function parse({
       if (reducedNotes.length === 0) {
         reducedNotes.push({
           duration: baseDuration,
-          notes: bar.notes,
+          notes: bar.keys,
           sticking: bar.sticking,
           withDot: false,
-          hasCursor: bar.index === cursorIndex && bar.notes.length > 0,
+          hasCursor: bar.index === cursorIndex && bar.keys.length > 0,
         });
         continue;
       }
 
-      if (bar.notes.length === 0) {
+      if (bar.keys.length === 0) {
         const previous = reducedNotes.at(-1);
         if (!previous) {
           continue;
@@ -63,7 +63,7 @@ export function parse({
       } else {
         reducedNotes.push({
           duration: baseDuration,
-          notes: bar.notes,
+          notes: bar.keys,
           sticking: bar.sticking,
           withDot: false,
           hasCursor: bar.index === cursorIndex,
@@ -76,7 +76,7 @@ export function parse({
     for (const reducedNote of reducedNotes) {
       const staveNote = createStaveNote({
         background,
-        bar: { notes: reducedNote.notes, sticking: reducedNote.sticking },
+        bar: { keys: reducedNote.notes, sticking: reducedNote.sticking },
         duration: reducedNote.duration,
         withDot: reducedNote.withDot,
         configuration,

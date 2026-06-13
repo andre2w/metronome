@@ -31,19 +31,19 @@ export function createScoreStore({ initialState, storage }: CreateScoreStoreProp
               throw new Error(`Cloudn't find Bar for index ${staveIndex} - ${staveNoteIndex}`);
             }
 
-            if (!notesWithSticking.notes.some((n) => n.note === note.note)) {
-              notesWithSticking.notes.push(note);
+            if (!notesWithSticking.keys.some((n) => n.note === note.note)) {
+              notesWithSticking.keys.push(note);
             } else {
-              const noteIndex = notesWithSticking.notes.findIndex((n) => n.note === note.note);
+              const noteIndex = notesWithSticking.keys.findIndex((n) => n.note === note.note);
               if (noteIndex >= 0) {
                 /**
                  * Replace the existing note with one with the modifier
                  */
                 const shouldReplace =
-                  notesWithSticking.notes.at(noteIndex)?.modifier !== note.modifier;
-                notesWithSticking.notes.splice(noteIndex, 1);
+                  notesWithSticking.keys.at(noteIndex)?.modifier !== note.modifier;
+                notesWithSticking.keys.splice(noteIndex, 1);
                 if (shouldReplace) {
-                  notesWithSticking.notes.push(note);
+                  notesWithSticking.keys.push(note);
                 }
               }
             }
@@ -79,7 +79,7 @@ export function createScoreStore({ initialState, storage }: CreateScoreStoreProp
             if (
               state.score.length === 1 &&
               state.score?.[0]?.length !== state.configuration.signature &&
-              state.score?.[0]?.every((n) => n.notes.length === 0)
+              state.score?.[0]?.every((n) => n.keys.length === 0)
             ) {
               state.score = [createStave(state.configuration.signature)];
             }

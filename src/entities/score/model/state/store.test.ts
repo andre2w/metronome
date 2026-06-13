@@ -23,13 +23,13 @@ describe("store", () => {
       store.getState().addStave();
 
       const newStave = Array.from<NotesWithSticking>({ length: 16 }).fill({
-        notes: [],
+        keys: [],
       });
       expect(store.getState().score).toEqual([newStave]);
 
       store.getState().onChangeConfiguration({ bpm: 100, graceTime: 50, signature: 4 });
       const updatedStave = Array.from<NotesWithSticking>({ length: 4 }).fill({
-        notes: [],
+        keys: [],
       });
       expect(store.getState().score).toEqual([updatedStave]);
     });
@@ -50,7 +50,7 @@ describe("store", () => {
       });
 
       const stave = createStave(16);
-      stave[0].notes.push({ note: "HIGH_HAT" });
+      stave[0].keys.push({ note: "HIGH_HAT" });
       expect(store.getState().score).toEqual([stave]);
 
       store.getState().toggleNote({
@@ -58,7 +58,7 @@ describe("store", () => {
         staveIndex: 0,
         note: { note: "SNARE" },
       });
-      stave[0].notes.push({ note: "SNARE" });
+      stave[0].keys.push({ note: "SNARE" });
       expect(store.getState().score).toEqual([stave]);
 
       store.getState().toggleNote({
@@ -66,7 +66,7 @@ describe("store", () => {
         staveIndex: 0,
         note: { note: "HIGH_HAT" },
       });
-      stave[1].notes.push({ note: "HIGH_HAT" });
+      stave[1].keys.push({ note: "HIGH_HAT" });
       expect(store.getState().score).toEqual([stave]);
     });
 
@@ -84,7 +84,7 @@ describe("store", () => {
       });
 
       const stave = createStave(16);
-      stave[0].notes.push({ note: "HIGH_HAT" });
+      stave[0].keys.push({ note: "HIGH_HAT" });
       expect(store.getState().score).toEqual([stave]);
 
       store.getState().toggleNote({
@@ -109,7 +109,7 @@ describe("store", () => {
       });
 
       const stave = createStave(16);
-      stave[0].notes.push({ note: "HIGH_HAT" });
+      stave[0].keys.push({ note: "HIGH_HAT" });
       expect(store.getState().score).toEqual([stave]);
 
       store.getState().toggleNote({
@@ -118,7 +118,7 @@ describe("store", () => {
         note: { note: "HIGH_HAT", modifier: "HIGH_HAT_OPEN" },
       });
       const staveWithModifier = createStave(16);
-      staveWithModifier[0].notes.push({ note: "HIGH_HAT", modifier: "HIGH_HAT_OPEN" });
+      staveWithModifier[0].keys.push({ note: "HIGH_HAT", modifier: "HIGH_HAT_OPEN" });
       expect(store.getState().score).toEqual([staveWithModifier]);
     });
   });
@@ -145,9 +145,9 @@ describe("store", () => {
       });
 
       const firstStave = createStave(16);
-      firstStave[0].notes.push({ note: "HIGH_HAT" });
+      firstStave[0].keys.push({ note: "HIGH_HAT" });
       const secondStave = createStave(16);
-      secondStave[0].notes.push({ note: "SNARE" });
+      secondStave[0].keys.push({ note: "SNARE" });
       expect(store.getState().score).toEqual([firstStave, secondStave]);
 
       store.getState().removeStave(0);
@@ -174,7 +174,7 @@ function createStorage(): StateStorage {
 function createStave(len: number) {
   const newArr: NotesWithSticking[] = [];
   for (let i = 0; i < len; i++) {
-    newArr.push({ notes: [] });
+    newArr.push({ keys: [] });
   }
 
   return newArr;

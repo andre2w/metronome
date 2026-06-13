@@ -49,7 +49,7 @@ export function calculateResult({ ticks, notesPlayed, score, graceTime }: Calcul
       }
     }
 
-    const expectedNotes = score[scoreIndex]?.[barIndex]?.notes;
+    const expectedNotes = score[scoreIndex]?.[barIndex]?.keys;
     if (!expectedNotes) {
       throw new Error(`Could not find notes for index ${scoreIndex} - ${barIndex}`);
     }
