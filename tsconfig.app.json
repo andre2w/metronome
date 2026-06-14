@@ -21,8 +21,8 @@
     "noFallthroughCasesInSwitch": true,
     "noUncheckedIndexedAccess": true,
     "paths": {
-      "~/*": ["./src/*"],
-    },
+      "~/*": ["./src/*"]
+    }
   },
-  "include": ["./src", "vitest-setup.ts", "vitest.config.ts"],
+  "include": ["./src", "vitest-setup.ts", "vitest.config.ts"]
 }

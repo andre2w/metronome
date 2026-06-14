@@ -4,8 +4,6 @@ import ZoomPlugin from "wavesurfer.js/dist/plugins/zoom.js";
 import { WaveSurferContext } from "./context";
 import type { GenericPlugin } from "wavesurfer.js/dist/base-plugin.js";
 import WaveSurfer from "wavesurfer.js";
-import { GeneralEventTypes } from "wavesurfer.js/dist/event-emitter.js";
-import { WaveSurferEvents } from "wavesurfer.js/dist/types.js";
 import { getRgbaColorString } from "~/shared/lib/color";
 
 export interface WaveSurferProviderProps {
@@ -35,6 +33,7 @@ export function WaveSurferProvider({ children }: WaveSurferProviderProps) {
       });
 
       waveSurferRef.current = waveSurfer;
+
       const regions = plugins[1];
       regions.enableDragSelection({
         color: "rgba(255, 0, 0, 0.1)",

@@ -1,18 +1,13 @@
-import { useCallback, useEffect, useState } from "react";
-import { useWaveform } from "./use-waveform";
-import { calculateBeatTime } from "~/pages/metronome/model/beat-time";
+import { useCallback } from "react";
 import { UploadFileArea } from "./upload-file-area";
-import { Button, Flex } from "@radix-ui/themes";
+import { Flex } from "@radix-ui/themes";
 import { useWaveSurfer } from "./wave-surfer-context/use-wave-surfer";
 import { Controls } from "./controls";
 import { Regions } from "./regions";
 
-// Give regions a random color when they are created
-const random = (min: number, max: number) => Math.random() * (max - min) + min;
-const randomColor = () => `rgba(${random(0, 255)}, ${random(0, 255)}, ${random(0, 255)}, 0.5)`;
-
 export function WaveformView() {
-  const { init, loadFile, isLoaded, playPause } = useWaveSurfer();
+  const { init, loadFile, isLoaded } = useWaveSurfer();
+
   const onLoadFile = useCallback(
     (files: FileList) => {
       if (isLoaded) {
