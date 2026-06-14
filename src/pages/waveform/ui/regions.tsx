@@ -7,7 +7,7 @@ export function Regions() {
 
   return (
     <Flex pt="3" gap="2">
-      {regions.map((region, index) => {
+      {Object.values(regions).map((region, index) => {
         return (
           <RegionCard
             region={region}

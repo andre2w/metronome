@@ -6,6 +6,7 @@ import type { GenericPlugin } from "wavesurfer.js/dist/base-plugin.js";
 import WaveSurfer from "wavesurfer.js";
 import { GeneralEventTypes } from "wavesurfer.js/dist/event-emitter.js";
 import { WaveSurferEvents } from "wavesurfer.js/dist/types.js";
+import { getRgbaColorString } from "~/shared/lib/color";
 
 export interface WaveSurferProviderProps {
   children: ReactNode;
@@ -25,9 +26,10 @@ export function WaveSurferProvider({ children }: WaveSurferProviderProps) {
 
   const init = useCallback(
     (el: HTMLElement) => {
+      const waveColor = getRgbaColorString(el);
       const waveSurfer = WaveSurfer.create({
         container: el,
-        waveColor: "#4F4A85",
+        waveColor: waveColor,
         progressColor: "#383351",
         plugins,
       });

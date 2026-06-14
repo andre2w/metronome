@@ -2,7 +2,7 @@ import { useThemeContext } from "@radix-ui/themes";
 import { forwardRef, RefObject, useEffect, useImperativeHandle, useRef } from "react";
 import { useResizeObserver } from "usehooks-ts";
 import { Renderer } from "vexflow";
-import { getRgbaColorString } from "../model/vexflow/color";
+import { getRgbaColorString } from "../../../shared/lib/color";
 import { drawScore } from "../model";
 import { useScoreStore } from "~/entities/score/model/state/score-store-provider";
 import { useConfiguration } from "~/shared/lib/configuration/configuration-provider";

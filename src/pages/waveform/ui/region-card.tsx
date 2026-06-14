@@ -4,7 +4,8 @@ import clsx from "clsx";
 import type { Region } from "wavesurfer.js/dist/plugins/regions.js";
 import { convertToMinutes } from "~/shared/lib/time-converter";
 import classes from "./region-card.module.scss";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useRegions } from "./wave-surfer-context/use-regions";
 
 export interface RegionProps {
   region: Region;
@@ -12,32 +13,42 @@ export interface RegionProps {
   selected?: boolean;
 }
 
+interface RegionContent {
+  start: number;
+  end: number;
+  annotation?: string;
+}
+
 export function RegionCard({ region, index, selected = false }: RegionProps) {
   const [isEditing, setIsEditing] = useState(false);
-  const [content, setContent] = useState(() => {
-    const initialContent = region.getContent();
-    return initialContent?.toString();
-  });
+  const { regionsPlugin } = useRegions();
+
+  const [content, setContent] = useState<RegionContent>(toRegionContent(region));
+  const [annotation, setAnnotation] = useState("");
+
+  useEffect(() => {
+    return regionsPlugin.on("region-update", (updatedRegion) => {
+      if (updatedRegion.id !== region.id) {
+        return;
+      }
+
+      setContent(toRegionContent(region));
+    });
+  }, [regionsPlugin, region]);
 
   return (
     <Box>
-      <Card>
+      <Card className={clsx({ [classes.selected!]: selected })}>
         <Flex direction="column" gap="2">
-          <Flex
-            direction="row"
-            className={clsx({ [classes.selected!]: selected })}
-            key={region.id}
-            align="center"
-            justify="between"
-          >
+          <Flex direction="row" key={region.id} align="center" justify="between">
             <Flex gap="2" align="center">
               <Text as="span">
-                {convertToMinutes(region.start)} - {convertToMinutes(region.end)}
+                {convertToMinutes(content.start)} - {convertToMinutes(content.end)}
               </Text>
 
               <Separator orientation="vertical" className={classes.separator} />
 
-              <Text as="span">{content ?? `Region ${index + 1}`}</Text>
+              <Text as="span">{content.annotation ?? `Region ${index + 1}`}</Text>
 
               {!isEditing && (
                 <IconButton
@@ -57,18 +68,18 @@ export function RegionCard({ region, index, selected = false }: RegionProps) {
             <Flex align="end" gap="1">
               <input
                 type="text"
-                value={content}
+                value={content.annotation}
                 onChange={(e) => {
-                  setContent(e.target.value);
+                  setAnnotation(e.target.value);
                 }}
               />
               <IconButton
                 aria-label="save"
                 size="1"
                 onClick={() => {
-                  region.setContent(content);
+                  region.setContent(annotation);
                   setIsEditing(false);
-                  setContent("");
+                  setAnnotation("");
                 }}
               >
                 <CheckIcon />
@@ -79,7 +90,7 @@ export function RegionCard({ region, index, selected = false }: RegionProps) {
                 size="1"
                 onClick={() => {
                   setIsEditing(false);
-                  setContent("");
+                  setAnnotation("");
                 }}
               >
                 <Cross2Icon />
@@ -90,4 +101,15 @@ export function RegionCard({ region, index, selected = false }: RegionProps) {
       </Card>
     </Box>
   );
+}
+
+function toRegionContent(region: Region): RegionContent {
+  const initialContent = region.getContent();
+  const annotation = initialContent?.toString();
+
+  return {
+    start: region.start,
+    end: region.end,
+    annotation,
+  };
 }
