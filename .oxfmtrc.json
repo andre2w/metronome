@@ -1,4 +1,9 @@
 {
   "$schema": "./node_modules/oxfmt/configuration_schema.json",
-  "ignorePatterns": [".zed/**/*", "dist/**", "vexflow.html", "src/routeTree.gen.ts"]
+  "ignorePatterns": [
+    ".zed/**/*",
+    "dist/**",
+    "vexflow.html",
+    "./src/routeTree.gen.ts"
+  ]
 }

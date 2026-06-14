@@ -5,7 +5,7 @@ export default defineConfig({
     ".zed/**/*",
     "dist/**",
     "vexflow.html",
-    "src/routeTree.gen.ts",
+    "./src/routeTree.gen.ts",
     "node_modules/**/*",
   ],
   options: {

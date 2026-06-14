@@ -8,7 +8,6 @@
         "!vtsls",
         "!typescript-language-server",
       ],
-      "document_symbols": "on",
       "format_on_save": "on",
       "prettier": {
         "allowed": false,
@@ -26,22 +25,16 @@
         "!vtsls",
         "!typescript-language-server",
       ],
-      "document_symbols": "on",
       "format_on_save": "on",
-      "prettier": {
-        "allowed": false,
-      },
+      "prettier": { "allowed": false },
       "formatter": [
         { "language_server": { "name": "oxfmt" } },
         { "code_action": "source.fixAll.oxc" },
       ],
     },
     "JavaScript": {
-      "document_symbols": "on",
       "format_on_save": "on",
-      "prettier": {
-        "allowed": false,
-      },
+      "prettier": { "allowed": false },
       "formatter": [
         { "language_server": { "name": "oxfmt" } },
         { "code_action": "source.fixAll.oxc" },
@@ -53,7 +46,7 @@
       "initialization_options": {
         "settings": {
           "disableNestedConfig": false,
-          "fixKind": "safe_fix",
+          "fixKind": "safe_fix_or_suggestion",
           "run": "onType",
           "unusedDisableDirectives": "deny",
         },
@@ -64,21 +57,6 @@
         "settings": {
           "fmt.configPath": null,
           "run": "onSave",
-        },
-      },
-    },
-    "vtsls": {
-      "settings": {
-        "typescript": {
-          "implementationsCodeLens": {
-            "enabled": true,
-            "showOnAllClassMethods": true,
-            "showOnInterfaceMethods": true,
-          },
-          "referencesCodeLens": {
-            "enabled": true,
-            "showOnAllFunctions": true,
-          },
         },
       },
     },

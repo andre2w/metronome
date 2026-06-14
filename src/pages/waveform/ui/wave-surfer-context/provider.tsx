@@ -1,11 +1,18 @@
-import { useCallback, useMemo, useRef } from "react";
+import { ReactNode, useCallback, useMemo, useRef, useState } from "react";
+import RegionsPlugin from "wavesurfer.js/dist/plugins/regions.js";
+import ZoomPlugin from "wavesurfer.js/dist/plugins/zoom.js";
+import { WaveSurferContext } from "./context";
+import type { GenericPlugin } from "wavesurfer.js/dist/base-plugin.js";
 import WaveSurfer from "wavesurfer.js";
-import ZoomPlugin from "wavesurfer.js/dist/plugins/zoom.esm.js";
-import RegionsPlugin from "wavesurfer.js/dist/plugins/regions.esm.js";
-import { GenericPlugin } from "wavesurfer.js/dist/base-plugin.js";
+import { GeneralEventTypes } from "wavesurfer.js/dist/event-emitter.js";
+import { WaveSurferEvents } from "wavesurfer.js/dist/types.js";
 
-export function useWaveform() {
+export interface WaveSurferProviderProps {
+  children: ReactNode;
+}
+export function WaveSurferProvider({ children }: WaveSurferProviderProps) {
   const waveSurferRef = useRef<WaveSurfer | undefined>(undefined);
+  const [isLoaded, setIsLoaded] = useState(false);
   const plugins = useMemo(() => {
     return [
       ZoomPlugin.create({
@@ -30,21 +37,6 @@ export function useWaveform() {
       regions.enableDragSelection({
         color: "rgba(255, 0, 0, 0.1)",
       });
-      regions.on("region-created", (event) => {
-        console.log("region-created", event);
-      });
-      regions.on("region-in", (event) => {
-        console.log("region-in", event);
-      });
-      regions.on("region-out", (event) => {
-        console.log("region-out", event);
-      });
-      regions.on("region-double-clicked", (...args) => {
-        console.log("region-double-clicked", args);
-      });
-      regions.on("region-clicked", (...args) => {
-        console.log("region-clicked", args);
-      });
     },
     [plugins],
   );
@@ -60,7 +52,25 @@ export function useWaveform() {
     }
 
     await waveSurferRef.current.loadBlob(audio);
+    setIsLoaded(true);
   }, []);
 
-  return { init, loadFile, isLoaded: !!waveSurferRef.current, waveSurferRef, regions: plugins[1] };
+  const playPause = useCallback(async () => {
+    await waveSurferRef.current?.playPause();
+  }, []);
+
+  return (
+    <WaveSurferContext.Provider
+      value={{
+        init,
+        loadFile,
+        isLoaded,
+        playPause,
+        waveSurferRef: waveSurferRef,
+        regions: plugins[1],
+      }}
+    >
+      {children}
+    </WaveSurferContext.Provider>
+  );
 }
