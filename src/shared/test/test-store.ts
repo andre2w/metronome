@@ -1,6 +1,4 @@
 import { StateStorage } from "zustand/middleware";
-import { createScoreStore } from "~/entities/score/model/state/store";
-import { NotesWithSticking } from "~/entities/score/model/types";
 
 export function createTestStorage(): StateStorage {
   const storage = new Map<string, string>();
