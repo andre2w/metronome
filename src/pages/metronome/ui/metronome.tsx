@@ -1,6 +1,5 @@
 import "./metronome.css";
 import { useRef, useState } from "react";
-import { calculateBeatTime } from "../model/beat-time";
 import { calculateResult } from "../model/result-calculator";
 import type { Ticks } from "../../../entities/score/model/types";
 import { Result, type ResultProps } from "./result";
@@ -9,12 +8,12 @@ import type { TicksHandle } from "./ticks";
 import { useAudioTicks } from "./use-audio-tick";
 import { useInputListener } from "../../../entities/midi-input/ui/use-input-listener";
 import { start } from "tone";
-import { useInterval } from "usehooks-ts";
 import { SheetRenderer } from "~/widgets/sheet-renderer";
 import { VexflowScoreHandle } from "~/widgets/sheet-renderer/ui/sheet-renderer";
 import { SheetControls } from "~/widgets/sheet-controls";
 import { useScoreStoreShallow } from "~/entities/score/model/state/score-store-provider";
 import { MetronomeConfiguration } from "./metronome-configuration";
+import { useScoreInterval } from "./use-score-interval";
 
 export interface MetronomeProps {
   className?: string;
@@ -25,7 +24,6 @@ export function Metronome({ className }: MetronomeProps) {
     score,
     configuration,
   }));
-  const [started, setStarted] = useState(false);
   const selectedRef = useRef<number>(-1);
   const vexflowScoreRef = useRef<VexflowScoreHandle>(null);
   const ticksRef = useRef<Ticks>([]);
@@ -43,21 +41,11 @@ export function Metronome({ className }: MetronomeProps) {
     ticksRef.current.push(performance.now());
     vexflowScoreRef.current?.next();
   };
-
-  const { signature: notes, bpm: beats } = configuration;
-  const beatTime = calculateBeatTime(beats, notes);
-
-  // biome-ignore lint/correctness/useExhaustiveDependencies: Need to fix this later
-  useInterval(
-    () => {
-      tick();
-    },
-    started ? beatTime : null,
-  );
+  const { isToggled, toggle: startStop } = useScoreInterval({ onTick: tick });
 
   const toggle = () => {
     start();
-    if (started) {
+    if (isToggled) {
       setResult(
         calculateResult({
           ticks: ticksRef.current,
@@ -75,7 +63,7 @@ export function Metronome({ className }: MetronomeProps) {
       vexflowScoreRef.current?.reset();
       setResult(undefined);
     }
-    setStarted((v) => !v);
+    startStop();
   };
 
   return (
@@ -93,12 +81,12 @@ export function Metronome({ className }: MetronomeProps) {
               <button
                 type="button"
                 className="metronome-cta"
-                data-state={started ? "running" : "idle"}
+                data-state={isToggled ? "running" : "idle"}
                 onClick={() => toggle()}
               >
-                {started ? "Stop" : "Start"}
+                {isToggled ? "Stop" : "Start"}
               </button>
-              <Timer started={started} />
+              <Timer started={isToggled} />
             </div>
           </div>
 

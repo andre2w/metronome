@@ -14,7 +14,6 @@ export function WaveformView() {
     const handler = (ev: KeyboardEvent) => {
       if (ev.key === "m" && waveSurferRef.current) {
         const currentTime = waveSurferRef.current.getCurrentTime();
-        console.log(currentTime);
         regions.addRegion({
           start: currentTime,
           content: "Marker",
@@ -41,7 +40,6 @@ export function WaveformView() {
             const duration = waveSurfer.getDuration();
             let start = 7.9;
             let index = 1;
-            console.log({ beat, start });
             while (start < duration) {
               regions.addRegion({
                 start,

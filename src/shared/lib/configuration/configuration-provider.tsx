@@ -15,12 +15,10 @@ export class Configuration {
   }
 
   getKeyData(key: string) {
-    console.log("KeyMap", this.keyMap);
     return this.keyMap[key];
   }
 
   getKeyValue(key: Key) {
-    console.log("Key", key);
     const baseValue = this.getKeyData(key.note);
     if (!baseValue) {
       throw new Error(`Could not find value for note ${key.note}`);

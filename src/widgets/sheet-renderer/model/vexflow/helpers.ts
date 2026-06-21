@@ -117,7 +117,6 @@ export function createStaveNote({
   configuration: Configuration;
 }) {
   const isRest = bar.keys.length === 0;
-  console.log("BAR", bar);
   const keys = isRest ? [REST_KEY] : bar.keys.map((key) => configuration.getKeyValue(key));
   const noteDuration = isRest ? `${duration}r` : duration;
   const staveNote = new StaveNote({ keys, duration: noteDuration });

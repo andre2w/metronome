@@ -18,7 +18,6 @@ export function getInitialStateFromHash(): Pick<ScoreContextValue, "configuratio
   const graceTime = hash.get("graceTime");
   const id = hash.get("id");
 
-  console.log("Building configuration", { signature, bpm, graceTime, id });
   const configuration = {
     signature: signature ? Number(signature) : defaultMetronomeConfiguration.signature,
     bpm: bpm ? Number(bpm) : defaultMetronomeConfiguration.bpm,

@@ -21,7 +21,6 @@ export function StaveNoteBox({ children, note, index, isSelected, modifier }: St
   const toggleNote = useScoreStore((state) => state.toggleNote);
   const configuration = useConfiguration();
   const noteData: KeyData | undefined = note ? configuration.getKeyData(note) : undefined;
-  console.log("NoteData", noteData, note);
 
   const onClick =
     index && note

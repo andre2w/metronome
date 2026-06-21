@@ -6,9 +6,16 @@ import { ScoreContextValue } from "./score-state";
 import { useShallow } from "zustand/react/shallow";
 import { queryParamsStorage } from "./query-params-storage";
 
-const ScoreContext = createContext(
+export const ScoreContext = createContext(
   createScoreStore({
-    initialState: getInitialStateFromHash(),
+    initialState: {
+      configuration: {
+        bpm: 100,
+        graceTime: 100,
+        signature: 4,
+      },
+      score: [],
+    },
     storage: queryParamsStorage,
   }),
 );
