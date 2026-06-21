@@ -18,16 +18,16 @@ describe("calculateResult", () => {
     ];
     const score: Score = [
       [
-        { keys: [{ note: "SNARE" }] },
-        { keys: [{ note: "SNARE" }] },
-        { keys: [{ note: "SNARE" }] },
-        { keys: [{ note: "SNARE" }] },
+        { tempo: "quarter", notes: [{ keys: [{ note: "SNARE" }] }] },
+        { tempo: "quarter", notes: [{ keys: [{ note: "SNARE" }] }] },
+        { tempo: "quarter", notes: [{ keys: [{ note: "SNARE" }] }] },
+        { tempo: "quarter", notes: [{ keys: [{ note: "SNARE" }] }] },
       ],
       [
-        { keys: [{ note: "SNARE" }] },
-        { keys: [{ note: "SNARE" }] },
-        { keys: [{ note: "SNARE" }] },
-        { keys: [{ note: "SNARE" }] },
+        { tempo: "quarter", notes: [{ keys: [{ note: "SNARE" }] }] },
+        { tempo: "quarter", notes: [{ keys: [{ note: "SNARE" }] }] },
+        { tempo: "quarter", notes: [{ keys: [{ note: "SNARE" }] }] },
+        { tempo: "quarter", notes: [{ keys: [{ note: "SNARE" }] }] },
       ],
     ];
 
@@ -53,16 +53,16 @@ describe("calculateResult", () => {
     ];
     const score: Score = [
       [
-        { keys: [{ note: "SNARE" }, { note: "HIGH_HAT" }] },
-        { keys: [{ note: "SNARE" }] },
-        { keys: [{ note: "SNARE" }] },
-        { keys: [{ note: "SNARE" }] },
+        { tempo: "quarter", notes: [{ keys: [{ note: "SNARE" }, { note: "HIGH_HAT" }] }] },
+        { tempo: "quarter", notes: [{ keys: [{ note: "SNARE" }] }] },
+        { tempo: "quarter", notes: [{ keys: [{ note: "SNARE" }] }] },
+        { tempo: "quarter", notes: [{ keys: [{ note: "SNARE" }] }] },
       ],
       [
-        { keys: [{ note: "SNARE" }, { note: "HIGH_HAT" }] },
-        { keys: [{ note: "SNARE" }] },
-        { keys: [{ note: "SNARE" }] },
-        { keys: [{ note: "SNARE" }] },
+        { tempo: "quarter", notes: [{ keys: [{ note: "SNARE" }, { note: "HIGH_HAT" }] }] },
+        { tempo: "quarter", notes: [{ keys: [{ note: "SNARE" }] }] },
+        { tempo: "quarter", notes: [{ keys: [{ note: "SNARE" }] }] },
+        { tempo: "quarter", notes: [{ keys: [{ note: "SNARE" }] }] },
       ],
     ];
 
@@ -87,16 +87,16 @@ describe("calculateResult", () => {
     ];
     const score: Score = [
       [
-        { keys: [{ note: "SNARE" }, { note: "HIGH_HAT" }] },
-        { keys: [{ note: "SNARE" }] },
-        { keys: [{ note: "SNARE" }] },
-        { keys: [{ note: "SNARE" }] },
+        { tempo: "quarter", notes: [{ keys: [{ note: "SNARE" }, { note: "HIGH_HAT" }] }] },
+        { tempo: "quarter", notes: [{ keys: [{ note: "SNARE" }] }] },
+        { tempo: "quarter", notes: [{ keys: [{ note: "SNARE" }] }] },
+        { tempo: "quarter", notes: [{ keys: [{ note: "SNARE" }] }] },
       ],
       [
-        { keys: [{ note: "SNARE" }, { note: "HIGH_HAT" }] },
-        { keys: [{ note: "SNARE" }] },
-        { keys: [{ note: "SNARE" }] },
-        { keys: [{ note: "SNARE" }] },
+        { tempo: "quarter", notes: [{ keys: [{ note: "SNARE" }, { note: "HIGH_HAT" }] }] },
+        { tempo: "quarter", notes: [{ keys: [{ note: "SNARE" }] }] },
+        { tempo: "quarter", notes: [{ keys: [{ note: "SNARE" }] }] },
+        { tempo: "quarter", notes: [{ keys: [{ note: "SNARE" }] }] },
       ],
     ];
 
@@ -123,16 +123,16 @@ describe("calculateResult", () => {
     ];
     const score: Score = [
       [
-        { keys: [{ note: "SNARE" }, { note: "HIGH_HAT" }] },
-        { keys: [{ note: "SNARE" }] },
-        { keys: [{ note: "SNARE" }] },
-        { keys: [{ note: "SNARE" }] },
+        { tempo: "quarter", notes: [{ keys: [{ note: "SNARE" }, { note: "HIGH_HAT" }] }] },
+        { tempo: "quarter", notes: [{ keys: [{ note: "SNARE" }] }] },
+        { tempo: "quarter", notes: [{ keys: [{ note: "SNARE" }] }] },
+        { tempo: "quarter", notes: [{ keys: [{ note: "SNARE" }] }] },
       ],
       [
-        { keys: [{ note: "SNARE" }, { note: "HIGH_HAT" }] },
-        { keys: [{ note: "SNARE" }] },
-        { keys: [{ note: "SNARE" }] },
-        { keys: [{ note: "SNARE" }] },
+        { tempo: "quarter", notes: [{ keys: [{ note: "SNARE" }, { note: "HIGH_HAT" }] }] },
+        { tempo: "quarter", notes: [{ keys: [{ note: "SNARE" }] }] },
+        { tempo: "quarter", notes: [{ keys: [{ note: "SNARE" }] }] },
+        { tempo: "quarter", notes: [{ keys: [{ note: "SNARE" }] }] },
       ],
     ];
 
@@ -158,16 +158,16 @@ describe("calculateResult", () => {
     ];
     const score: Score = [
       [
-        { keys: [{ note: "SNARE" }, { note: "HIGH_HAT" }] },
-        { keys: [{ note: "SNARE" }] },
-        { keys: [{ note: "SNARE" }] },
-        { keys: [{ note: "SNARE" }] },
+        { tempo: "quarter", notes: [{ keys: [{ note: "SNARE" }, { note: "HIGH_HAT" }] }] },
+        { tempo: "quarter", notes: [{ keys: [{ note: "SNARE" }] }] },
+        { tempo: "quarter", notes: [{ keys: [{ note: "SNARE" }] }] },
+        { tempo: "quarter", notes: [{ keys: [{ note: "SNARE" }] }] },
       ],
       [
-        { keys: [{ note: "SNARE" }, { note: "HIGH_HAT" }] },
-        { keys: [{ note: "SNARE" }] },
-        { keys: [{ note: "SNARE" }] },
-        { keys: [{ note: "SNARE" }] },
+        { tempo: "quarter", notes: [{ keys: [{ note: "SNARE" }, { note: "HIGH_HAT" }] }] },
+        { tempo: "quarter", notes: [{ keys: [{ note: "SNARE" }] }] },
+        { tempo: "quarter", notes: [{ keys: [{ note: "SNARE" }] }] },
+        { tempo: "quarter", notes: [{ keys: [{ note: "SNARE" }] }] },
       ],
     ];
 
@@ -193,10 +193,13 @@ describe("calculateResult", () => {
     ];
     const score: Score = [
       [
-        { keys: [{ note: "SNARE" }, { note: "HIGH_HAT", modifier: "HIGH_HAT_OPEN" }] },
-        { keys: [{ note: "SNARE" }] },
-        { keys: [{ note: "SNARE" }] },
-        { keys: [{ note: "SNARE" }] },
+        {
+          tempo: "quarter",
+          notes: [{ keys: [{ note: "SNARE" }, { note: "HIGH_HAT", modifier: "HIGH_HAT_OPEN" }] }],
+        },
+        { tempo: "quarter", notes: [{ keys: [{ note: "SNARE" }] }] },
+        { tempo: "quarter", notes: [{ keys: [{ note: "SNARE" }] }] },
+        { tempo: "quarter", notes: [{ keys: [{ note: "SNARE" }] }] },
       ],
     ];
 
@@ -222,22 +225,22 @@ describe("calculateResult", () => {
     ];
     const score: Score = [
       [
-        { keys: [{ note: "SNARE" }, { note: "HIGH_HAT" }] },
-        { keys: [{ note: "SNARE" }] },
-        { keys: [{ note: "SNARE" }] },
-        { keys: [{ note: "SNARE" }] },
+        { tempo: "quarter", notes: [{ keys: [{ note: "SNARE" }, { note: "HIGH_HAT" }] }] },
+        { tempo: "quarter", notes: [{ keys: [{ note: "SNARE" }] }] },
+        { tempo: "quarter", notes: [{ keys: [{ note: "SNARE" }] }] },
+        { tempo: "quarter", notes: [{ keys: [{ note: "SNARE" }] }] },
       ],
       [
-        { keys: [{ note: "SNARE" }, { note: "HIGH_HAT" }] },
-        { keys: [{ note: "SNARE" }] },
-        { keys: [{ note: "SNARE" }] },
-        { keys: [{ note: "SNARE" }] },
+        { tempo: "quarter", notes: [{ keys: [{ note: "SNARE" }, { note: "HIGH_HAT" }] }] },
+        { tempo: "quarter", notes: [{ keys: [{ note: "SNARE" }] }] },
+        { tempo: "quarter", notes: [{ keys: [{ note: "SNARE" }] }] },
+        { tempo: "quarter", notes: [{ keys: [{ note: "SNARE" }] }] },
       ],
       [
-        { keys: [{ note: "SNARE" }, { note: "HIGH_HAT" }] },
-        { keys: [{ note: "SNARE" }] },
-        { keys: [{ note: "SNARE" }] },
-        { keys: [{ note: "SNARE" }] },
+        { tempo: "quarter", notes: [{ keys: [{ note: "SNARE" }, { note: "HIGH_HAT" }] }] },
+        { tempo: "quarter", notes: [{ keys: [{ note: "SNARE" }] }] },
+        { tempo: "quarter", notes: [{ keys: [{ note: "SNARE" }] }] },
+        { tempo: "quarter", notes: [{ keys: [{ note: "SNARE" }] }] },
       ],
     ];
 
@@ -261,16 +264,16 @@ describe("calculateResult", () => {
     ];
     const score: Score = [
       [
-        { keys: [{ note: "SNARE" }] },
-        { keys: [{ note: "SNARE" }] },
-        { keys: [{ note: "SNARE" }] },
-        { keys: [{ note: "SNARE" }] },
+        { tempo: "quarter", notes: [{ keys: [{ note: "SNARE" }] }] },
+        { tempo: "quarter", notes: [{ keys: [{ note: "SNARE" }] }] },
+        { tempo: "quarter", notes: [{ keys: [{ note: "SNARE" }] }] },
+        { tempo: "quarter", notes: [{ keys: [{ note: "SNARE" }] }] },
       ],
       [
-        { keys: [{ note: "SNARE" }] },
-        { keys: [{ note: "SNARE" }] },
-        { keys: [{ note: "SNARE" }] },
-        { keys: [{ note: "SNARE" }] },
+        { tempo: "quarter", notes: [{ keys: [{ note: "SNARE" }] }] },
+        { tempo: "quarter", notes: [{ keys: [{ note: "SNARE" }] }] },
+        { tempo: "quarter", notes: [{ keys: [{ note: "SNARE" }] }] },
+        { tempo: "quarter", notes: [{ keys: [{ note: "SNARE" }] }] },
       ],
     ];
 
@@ -285,16 +288,16 @@ describe("calculateResult", () => {
     const notesPlayed: NotePlayed[] = [];
     const score: Score = [
       [
-        { keys: [{ note: "SNARE" }] },
-        { keys: [{ note: "SNARE" }] },
-        { keys: [{ note: "SNARE" }] },
-        { keys: [{ note: "SNARE" }] },
+        { tempo: "quarter", notes: [{ keys: [{ note: "SNARE" }] }] },
+        { tempo: "quarter", notes: [{ keys: [{ note: "SNARE" }] }] },
+        { tempo: "quarter", notes: [{ keys: [{ note: "SNARE" }] }] },
+        { tempo: "quarter", notes: [{ keys: [{ note: "SNARE" }] }] },
       ],
       [
-        { keys: [{ note: "SNARE" }] },
-        { keys: [{ note: "SNARE" }] },
-        { keys: [{ note: "SNARE" }] },
-        { keys: [{ note: "SNARE" }] },
+        { tempo: "quarter", notes: [{ keys: [{ note: "SNARE" }] }] },
+        { tempo: "quarter", notes: [{ keys: [{ note: "SNARE" }] }] },
+        { tempo: "quarter", notes: [{ keys: [{ note: "SNARE" }] }] },
+        { tempo: "quarter", notes: [{ keys: [{ note: "SNARE" }] }] },
       ],
     ];
 
@@ -399,10 +402,10 @@ describe("calculateResult", () => {
       ],
       score: [
         [
-          { keys: [{ note: "SNARE" }] },
-          { keys: [{ note: "SNARE" }] },
-          { keys: [{ note: "SNARE" }] },
-          { keys: [{ note: "SNARE" }] },
+          { tempo: "quarter", notes: [{ keys: [{ note: "SNARE" }] }] },
+          { tempo: "quarter", notes: [{ keys: [{ note: "SNARE" }] }] },
+          { tempo: "quarter", notes: [{ keys: [{ note: "SNARE" }] }] },
+          { tempo: "quarter", notes: [{ keys: [{ note: "SNARE" }] }] },
         ],
       ],
       graceTime: 100,

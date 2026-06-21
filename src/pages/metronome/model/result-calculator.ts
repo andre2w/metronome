@@ -1,15 +1,23 @@
 import { NotePlayed } from "~/shared/lib/score/note-played";
 import type { Score, Ticks } from "../../../entities/score/model/types";
 import { Key } from "~/shared/lib/score/key-data";
+import { calculateBeatTime } from "./beat-time";
 
 export interface CalculateResultProps {
   ticks: Ticks;
   notesPlayed: NotePlayed[];
   score: Score;
   graceTime: number;
+  startTime: number;
 }
 
-export function calculateResult({ ticks, notesPlayed, score, graceTime }: CalculateResultProps) {
+export function calculateResult({
+  ticks,
+  notesPlayed,
+  score,
+  graceTime,
+  startTime,
+}: CalculateResultProps) {
   let right = 0;
   let missed = 0;
   let tickIndex = 0;
@@ -20,6 +28,13 @@ export function calculateResult({ ticks, notesPlayed, score, graceTime }: Calcul
 
   if (!score.length) {
     return { missed: 0, right: 0 };
+  }
+
+  while (tickIndex < ticks.length) {
+    const bar = score.at(scoreIndex)?.at(barIndex);
+    if (!bar) {
+      throw new Error();
+    }
   }
 
   while (tickIndex < ticks.length) {

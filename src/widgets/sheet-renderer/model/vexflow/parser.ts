@@ -1,5 +1,5 @@
 import { Beam, type StemmableNote } from "vexflow";
-import type { NotesWithSticking, Sticking } from "../../../../entities/score/model/types";
+import type { Note, Sticking } from "../../../../entities/score/model/types";
 import { createStaveNote } from "./helpers";
 import { Configuration } from "~/shared/lib/configuration/configuration-provider";
 import { Key } from "~/shared/lib/score/key-data";
@@ -23,7 +23,7 @@ export function parse({
   cursorIndex,
   configuration,
 }: {
-  groups: (NotesWithSticking & { index: number })[][];
+  groups: (Note & { index: number })[][];
   background: "light" | "dark";
   baseDuration: "16" | "8" | "4";
   cursorIndex: number;
