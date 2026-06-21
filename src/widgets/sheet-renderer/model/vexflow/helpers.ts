@@ -1,5 +1,5 @@
 import { Annotation, Dot, ModifierPosition, Parenthesis, StaveNote, Stem } from "vexflow";
-import { type Bar, type NotesWithSticking } from "../../../../entities/score/model/types";
+import { type Bar, type Note } from "../../../../entities/score/model/types";
 import { REST_KEY } from "./constants";
 import { Configuration } from "~/shared/lib/configuration/configuration-provider";
 
@@ -90,7 +90,7 @@ export function groupNotes({
 }) {
   const size = duration === "4" ? 1 : duration === "8" ? 2 : 4;
 
-  return bar.reduce<(NotesWithSticking & { index: number })[][]>(
+  return bar.reduce<(Note & { index: number })[][]>(
     (acc, curr, index) => {
       const group = acc[acc.length - 1];
       if (group && group.length >= size) {
@@ -111,7 +111,7 @@ export function createStaveNote({
   configuration,
 }: {
   duration: string;
-  bar: NotesWithSticking;
+  bar: Note;
   background: "light" | "dark";
   withDot?: boolean;
   configuration: Configuration;

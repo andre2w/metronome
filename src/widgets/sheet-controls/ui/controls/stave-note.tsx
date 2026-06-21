@@ -1,5 +1,5 @@
 import { Text } from "@radix-ui/themes";
-import { type NotesWithSticking } from "../../../../entities/score/model/types";
+import { type Note } from "../../../../entities/score/model/types";
 import "./stave-note.css";
 import { StaveNoteBox } from "./stave-note-box";
 import { Tile } from "./tile";
@@ -7,7 +7,7 @@ import { useScoreStore } from "~/entities/score/model/state/score-store-provider
 import { useConfiguration } from "~/shared/lib/configuration/configuration-provider";
 
 export interface StaveNoteProps {
-  notesWithSticking: NotesWithSticking;
+  notesWithSticking: Note;
   staveIndex: number;
   barIndex: number;
   noteCount?: string;

@@ -13,11 +13,24 @@ export type Sticking = (typeof sticking)[number];
  * Is one or more parts of the drum that must be played at a moment
  */
 export type Keys = Key[];
-export type NotesWithSticking = { keys: Keys; sticking?: Sticking };
+
+export type Note = { keys: Keys; sticking?: Sticking };
+
+export type Tempo = "quarter" | "eights" | "sixteens" | "triplet";
+
+/**
+ * A part can be a group of notes to be played. It can go from
+ * 1 note in a 1/4 bar to 4 notes in a 1/16 bar.
+ */
+export interface Part {
+  tempo: "quarter" | "eights" | "sixteens" | "triplet";
+  notes: Note[];
+}
+
 /**
  * It's 4 groups of notes - a bar can be 1/4 1/8 1/16
  */
-export type Bar = NotesWithSticking[];
+export type Bar = Part[];
 
 /**
  * The score is a list of bars that must be played

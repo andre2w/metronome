@@ -1,6 +1,6 @@
 import { describe, expect, test } from "vitest";
 import { createScoreStore } from "./store";
-import { NotesWithSticking } from "../types";
+import { Note } from "../types";
 import { StateStorage } from "zustand/middleware";
 
 const initialState = {
@@ -22,13 +22,13 @@ describe("store", () => {
 
       store.getState().addStave();
 
-      const newStave = Array.from<NotesWithSticking>({ length: 16 }).fill({
+      const newStave = Array.from<Note>({ length: 16 }).fill({
         keys: [],
       });
       expect(store.getState().score).toEqual([newStave]);
 
       store.getState().onChangeConfiguration({ bpm: 100, graceTime: 50, signature: 4 });
-      const updatedStave = Array.from<NotesWithSticking>({ length: 4 }).fill({
+      const updatedStave = Array.from<Note>({ length: 4 }).fill({
         keys: [],
       });
       expect(store.getState().score).toEqual([updatedStave]);
@@ -46,6 +46,7 @@ describe("store", () => {
       store.getState().toggleNote({
         staveNoteIndex: 0,
         staveIndex: 0,
+        partIndex: 0,
         note: { note: "HIGH_HAT" },
       });
 
@@ -56,6 +57,7 @@ describe("store", () => {
       store.getState().toggleNote({
         staveNoteIndex: 0,
         staveIndex: 0,
+        partIndex: 0,
         note: { note: "SNARE" },
       });
       stave[0]!.keys.push({ note: "SNARE" });
@@ -64,6 +66,7 @@ describe("store", () => {
       store.getState().toggleNote({
         staveNoteIndex: 1,
         staveIndex: 0,
+        partIndex: 0,
         note: { note: "HIGH_HAT" },
       });
       stave[1]!.keys.push({ note: "HIGH_HAT" });
@@ -80,6 +83,7 @@ describe("store", () => {
       store.getState().toggleNote({
         staveNoteIndex: 0,
         staveIndex: 0,
+        partIndex: 0,
         note: { note: "HIGH_HAT" },
       });
 
@@ -90,6 +94,7 @@ describe("store", () => {
       store.getState().toggleNote({
         staveNoteIndex: 0,
         staveIndex: 0,
+        partIndex: 0,
         note: { note: "HIGH_HAT" },
       });
       expect(store.getState().score).toEqual([createStave(16)]);
@@ -105,6 +110,7 @@ describe("store", () => {
       store.getState().toggleNote({
         staveNoteIndex: 0,
         staveIndex: 0,
+        partIndex: 0,
         note: { note: "HIGH_HAT" },
       });
 
@@ -115,6 +121,7 @@ describe("store", () => {
       store.getState().toggleNote({
         staveNoteIndex: 0,
         staveIndex: 0,
+        partIndex: 0,
         note: { note: "HIGH_HAT", modifier: "HIGH_HAT_OPEN" },
       });
       const staveWithModifier = createStave(16);
@@ -134,6 +141,7 @@ describe("store", () => {
       store.getState().toggleNote({
         staveNoteIndex: 0,
         staveIndex: 0,
+        partIndex: 0,
         note: { note: "HIGH_HAT" },
       });
 
@@ -141,6 +149,7 @@ describe("store", () => {
       store.getState().toggleNote({
         staveNoteIndex: 0,
         staveIndex: 1,
+        partIndex: 0,
         note: { note: "SNARE" },
       });
 
@@ -172,7 +181,7 @@ function createStorage(): StateStorage {
 }
 
 function createStave(len: number) {
-  const newArr: NotesWithSticking[] = [];
+  const newArr: Note[] = [];
   for (let i = 0; i < len; i++) {
     newArr.push({ keys: [] });
   }
