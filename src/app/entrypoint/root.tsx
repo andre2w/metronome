@@ -10,6 +10,7 @@ import "./root.css";
 import { ConfigurationContextProvider } from "~/shared/lib/configuration/configuration-provider";
 import { mappings } from "~/entities/midi-input/config/mappings/roland-td07";
 import { KEYS } from "~/entities/score/model/notes";
+import { ScoreProvider } from "~/entities/score/model/state/score-store-provider";
 
 function RootLayout() {
   const [{ appearance, accentColor }, setThemePreferences] = useLocalStorage("theme-preferences", {
@@ -27,26 +28,28 @@ function RootLayout() {
     >
       <ConfigurationContextProvider keyMap={KEYS} mappings={mappings}>
         <InputConfigurationProvider>
-          <div className="app-shell">
-            <header className="navbar">
-              <div className="navbar-brand">
-                <span className="navbar-wordmark">metronome</span>
-                <span className="navbar-tagline">/ DRUM PRACTICE CONSOLE</span>
-              </div>
-              <div className="navbar-section">
-                <InputConfiguration />
-                <ThemePicker
-                  appearance={appearance}
-                  accentColor={accentColor}
-                  onChange={setThemePreferences}
-                />
-              </div>
-            </header>
-            <main className="page">
-              <Outlet />
-            </main>
-          </div>
-          <TanStackRouterDevtools />
+          <ScoreProvider>
+            <div className="app-shell">
+              <header className="navbar">
+                <div className="navbar-brand">
+                  <span className="navbar-wordmark">metronome</span>
+                  <span className="navbar-tagline">/ DRUM PRACTICE CONSOLE</span>
+                </div>
+                <div className="navbar-section">
+                  <InputConfiguration />
+                  <ThemePicker
+                    appearance={appearance}
+                    accentColor={accentColor}
+                    onChange={setThemePreferences}
+                  />
+                </div>
+              </header>
+              <main className="page">
+                <Outlet />
+              </main>
+            </div>
+            <TanStackRouterDevtools />
+          </ScoreProvider>
         </InputConfigurationProvider>
       </ConfigurationContextProvider>
     </Theme>
