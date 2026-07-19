@@ -19,29 +19,33 @@ export function createScoreStore({ initialState, storage }: CreateScoreStoreProp
         configuration: initialState.configuration,
         addStave: () =>
           set((state) => {
-            state.score.push(createStave(state.configuration.signature));
+            state.score.bars.push(createStave(state.configuration.signature));
           }),
 
-        toggleNote: ({ note, staveIndex: scoreIndex, staveNoteIndex: barIndex, partIndex }) =>
+        toggleNote: ({ note: key, staveIndex: scoreIndex, staveNoteIndex: barIndex, partIndex }) =>
           set((state) => {
-            const noteInPart = state.score?.[scoreIndex]?.[barIndex]?.notes[partIndex];
+            const noteInPart = state.score?.bars?.[scoreIndex]?.parts?.[barIndex]?.notes[partIndex];
 
             if (!noteInPart) {
-              throw new Error(`Cloudn't find Bar for index ${scoreIndex} - ${barIndex}`);
+              state.score?.bars?.[scoreIndex]?.parts?.[barIndex]?.notes.push({
+                type: "note",
+                keys: [{ type: "key", ...key }],
+              });
+              return;
             }
 
-            if (!noteInPart.keys.some((n) => n.note === note.note)) {
-              noteInPart.keys.push(note);
+            if (!noteInPart.keys.some((n) => n.note === key.note)) {
+              noteInPart.keys.push({ type: "key", ...key });
             } else {
-              const noteIndex = noteInPart.keys.findIndex((n) => n.note === note.note);
+              const noteIndex = noteInPart.keys.findIndex((n) => n.note === key.note);
               if (noteIndex >= 0) {
                 /**
                  * Replace the existing note with one with the modifier
                  */
-                const shouldReplace = noteInPart.keys.at(noteIndex)?.modifier !== note.modifier;
+                const shouldReplace = noteInPart.keys.at(noteIndex)?.modifier !== key.modifier;
                 noteInPart.keys.splice(noteIndex, 1);
                 if (shouldReplace) {
-                  noteInPart.keys.push(note);
+                  noteInPart.keys.push({ type: "key", ...key });
                 }
               }
             }
@@ -49,18 +53,21 @@ export function createScoreStore({ initialState, storage }: CreateScoreStoreProp
 
         removeStave: (staveIndex) =>
           set((state) => {
-            state.score.splice(staveIndex, 1);
-            if (state.score.length === 0) {
-              state.score.push(createStave(state.configuration.signature));
+            state.score.bars.splice(staveIndex, 1);
+            if (state.score.bars.length === 0) {
+              state.score.bars.push(createStave(state.configuration.signature));
             }
           }),
 
         setSticking: ({ staveIndex: scoreIndex, staveNoteIndex: barIndex, partIndex, sticking }) =>
           set((state) => {
-            const notesWithSticking = state.score?.[scoreIndex]?.[barIndex]?.notes[partIndex];
+            const notesWithSticking =
+              state.score?.bars[scoreIndex]?.parts[barIndex]?.notes[partIndex];
 
             if (!notesWithSticking) {
-              throw new Error(`Cloudn't find Bar for index ${scoreIndex} - ${barIndex}`);
+              throw new Error(
+                `Cloudn't find Bar for index ${scoreIndex} - ${barIndex} - ${partIndex}`,
+              );
             }
 
             if (sticking !== null) {
@@ -75,17 +82,17 @@ export function createScoreStore({ initialState, storage }: CreateScoreStoreProp
             state.configuration = configuration;
 
             if (
-              state.score.length === 1 &&
-              state.score?.[0]?.length !== state.configuration.signature &&
-              state.score?.[0]?.every((n) => n.notes.length === 0)
+              state.score.bars.length === 1 &&
+              state.score?.bars[0]?.parts.length !== state.configuration.signature &&
+              state.score?.bars[0]?.parts.every((part) => part.notes.length === 0)
             ) {
-              state.score = [createStave(state.configuration.signature)];
+              state.score = { type: "score", bars: [createStave(state.configuration.signature)] };
             }
           }),
 
         clear: () =>
           set((state) => {
-            state.score = [createStave(state.configuration.signature)];
+            state.score = { type: "score", bars: [createStave(state.configuration.signature)] };
           }),
 
         loadScore: (score: FullScore & { id: number }) => {

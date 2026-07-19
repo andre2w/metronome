@@ -8,15 +8,13 @@ export interface CalculateResultProps {
   notesPlayed: NotePlayed[];
   score: Score;
   graceTime: number;
-  startTime: number;
 }
 
 export function calculateResult({
   ticks,
   notesPlayed,
-  score,
+  score: baseScore,
   graceTime,
-  startTime,
 }: CalculateResultProps) {
   let right = 0;
   let missed = 0;
@@ -25,16 +23,10 @@ export function calculateResult({
   let scoreIndex = 0;
   let barIndex = 0;
   notesPlayed.sort((a, b) => a.timestamp - b.timestamp);
+  const score = baseScore.bars.flatMap((s) => s.parts.map((p) => p.notes));
 
   if (!score.length) {
     return { missed: 0, right: 0 };
-  }
-
-  while (tickIndex < ticks.length) {
-    const bar = score.at(scoreIndex)?.at(barIndex);
-    if (!bar) {
-      throw new Error();
-    }
   }
 
   while (tickIndex < ticks.length) {

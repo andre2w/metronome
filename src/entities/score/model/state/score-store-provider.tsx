@@ -14,7 +14,7 @@ export const ScoreContext = createContext(
         graceTime: 100,
         signature: 4,
       },
-      score: [],
+      score: { type: "score", bars: [] },
     },
     storage: queryParamsStorage,
   }),

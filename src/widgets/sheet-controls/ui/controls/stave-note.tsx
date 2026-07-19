@@ -10,6 +10,7 @@ export interface StaveNoteProps {
   notesWithSticking: Note;
   staveIndex: number;
   barIndex: number;
+  partIndex: number;
   noteCount?: string;
   className?: string;
 }
@@ -22,6 +23,7 @@ export function StaveNote({
   className,
   staveIndex,
   barIndex,
+  partIndex,
 }: StaveNoteProps) {
   const configuration = useConfiguration();
   const { keys: selectedNotes, sticking } = notesWithSticking;
@@ -41,7 +43,7 @@ export function StaveNote({
       <Tile
         className="sticking"
         onClick={() => {
-          setSticking({ staveIndex, staveNoteIndex: barIndex, sticking: nextSticking });
+          setSticking({ staveIndex, staveNoteIndex: barIndex, sticking: nextSticking, partIndex });
         }}
       >
         <Text weight={sticking ? "bold" : "light"}>{sticking ?? noteCount}</Text>

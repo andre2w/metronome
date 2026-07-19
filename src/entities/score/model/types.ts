@@ -12,9 +12,8 @@ export type Sticking = (typeof sticking)[number];
 /**
  * Is one or more parts of the drum that must be played at a moment
  */
-export type Keys = Key[];
 
-export type Note = { keys: Keys; sticking?: Sticking };
+export type Note = { type: "note"; keys: (Key & { type: "key" })[]; sticking?: Sticking };
 
 export type Tempo = "quarter" | "eights" | "sixteens" | "triplet";
 
@@ -23,6 +22,7 @@ export type Tempo = "quarter" | "eights" | "sixteens" | "triplet";
  * 1 note in a 1/4 bar to 4 notes in a 1/16 bar.
  */
 export interface Part {
+  type: "part";
   tempo: "quarter" | "eights" | "sixteens" | "triplet";
   notes: Note[];
 }
@@ -30,12 +30,12 @@ export interface Part {
 /**
  * It's 4 groups of notes - a bar can be 1/4 1/8 1/16
  */
-export type Bar = Part[];
+export type Bar = { type: "bar"; parts: Part[] };
 
 /**
  * The score is a list of bars that must be played
  */
-export type Score = Bar[];
+export type Score = { type: "score"; bars: Bar[] };
 
 /**
  * A tick is one tick of the metronome when the note
