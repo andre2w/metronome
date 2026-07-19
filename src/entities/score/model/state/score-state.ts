@@ -1,5 +1,5 @@
 import { Key } from "~/shared/lib/score/key-data";
-import { FullScore, Part, Score, Sticking, Tempo } from "../types";
+import { Bar, FullScore, Part, Score, Sticking, Tempo } from "../types";
 import { MetronomeConfigurationProps } from "~/entities/score/model/state/defaults";
 
 export interface ScoreContextValue {
@@ -24,19 +24,19 @@ export interface ScoreContextValue {
   clear: () => void;
 }
 
-export function createStave(notes: number) {
+export function createStave(notes: number): Bar {
   let tempo: Tempo | undefined;
   switch (notes) {
-    case 1:
+    case 4:
       tempo = "quarter";
       break;
-    case 2:
+    case 8:
       tempo = "eights";
       break;
     case 3:
       tempo = "triplet";
       break;
-    case 4:
+    case 16:
       tempo = "sixteens";
       break;
   }
@@ -45,8 +45,9 @@ export function createStave(notes: number) {
     throw new Error("Could not translate value into tempo");
   }
 
-  return Array.from<Part>({ length: notes }).fill({
-    notes: [],
-    tempo,
-  });
+  const parts: Part[] = [];
+  for (let i = 0; i < notes; i++) {
+    parts.push({ type: "part", notes: [], tempo });
+  }
+  return { type: "bar", parts };
 }

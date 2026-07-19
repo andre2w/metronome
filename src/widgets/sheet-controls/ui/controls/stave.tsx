@@ -17,23 +17,26 @@ export function Stave({ bar, staveIndex: index, onRemoveStave }: StaveProps) {
   if (!tempoCounting) {
     throw new Error(`No count for length: ${bar.length}`);
   }
-  const notes = bar.map((notesWithSticking, barIndex) => {
-    const noteCount = tempoCounting[barIndex];
+  const notes = bar.flatMap((part, barIndex) => {
+    return part.notes.map((note, partIndex) => {
+      const noteCount = tempoCounting[barIndex];
 
-    if (!noteCount) {
-      throw new Error(`No counting for bar at ${barIndex}`);
-    }
+      if (!noteCount) {
+        throw new Error(`No counting for bar at ${barIndex}`);
+      }
 
-    const withSpace = ["2", "3", "4"].includes(noteCount);
-    return (
-      <StaveNote
-        noteCount={noteCount}
-        barIndex={barIndex}
-        staveIndex={index}
-        notesWithSticking={notesWithSticking}
-        className={withSpace ? "with-space-left" : undefined}
-      />
-    );
+      const withSpace = ["2", "3", "4"].includes(noteCount);
+      return (
+        <StaveNote
+          noteCount={noteCount}
+          barIndex={barIndex}
+          staveIndex={index}
+          notesWithSticking={note}
+          partIndex={partIndex}
+          className={withSpace ? "with-space-left" : undefined}
+        />
+      );
+    });
   });
 
   return (
