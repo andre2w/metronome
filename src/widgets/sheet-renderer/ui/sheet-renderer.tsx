@@ -23,7 +23,7 @@ export const SheetRenderer = forwardRef<VexflowScoreHandle, VexflowScoreProps>((
     ref: boxRef as RefObject<HTMLDivElement>,
   });
   const scoreIndexRef = useRef(0);
-  const flatScore = score.flat().map((n) => n.keys);
+  const flatScore = score.bars.flatMap((n) => n.parts);
   const colorRef = useRef<string | undefined>(undefined);
   const { accentColor, appearance } = useThemeContext();
   const configuration = useConfiguration();
@@ -90,6 +90,9 @@ export const SheetRenderer = forwardRef<VexflowScoreHandle, VexflowScoreProps>((
 
     const sheetWidth = scoreSize.width ?? element.getBoundingClientRect().width;
     const renderer = rendererRef.current;
+    if (!renderer) {
+      throw new Error("Renderer not set");
+    }
     drawScore({
       renderer,
       score,

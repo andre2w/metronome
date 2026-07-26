@@ -1,5 +1,5 @@
 import { Annotation, Dot, ModifierPosition, Parenthesis, StaveNote, Stem } from "vexflow";
-import { type Bar, type Note } from "../../../../entities/score/model/types";
+import { Part, type Bar, type Note } from "../../../../entities/score/model/types";
 import { REST_KEY } from "./constants";
 import { Configuration } from "~/shared/lib/configuration/configuration-provider";
 
@@ -90,7 +90,7 @@ export function groupNotes({
 }) {
   const size = duration === "4" ? 1 : duration === "8" ? 2 : 4;
 
-  return bar.reduce<(Note & { index: number })[][]>(
+  return bar.parts.reduce<(Part & { index: number })[][]>(
     (acc, curr, index) => {
       const group = acc[acc.length - 1];
       if (group && group.length >= size) {
@@ -110,7 +110,7 @@ export function createStaveNote({
   withDot = false,
   configuration,
 }: {
-  duration: string;
+  duration: Part["tempo"];
   bar: Note;
   background: "light" | "dark";
   withDot?: boolean;
@@ -118,7 +118,7 @@ export function createStaveNote({
 }) {
   const isRest = bar.keys.length === 0;
   const keys = isRest ? [REST_KEY] : bar.keys.map((key) => configuration.getKeyValue(key));
-  const noteDuration = isRest ? `${duration}r` : duration;
+  const noteDuration = isRest ? `${parseTempo(duration)}r` : parseTempo(duration);
   const staveNote = new StaveNote({ keys, duration: noteDuration });
 
   if (!isRest) {
@@ -176,4 +176,17 @@ export function createStaveNote({
     Dot.buildAndAttach([staveNote]);
   }
   return staveNote;
+}
+
+function parseTempo(tempo: Part["tempo"]) {
+  switch (tempo) {
+    case "eights":
+      return "8";
+    case "quarter":
+      return "4";
+    case "sixteens":
+      return "16";
+    case "triplet":
+      return "3";
+  }
 }

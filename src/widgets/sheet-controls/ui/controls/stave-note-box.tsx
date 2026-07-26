@@ -13,6 +13,7 @@ export interface StaveNoteBoxProps {
   index?: {
     staveIndex: number;
     barIndex: number;
+    partIndex: number;
   };
   isSelected: boolean;
   modifier?: string;
@@ -26,9 +27,10 @@ export function StaveNoteBox({ children, note, index, isSelected, modifier }: St
     index && note
       ? () => {
           toggleNote({
-            note: { note: note, modifier },
-            staveIndex: index.staveIndex,
-            staveNoteIndex: index.barIndex,
+            noteIndex: index.partIndex,
+            key: { note: note, modifier },
+            barIndex: index.staveIndex,
+            partIndex: index.barIndex,
           });
         }
       : undefined;
@@ -54,9 +56,10 @@ export function StaveNoteBox({ children, note, index, isSelected, modifier }: St
               <ContextMenu.Item
                 onClick={() => {
                   toggleNote({
-                    note: { note, modifier: modifier },
-                    staveIndex: index.staveIndex,
-                    staveNoteIndex: index.barIndex,
+                    noteIndex: index.partIndex,
+                    key: { note, modifier: modifier },
+                    barIndex: index.staveIndex,
+                    partIndex: index.barIndex,
                   });
                 }}
               >

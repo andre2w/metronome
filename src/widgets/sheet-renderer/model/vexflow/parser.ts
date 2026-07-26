@@ -1,5 +1,5 @@
 import { Beam, type StemmableNote } from "vexflow";
-import type { Note, Sticking } from "../../../../entities/score/model/types";
+import type { Bar, Part, Sticking } from "../../../../entities/score/model/types";
 import { createStaveNote } from "./helpers";
 import { Configuration } from "~/shared/lib/configuration/configuration-provider";
 import { Key } from "~/shared/lib/score/key-data";
@@ -7,7 +7,7 @@ import { Key } from "~/shared/lib/score/key-data";
 interface ReducedStaveNote {
   notes: Key[];
   withDot: boolean;
-  duration: "4" | "8" | "16";
+  duration: Part["tempo"];
   sticking?: Sticking;
   hasCursor?: boolean;
 }
@@ -17,56 +17,72 @@ interface ReducedStaveNote {
  */
 
 export function parse({
-  groups,
+  bar,
   background,
-  baseDuration,
   cursorIndex,
   configuration,
 }: {
-  groups: (Note & { index: number })[][];
+  bar: Bar;
   background: "light" | "dark";
-  baseDuration: "16" | "8" | "4";
   cursorIndex: number;
   configuration: Configuration;
 }) {
   const notes: { note: StemmableNote; hasCursor: boolean }[][] = [];
   const beams: Beam[] = [];
-  const allowDot = baseDuration === "16";
 
-  for (const group of groups) {
+  for (const part of bar.parts) {
     const reducedNotes: ReducedStaveNote[] = [];
-    for (const bar of group) {
-      if (reducedNotes.length === 0) {
-        reducedNotes.push({
-          duration: baseDuration,
-          notes: bar.keys,
-          sticking: bar.sticking,
-          withDot: false,
-          hasCursor: bar.index === cursorIndex && bar.keys.length > 0,
-        });
-        continue;
-      }
+    let allowDot = part.tempo === "sixteens";
 
-      if (bar.keys.length === 0) {
+    if (part.notes.length === 0) {
+      notes.push([
+        {
+          note: createStaveNote({
+            background,
+            duration: "quarter",
+            withDot: false,
+            configuration,
+            bar: {
+              type: "note",
+              keys: [],
+            },
+          }),
+          hasCursor: false,
+        },
+      ]);
+      continue;
+    }
+
+    for (const [index, note] of part.notes.entries()) {
+      // In case the note doesn't have any key, it means that is a pause
+      // so we increase the duration of the note.
+      if (note.keys.length === 0) {
         const previous = reducedNotes.at(-1);
         if (!previous) {
+          reducedNotes.push({
+            duration: part.tempo,
+            notes: note.keys,
+            sticking: note.sticking,
+            withDot: false,
+            hasCursor: index === cursorIndex,
+          });
           continue;
         }
-        if (previous.duration === "16") {
-          previous.duration = "8";
-        } else if (previous.duration === "8" && !previous.withDot && allowDot) {
+        if (previous.duration === "sixteens") {
+          previous.duration = "eights";
+        } else if (previous.duration === "eights" && !previous.withDot && allowDot) {
           previous.withDot = true;
-        } else if (previous.duration === "8" && (previous.withDot || !allowDot)) {
+        } else if (previous.duration === "eights" && (previous.withDot || !allowDot)) {
           previous.withDot = false;
-          previous.duration = "4";
+          previous.duration = "quarter";
         }
       } else {
         reducedNotes.push({
-          duration: baseDuration,
-          notes: bar.keys,
-          sticking: bar.sticking,
+          duration: part.tempo,
+          notes: note.keys,
+          sticking: note.sticking,
           withDot: false,
-          hasCursor: bar.index === cursorIndex,
+          hasCursor: index === cursorIndex,
         });
       }
     }
@@ -76,7 +92,11 @@ export function parse({
     for (const reducedNote of reducedNotes) {
       const staveNote = createStaveNote({
         background,
-        bar: { keys: reducedNote.notes, sticking: reducedNote.sticking },
+        bar: {
+          type: "note",
+          keys: reducedNote.notes.map((n) => ({ type: "key", ...n })),
+          sticking: reducedNote.sticking,
+        },
         duration: reducedNote.duration,
         withDot: reducedNote.withDot,
         configuration,

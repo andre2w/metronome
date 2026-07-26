@@ -1,11 +1,14 @@
 import { describe, expect, test } from "vitest";
 import { createScoreStore } from "./store";
-import { Part, Tempo } from "../types";
+import { Bar, Note, Part, Score, type Tempo } from "../types";
 import { StateStorage } from "zustand/middleware";
 import { InitialState } from "./initial-state";
 
 const initialState = {
-  score: { type: "score", bars: [] },
+  score: {
+    type: "score",
+    bars: [createBar(16)],
+  },
   configuration: {
     bpm: 100,
     graceTime: 50,
@@ -21,14 +24,12 @@ describe("store", () => {
         storage: createStorage(),
       });
 
-      store.getState().addStave();
-
-      const newStave = createStave(16);
-      expect(store.getState().score).toEqual([newStave]);
+      const existingBar = createBar(16);
+      expect(store.getState().score).toEqual<Score>({ type: "score", bars: [existingBar] });
 
       store.getState().onChangeConfiguration({ bpm: 100, graceTime: 50, signature: 4 });
-      const updatedStave = createStave(4);
-      expect(store.getState().score).toEqual([updatedStave]);
+      const updatedBar = createBar(4);
+      expect(store.getState().score).toEqual({ type: "score", bars: [updatedBar] });
     });
   });
 
@@ -39,35 +40,34 @@ describe("store", () => {
         storage: createStorage(),
       });
 
-      store.getState().addStave();
       store.getState().toggleNote({
-        staveNoteIndex: 0,
-        staveIndex: 0,
         partIndex: 0,
-        note: { note: "HIGH_HAT" },
+        barIndex: 0,
+        noteIndex: 0,
+        key: { note: "HIGH_HAT" },
       });
 
-      const stave = createStave(16);
-      stave[0]!.notes.push({ type: "note", keys: [{ type: "key", note: "HIGH_HAT" }] });
-      expect(store.getState().score).toEqual([stave]);
+      const bar = createBar(16);
+      bar.parts[0]!.notes[0]?.keys.push({ type: "key", note: "HIGH_HAT" });
+      expect(store.getState().score).toEqual<Score>({ type: "score", bars: [bar] });
 
       store.getState().toggleNote({
-        staveNoteIndex: 0,
-        staveIndex: 0,
         partIndex: 0,
-        note: { note: "SNARE" },
+        barIndex: 0,
+        noteIndex: 0,
+        key: { note: "SNARE" },
       });
-      stave[0]?.notes.at(0)?.keys.push({ type: "key", note: "SNARE" });
-      expect(store.getState().score).toEqual([stave]);
+      bar.parts[0]?.notes[0]?.keys.push({ type: "key", note: "SNARE" });
+      expect(store.getState().score).toEqual({ type: "score", bars: [bar] });
 
       store.getState().toggleNote({
-        staveIndex: 0,
-        staveNoteIndex: 1,
-        partIndex: 0,
-        note: { note: "HIGH_HAT" },
+        barIndex: 0,
+        partIndex: 1,
+        noteIndex: 0,
+        key: { note: "HIGH_HAT" },
       });
-      stave[1]?.notes.push({ type: "note", keys: [{ type: "key", note: "HIGH_HAT" }] });
-      expect(store.getState().score).toEqual([stave]);
+      bar.parts[1]?.notes[0]?.keys.push({ type: "key", note: "HIGH_HAT" });
+      expect(store.getState().score).toEqual({ type: "score", bars: [bar] });
     });
 
     test("Removes a note in case the same is already selected", () => {
@@ -76,27 +76,26 @@ describe("store", () => {
         storage: createStorage(),
       });
 
-      store.getState().addStave();
       store.getState().toggleNote({
-        staveNoteIndex: 0,
-        staveIndex: 0,
         partIndex: 0,
-        note: { note: "HIGH_HAT" },
+        barIndex: 0,
+        noteIndex: 0,
+        key: { note: "HIGH_HAT" },
       });
 
-      const stave = createStave(16);
-      stave[0]!.notes.push({ type: "note", keys: [{ type: "key", note: "HIGH_HAT" }] });
-      expect(store.getState().score).toEqual([stave]);
+      const stave = createBar(16);
+      stave.parts[0]?.notes[0]?.keys.push({ type: "key", note: "HIGH_HAT" });
+      expect(store.getState().score).toEqual<Score>({ type: "score", bars: [stave] });
 
       store.getState().toggleNote({
-        staveNoteIndex: 0,
-        staveIndex: 0,
         partIndex: 0,
-        note: { note: "HIGH_HAT" },
+        barIndex: 0,
+        noteIndex: 0,
+        key: { note: "HIGH_HAT" },
       });
-      const newStave = createStave(16);
-      newStave[0]!.notes.push({ type: "note", keys: [] });
-      expect(store.getState().score).toEqual([newStave]);
+      const newStave = createBar(16);
+      stave.parts[0]?.notes.push({ type: "note", keys: [] });
+      expect(store.getState().score).toEqual<Score>({ type: "score", bars: [newStave] });
     });
 
     test("Replaces note when note with modifier is toggled", () => {
@@ -105,30 +104,30 @@ describe("store", () => {
         storage: createStorage(),
       });
 
-      store.getState().addStave();
       store.getState().toggleNote({
-        staveNoteIndex: 0,
-        staveIndex: 0,
         partIndex: 0,
-        note: { note: "HIGH_HAT" },
+        barIndex: 0,
+        noteIndex: 0,
+        key: { note: "HIGH_HAT" },
       });
 
-      const stave = createStave(16);
-      stave[0]!.notes.push({ type: "note", keys: [{ type: "key", note: "HIGH_HAT" }] });
-      expect(store.getState().score).toEqual([stave]);
+      const bar = createBar(16);
+      bar.parts[0]?.notes[0]?.keys.push({ type: "key", note: "HIGH_HAT" });
+      expect(store.getState().score).toEqual({ type: "score", bars: [bar] });
 
       store.getState().toggleNote({
-        staveNoteIndex: 0,
-        staveIndex: 0,
         partIndex: 0,
-        note: { note: "HIGH_HAT", modifier: "HIGH_HAT_OPEN" },
+        barIndex: 0,
+        noteIndex: 0,
+        key: { note: "HIGH_HAT", modifier: "HIGH_HAT_OPEN" },
       });
-      const staveWithModifier = createStave(16);
-      staveWithModifier[0]!.notes.push({
-        type: "note",
-        keys: [{ type: "key", note: "HIGH_HAT", modifier: "HIGH_HAT_OPEN" }],
+      const barWithModifier = createBar(16);
+      barWithModifier.parts[0]?.notes[0]?.keys.push({
+        type: "key",
+        note: "HIGH_HAT",
+        modifier: "HIGH_HAT_OPEN",
       });
-      expect(store.getState().score).toEqual([staveWithModifier]);
+      expect(store.getState().score).toEqual({ type: "score", bars: [barWithModifier] });
     });
   });
 
@@ -139,30 +138,39 @@ describe("store", () => {
         storage: createStorage(),
       });
 
-      store.getState().addStave();
       store.getState().toggleNote({
-        staveNoteIndex: 0,
-        staveIndex: 0,
         partIndex: 0,
-        note: { note: "HIGH_HAT" },
+        barIndex: 0,
+        noteIndex: 0,
+        key: { note: "HIGH_HAT" },
+      });
+      const firstBar = createBar(16);
+      firstBar.parts[0]?.notes[0]?.keys.push({ type: "key", note: "HIGH_HAT" });
+      expect(store.getState().score).toEqual<Score>({
+        type: "score",
+        bars: [firstBar],
       });
 
       store.getState().addStave();
       store.getState().toggleNote({
-        staveNoteIndex: 0,
-        staveIndex: 1,
         partIndex: 0,
-        note: { note: "SNARE" },
+        barIndex: 1,
+        noteIndex: 0,
+        key: { note: "SNARE" },
       });
 
-      const firstStave = createStave(16);
-      firstStave[0]!.notes.push({ type: "note", keys: [{ type: "key", note: "HIGH_HAT" }] });
-      const secondStave = createStave(16);
-      secondStave[0]!.notes.push({ type: "note", keys: [{ type: "key", note: "SNARE" }] });
-      expect(store.getState().score).toEqual([firstStave, secondStave]);
+      const secondBar = createBar(16);
+      secondBar.parts[0]!.notes[0]?.keys.push({ type: "key", note: "SNARE" });
+      expect(store.getState().score).toEqual<Score>({
+        type: "score",
+        bars: [firstBar, secondBar],
+      });
 
       store.getState().removeStave(0);
-      expect(store.getState().score).toEqual([secondStave]);
+      expect(store.getState().score).toEqual({
+        type: "score",
+        bars: [secondBar],
+      });
     });
   });
 });
@@ -182,7 +190,7 @@ function createStorage(): StateStorage {
   };
 }
 
-function createStave(len: number) {
+function createBar(len: number): Bar {
   let tempo: Tempo | undefined;
   switch (len) {
     case 4:
@@ -202,9 +210,31 @@ function createStave(len: number) {
     throw new Error("Could not translate value into tempo");
   }
 
+  let notesPerPart: number;
+  switch (len) {
+    case 4:
+      notesPerPart = 1;
+      break;
+    case 8:
+      notesPerPart = 2;
+      break;
+    case 3:
+      notesPerPart = 3;
+      break;
+    case 16:
+      notesPerPart = 4;
+      break;
+    default:
+      throw new Error("Invalid number of notes per part");
+  }
+
   const parts: Part[] = [];
   for (let i = 0; i < len; i++) {
-    parts.push({ type: "part", notes: [], tempo });
+    const notes: Note[] = [];
+    for (let i = 0; i < notesPerPart; i++) {
+      notes.push({ type: "note", keys: [], sticking: undefined });
+    }
+    parts.push({ type: "part", notes: notes, tempo });
   }
-  return parts;
+  return { type: "bar", parts: parts };
 }
