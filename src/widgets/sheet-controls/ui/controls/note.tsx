@@ -1,32 +1,25 @@
 import { Text } from "@radix-ui/themes";
 import { type Note } from "../../../../entities/score/model/types";
-import "./stave-note.css";
-import { StaveNoteBox } from "./stave-note-box";
+import "./note.css";
+import { Key } from "./key";
 import { Tile } from "./tile";
 import { useScoreStore } from "~/entities/score/model/state/score-store-provider";
 import { useConfiguration } from "~/shared/lib/configuration/configuration-provider";
 
-export interface StaveNoteProps {
+export interface NoteProps {
   notesWithSticking: Note;
-  staveIndex: number;
-  barIndex: number;
-  partIndex: number;
-  noteIndex: number;
   noteCount?: string;
   className?: string;
+  index: {
+    barIndex: number;
+    partIndex: number;
+    noteIndex: number;
+  };
 }
 
 const stickingsLoop = [null, "L", "R", "R/L"] as const;
 
-export function StaveNote({
-  notesWithSticking,
-  noteCount,
-  className,
-  staveIndex,
-  barIndex,
-  partIndex,
-  noteIndex,
-}: StaveNoteProps) {
+export function Note({ notesWithSticking, noteCount, className, index }: NoteProps) {
   const configuration = useConfiguration();
   const { keys: selectedNotes, sticking } = notesWithSticking;
   const setSticking = useScoreStore((state) => state.setSticking);
@@ -45,7 +38,10 @@ export function StaveNote({
       <Tile
         className="sticking"
         onClick={() => {
-          setSticking({ staveIndex, staveNoteIndex: barIndex, sticking: nextSticking, partIndex });
+          setSticking({
+            ...index,
+            sticking: nextSticking,
+          });
         }}
       >
         <Text weight={sticking ? "bold" : "light"}>{sticking ?? noteCount}</Text>
@@ -53,11 +49,11 @@ export function StaveNote({
       {configuration.keys().map((key) => {
         const selectedNote = selectedNotes.find((n) => n.note === key.key);
         return (
-          <StaveNoteBox
+          <Key
             isSelected={!!selectedNote}
             note={key.key}
             modifier={selectedNote?.modifier}
-            index={{ staveIndex: staveIndex, barIndex, partIndex: noteIndex }}
+            index={index}
           />
         );
       })}

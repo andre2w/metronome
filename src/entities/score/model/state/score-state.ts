@@ -8,9 +8,9 @@ export interface ScoreContextValue {
   toggleNote: (props: { barIndex: number; partIndex: number; noteIndex: number; key: Key }) => void;
   removeStave: (staveIndex: number) => void;
   setSticking: (props: {
-    staveIndex: number;
-    staveNoteIndex: number;
+    barIndex: number;
     partIndex: number;
+    noteIndex: number;
     sticking: Sticking | null;
   }) => void;
   loadScore: (score: FullScore & { id: number }) => void;

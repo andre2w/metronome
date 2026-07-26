@@ -1,5 +1,5 @@
 import { Box, Button, Text } from "@radix-ui/themes";
-import { Stave } from "./stave";
+import { Bar } from "./bar";
 import "./controls.css";
 import { ListScores } from "../list-scores";
 import { SaveScore } from "../save-score";
@@ -48,11 +48,7 @@ export function Controls() {
         <div style={{ display: "flex", flexDirection: "row" }}>
           {score.bars.map((bar, staveIndex) => {
             return (
-              <Stave
-                bar={bar}
-                staveIndex={staveIndex}
-                onRemoveStave={() => removeStave(staveIndex)}
-              />
+              <Bar bar={bar} barIndex={staveIndex} onRemoveStave={() => removeStave(staveIndex)} />
             );
           })}
         </div>
