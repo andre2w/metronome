@@ -59,19 +59,14 @@ export function createScoreStore({ initialState, storage }: CreateScoreStoreProp
             }
           }),
 
-        setSticking: ({
-          barIndex: scoreIndex,
-          noteIndex: barIndex,
-          noteIndex: partIndex,
-          sticking,
-        }) =>
+        setSticking: ({ barIndex, noteIndex, partIndex, sticking }) =>
           set((state) => {
             const notesWithSticking =
-              state.score?.bars[scoreIndex]?.parts[barIndex]?.notes[partIndex];
+              state.score?.bars[barIndex]?.parts[partIndex]?.notes[noteIndex];
 
             if (!notesWithSticking) {
               throw new Error(
-                `Cloudn't find Bar for index ${scoreIndex} - ${barIndex} - ${partIndex}`,
+                `Cloudn't find Bar for index ${barIndex} - ${partIndex} - ${noteIndex}`,
               );
             }
 

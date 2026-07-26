@@ -29,7 +29,7 @@ export function Note({ notesWithSticking, noteCount, className, index }: NotePro
   );
   const nextIndex = stickingIndex + 1 >= stickingsLoop.length ? 0 : stickingIndex + 1;
   const nextSticking = stickingsLoop[nextIndex];
-  if (!nextSticking) {
+  if (typeof nextSticking === "undefined") {
     throw new Error(`Invalid sticking at index ${nextIndex}`);
   }
 

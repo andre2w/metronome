@@ -59,7 +59,7 @@ export function createBar(notes: number): Bar {
   }
 
   const parts: Part[] = [];
-  for (let i = 0; i < notes; i++) {
+  for (let i = 0; i < 4; i++) {
     const notes: Note[] = [];
     for (let i = 0; i < notesPerPart; i++) {
       notes.push({ type: "note", keys: [], sticking: undefined });
