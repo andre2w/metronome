@@ -13,12 +13,9 @@ export interface StaveProps {
 }
 
 export function Bar({ bar, barIndex, onRemoveStave }: StaveProps) {
-  const tempoCounting = counting[bar.parts.length];
-  if (!tempoCounting) {
-    throw new Error(`No count for length: ${bar.parts.length}`);
-  }
-
   const parts = bar.parts.flatMap((part, partIndex) => {
+    const tempoCounting = counting[part.tempo];
+
     return part.notes.map((note, noteIndex) => {
       const noteCount = tempoCounting[partIndex]?.[noteIndex];
 

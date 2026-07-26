@@ -173,6 +173,33 @@ describe("store", () => {
       });
     });
   });
+
+  describe("clear", () => {
+    test("clears existing score", () => {
+      const store = createScoreStore({
+        initialState,
+        storage: createStorage(),
+      });
+
+      store
+        .getState()
+        .toggleNote({ barIndex: 0, key: { note: "HIGH_HAT" }, noteIndex: 0, partIndex: 0 });
+      const bar = createBar(16);
+      bar.parts[0]!.notes[0]?.keys.push({ type: "key", note: "HIGH_HAT" });
+      expect(store.getState().score).toEqual<Score>({
+        type: "score",
+        bars: [bar],
+      });
+
+      store.getState().clear();
+
+      const emptyBar = createBar(16);
+      expect(store.getState().score).toEqual<Score>({
+        type: "score",
+        bars: [emptyBar],
+      });
+    });
+  });
 });
 
 function createStorage(): StateStorage {
