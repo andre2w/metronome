@@ -1,24 +1,24 @@
 import { ContextMenu } from "@radix-ui/themes";
 import type { ReactNode } from "react";
-import "./stave-note-box.css";
+import "./key.css";
 import { useScoreStore } from "~/entities/score/model/state/score-store-provider";
 import { Tile } from "./tile";
 import { useConfiguration } from "~/shared/lib/configuration/configuration-provider";
 import { KeyData } from "~/shared/lib/score/key-data";
 
-export interface StaveNoteBoxProps {
+export interface KeyProps {
   children?: ReactNode;
   className?: string;
   note: string;
   index?: {
-    staveIndex: number;
     barIndex: number;
     partIndex: number;
+    noteIndex: number;
   };
   isSelected: boolean;
   modifier?: string;
 }
-export function StaveNoteBox({ children, note, index, isSelected, modifier }: StaveNoteBoxProps) {
+export function Key({ children, note, index, isSelected, modifier }: KeyProps) {
   const toggleNote = useScoreStore((state) => state.toggleNote);
   const configuration = useConfiguration();
   const noteData: KeyData | undefined = note ? configuration.getKeyData(note) : undefined;
@@ -27,18 +27,18 @@ export function StaveNoteBox({ children, note, index, isSelected, modifier }: St
     index && note
       ? () => {
           toggleNote({
-            noteIndex: index.partIndex,
+            noteIndex: index.noteIndex,
             key: { note: note, modifier },
-            barIndex: index.staveIndex,
-            partIndex: index.barIndex,
+            barIndex: index.barIndex,
+            partIndex: index.partIndex,
           });
         }
       : undefined;
 
   const noteBox = (
     <Tile
-      key={`${index?.staveIndex ?? 0}#${index?.barIndex ?? 0}#${note}`}
-      className="stave-note-box"
+      key={`${index?.barIndex ?? 0}#${index?.partIndex ?? 0}#${note}`}
+      className="key"
       onClick={onClick}
       variant={isSelected ? "selected" : undefined}
     >
@@ -56,10 +56,10 @@ export function StaveNoteBox({ children, note, index, isSelected, modifier }: St
               <ContextMenu.Item
                 onClick={() => {
                   toggleNote({
-                    noteIndex: index.partIndex,
+                    noteIndex: index.noteIndex,
                     key: { note, modifier: modifier },
-                    barIndex: index.staveIndex,
-                    partIndex: index.barIndex,
+                    barIndex: index.barIndex,
+                    partIndex: index.partIndex,
                   });
                 }}
               >

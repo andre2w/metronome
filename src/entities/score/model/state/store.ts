@@ -59,7 +59,12 @@ export function createScoreStore({ initialState, storage }: CreateScoreStoreProp
             }
           }),
 
-        setSticking: ({ staveIndex: scoreIndex, staveNoteIndex: barIndex, partIndex, sticking }) =>
+        setSticking: ({
+          barIndex: scoreIndex,
+          noteIndex: barIndex,
+          noteIndex: partIndex,
+          sticking,
+        }) =>
           set((state) => {
             const notesWithSticking =
               state.score?.bars[scoreIndex]?.parts[barIndex]?.notes[partIndex];
