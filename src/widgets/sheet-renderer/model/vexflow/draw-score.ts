@@ -1,6 +1,6 @@
 import { Formatter, type Renderer, Stave, Voice } from "vexflow";
 import type { Score } from "../../../../entities/score/model/types";
-import { calculateWidthAndPosition, groupNotes } from "./helpers";
+import { calculateWidthAndPosition } from "./helpers";
 import { parse } from "./parser";
 import { Configuration } from "~/shared/lib/configuration/configuration-provider";
 
@@ -31,7 +31,7 @@ export function drawScore({
 }: DrawScoreProps) {
   const positions = calculateWidthAndPosition({
     sheetWidth: sheetWidth - 40,
-    staveCount: score.length,
+    staveCount: score.bars.length,
     staveHeight: STAVE_HEIGHT,
     staveWidth: STAVE_WIDTH,
     startY: Y_OFFSET,
@@ -51,17 +51,17 @@ export function drawScore({
     context.strokeStyle = "white";
   }
 
-  if (!score.length) {
-    const stave = new Stave(0, 0, 0);
-    stave.setContext(context).draw();
-    Formatter.FormatAndDraw(context, stave, [], {
-      autoBeam: true,
-      alignRests: true,
-    });
-    return;
-  }
+  // if (score.bars.every((bar) => bar.parts.every((part) => part.notes.length === 0))) {
+  //   const stave = new Stave(0, 0, 0);
+  //   stave.setContext(context);
+  //   Formatter.FormatAndDraw(context, stave, [], {
+  //     autoBeam: true,
+  //     alignRests: true,
+  //   });
+  //   return;
+  // }
 
-  for (let i = 0; i < score.length; i++) {
+  for (let i = 0; i < score.bars.length; i++) {
     const position = positions[i];
     if (!position) {
       throw new Error(`No position found for index: ${i}`);
@@ -73,18 +73,16 @@ export function drawScore({
       stave.addClef("treble").addTimeSignature("4/4");
     }
 
-    const bars = score[i];
-    if (!bars) {
+    const bar = score.bars[i];
+    if (!bar) {
       throw new Error(`Invalid bars at index: ${i}`);
     }
-    const duration = String(bars.length);
-    const groups = groupNotes({ bar: bars, duration, offset: bars.length * i });
+
     const { notes, beams } = parse({
       background,
-      groups,
-      baseDuration: duration as "4" | "8" | "16",
       cursorIndex: index,
       configuration,
+      bar,
     });
 
     const allNotes = notes.flatMap((note) => note.map((n) => n.note));

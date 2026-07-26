@@ -46,7 +46,7 @@ export function Controls() {
           ))}
         </div>
         <div style={{ display: "flex", flexDirection: "row" }}>
-          {score.map((bar, staveIndex) => {
+          {score.bars.map((bar, staveIndex) => {
             return (
               <Stave
                 bar={bar}

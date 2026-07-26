@@ -12,27 +12,32 @@ export interface StaveProps {
   className?: string;
 }
 
-export function Stave({ bar, staveIndex: index, onRemoveStave }: StaveProps) {
-  const tempoCounting = counting[bar.length];
+export function Stave({ bar, staveIndex, onRemoveStave }: StaveProps) {
+  const tempoCounting = counting[bar.parts.length];
   if (!tempoCounting) {
-    throw new Error(`No count for length: ${bar.length}`);
+    throw new Error(`No count for length: ${bar.parts.length}`);
   }
-  const notes = bar.flatMap((part, barIndex) => {
-    return part.notes.map((note, partIndex) => {
-      const noteCount = tempoCounting[barIndex];
+
+  const parts = bar.parts.flatMap((part, partIndex) => {
+    return part.notes.map((note, noteIndex) => {
+      const noteCount = tempoCounting[partIndex]?.[noteIndex];
 
       if (!noteCount) {
-        throw new Error(`No counting for bar at ${barIndex}`);
+        throw new Error(
+          `No counting for bar at ${JSON.stringify({ staveIndex, partIndex, note })}`,
+        );
       }
 
       const withSpace = ["2", "3", "4"].includes(noteCount);
+
       return (
         <StaveNote
+          partIndex={noteIndex}
           noteCount={noteCount}
-          barIndex={barIndex}
-          staveIndex={index}
+          barIndex={partIndex}
+          staveIndex={staveIndex}
+          noteIndex={noteIndex}
           notesWithSticking={note}
-          partIndex={partIndex}
           className={withSpace ? "with-space-left" : undefined}
         />
       );
@@ -42,12 +47,12 @@ export function Stave({ bar, staveIndex: index, onRemoveStave }: StaveProps) {
   return (
     <div className="stave">
       <div className="stave-content">
-        <Text>{index + 1}</Text>
+        <Text>{staveIndex + 1}</Text>
         <Button onClick={onRemoveStave} variant="ghost">
           <Cross1Icon />
         </Button>
       </div>
-      <div className="stave-notes">{notes}</div>
+      <div className="stave-notes">{parts}</div>
     </div>
   );
 }

@@ -9,17 +9,17 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from "./app/entrypoint/root"
-import { Route as DotPagesWaveformRouteRouteImport } from "./pages/waveform/route"
 import { Route as DotPagesMetronomeRouteRouteImport } from "./pages/metronome/route"
+import { Route as DotPagesWaveformRouteRouteImport } from "./pages/waveform/route"
 
-const DotPagesWaveformRouteRoute = DotPagesWaveformRouteRouteImport.update({
-  id: "/waveform",
-  path: "/waveform",
-  getParentRoute: () => rootRouteImport,
-} as any)
 const DotPagesMetronomeRouteRoute = DotPagesMetronomeRouteRouteImport.update({
   id: "/",
   path: "/",
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DotPagesWaveformRouteRoute = DotPagesWaveformRouteRouteImport.update({
+  id: "/waveform",
+  path: "/waveform",
   getParentRoute: () => rootRouteImport,
 } as any)
 
@@ -51,18 +51,18 @@ export interface RootRouteChildren {
 
 declare module "@tanstack/react-router" {
   interface FileRoutesByPath {
-    "/waveform": {
-      id: "/waveform"
-      path: "/waveform"
-      fullPath: "/waveform"
-      preLoaderRoute: typeof DotPagesWaveformRouteRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     "/": {
       id: "/"
       path: "/"
       fullPath: "/"
       preLoaderRoute: typeof DotPagesMetronomeRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    "/waveform": {
+      id: "/waveform"
+      path: "/waveform"
+      fullPath: "/waveform"
+      preLoaderRoute: typeof DotPagesWaveformRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
   }

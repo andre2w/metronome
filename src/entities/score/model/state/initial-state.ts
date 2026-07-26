@@ -1,6 +1,6 @@
 import { defaultMetronomeConfiguration } from "~/entities/score/model/state/defaults";
 import { Score } from "../types";
-import { createStave, ScoreContextValue } from "./score-state";
+import { createBar, ScoreContextValue } from "./score-state";
 
 export type InitialState = Pick<ScoreContextValue, "configuration" | "score">;
 
@@ -29,7 +29,7 @@ export function getInitialStateFromHash(): Pick<ScoreContextValue, "configuratio
     ? typeof scoreText === "string"
       ? JSON.parse(scoreText)
       : scoreText
-    : [createStave(configuration.signature)];
+    : { type: "score", bars: [createBar(configuration.signature)] };
   const score = initialScore;
   const name = hash.get("name");
 

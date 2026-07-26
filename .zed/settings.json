@@ -2,7 +2,7 @@
   "languages": {
     "TypeScript": {
       "language_servers": [
-        "tsgo",
+        "typescript-ls",
         "oxfmt",
         "oxlint",
         "!vtsls",
@@ -20,7 +20,7 @@
     },
     "TSX": {
       "language_servers": [
-        "tsgo",
+        "typescript-ls",
         "oxfmt",
         "oxc",
         "!vtsls",

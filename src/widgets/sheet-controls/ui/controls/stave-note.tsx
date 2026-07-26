@@ -11,6 +11,7 @@ export interface StaveNoteProps {
   staveIndex: number;
   barIndex: number;
   partIndex: number;
+  noteIndex: number;
   noteCount?: string;
   className?: string;
 }
@@ -24,6 +25,7 @@ export function StaveNote({
   staveIndex,
   barIndex,
   partIndex,
+  noteIndex,
 }: StaveNoteProps) {
   const configuration = useConfiguration();
   const { keys: selectedNotes, sticking } = notesWithSticking;
@@ -55,7 +57,7 @@ export function StaveNote({
             isSelected={!!selectedNote}
             note={key.key}
             modifier={selectedNote?.modifier}
-            index={{ staveIndex: staveIndex, barIndex }}
+            index={{ staveIndex: staveIndex, barIndex, partIndex: noteIndex }}
           />
         );
       })}

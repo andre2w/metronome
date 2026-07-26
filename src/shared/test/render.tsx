@@ -74,7 +74,7 @@ function TestWrapper({ children }: { children: ReactNode }) {
           graceTime: 100,
           signature: 4,
         },
-        score: [],
+        score: { type: "score", bars: [] },
       },
       storage: createTestStorage(),
     });

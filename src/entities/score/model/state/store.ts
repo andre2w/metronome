@@ -2,7 +2,7 @@ import { createStore } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
 import { immer } from "zustand/middleware/immer";
 import { InitialState } from "./initial-state";
-import { createStave, ScoreContextValue } from "./score-state";
+import { createBar, ScoreContextValue } from "./score-state";
 import { FullScore } from "../types";
 import { StateStorage } from "zustand/middleware";
 
@@ -19,15 +19,15 @@ export function createScoreStore({ initialState, storage }: CreateScoreStoreProp
         configuration: initialState.configuration,
         addStave: () =>
           set((state) => {
-            state.score.bars.push(createStave(state.configuration.signature));
+            state.score.bars.push(createBar(state.configuration.signature));
           }),
 
-        toggleNote: ({ note: key, staveIndex: scoreIndex, staveNoteIndex: barIndex, partIndex }) =>
+        toggleNote: ({ key, barIndex, partIndex, noteIndex }) =>
           set((state) => {
-            const noteInPart = state.score?.bars?.[scoreIndex]?.parts?.[barIndex]?.notes[partIndex];
+            const noteInPart = state.score?.bars?.[barIndex]?.parts?.[partIndex]?.notes[noteIndex];
 
             if (!noteInPart) {
-              state.score?.bars?.[scoreIndex]?.parts?.[barIndex]?.notes.push({
+              state.score?.bars?.[barIndex]?.parts?.[partIndex]?.notes.push({
                 type: "note",
                 keys: [{ type: "key", ...key }],
               });
@@ -55,7 +55,7 @@ export function createScoreStore({ initialState, storage }: CreateScoreStoreProp
           set((state) => {
             state.score.bars.splice(staveIndex, 1);
             if (state.score.bars.length === 0) {
-              state.score.bars.push(createStave(state.configuration.signature));
+              state.score.bars.push(createBar(state.configuration.signature));
             }
           }),
 
@@ -84,15 +84,18 @@ export function createScoreStore({ initialState, storage }: CreateScoreStoreProp
             if (
               state.score.bars.length === 1 &&
               state.score?.bars[0]?.parts.length !== state.configuration.signature &&
-              state.score?.bars[0]?.parts.every((part) => part.notes.length === 0)
+              state.score?.bars[0]?.parts.every(
+                (part) =>
+                  part.notes.length === 0 || part.notes.every((note) => note.keys.length === 0),
+              )
             ) {
-              state.score = { type: "score", bars: [createStave(state.configuration.signature)] };
+              state.score = { type: "score", bars: [createBar(state.configuration.signature)] };
             }
           }),
 
         clear: () =>
           set((state) => {
-            state.score = { type: "score", bars: [createStave(state.configuration.signature)] };
+            state.score = { type: "score", bars: [createBar(state.configuration.signature)] };
           }),
 
         loadScore: (score: FullScore & { id: number }) => {
