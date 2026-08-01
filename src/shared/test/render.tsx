@@ -45,7 +45,7 @@ export function renderHook<
   BaseElement extends RendererableContainer | HydrateableContainer = Container,
 >(
   render: (initialProps: Props) => Result,
-  options?: RenderHookOptions<Props, Q, Container, BaseElement> | undefined,
+  options?: RenderHookOptions<Props, Q, Container, BaseElement>  ,
 ): RenderHookResult<Result, Props> {
   const UserWrapper = options?.wrapper;
 

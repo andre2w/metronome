@@ -1,4 +1,4 @@
-import { Formatter, type Renderer, Stave, Voice } from "vexflow";
+import { Formatter, type Renderer, Stave, StemmableNote, Voice } from "vexflow";
 import type { Score } from "../../../../entities/score/model/types";
 import { calculateWidthAndPosition } from "./helpers";
 import { parse } from "./parser";
@@ -51,16 +51,7 @@ export function drawScore({
     context.strokeStyle = "white";
   }
 
-  // if (score.bars.every((bar) => bar.parts.every((part) => part.notes.length === 0))) {
-  //   const stave = new Stave(0, 0, 0);
-  //   stave.setContext(context);
-  //   Formatter.FormatAndDraw(context, stave, [], {
-  //     autoBeam: true,
-  //     alignRests: true,
-  //   });
-  //   return;
-  // }
-
+  const drawnNotes: { x: number; y: number; width: number; height: number }[] = [];
   for (let i = 0; i < score.bars.length; i++) {
     const position = positions[i];
     if (!position) {
@@ -110,21 +101,34 @@ export function drawScore({
       beam.setContext(context).drawWithStyle();
     }
 
-    const cursorNote = notes.flatMap((note) => note).find((note) => note.hasCursor);
-    if (cursorNote) {
-      const modifierShift = cursorNote.note.getModifierContext()?.getLeftShift() ?? 0;
-
-      const originalFillStyle: (typeof context)["fillStyle"] = context.fillStyle;
-      context.fillStyle = accent ?? "rgba(88, 176, 51, 0.5)";
-
-      context.fillRect(
-        cursorNote.note.getAbsoluteX() + -modifierShift,
-        stave.getY(),
-        Math.max(cursorNote.note.getWidth(), 15) + modifierShift,
-        stave.getHeight(),
-      );
-
-      context.fillStyle = originalFillStyle;
-    }
+    drawnNotes.push(
+      ...notes.flat().map((note) => {
+        const cursorNote = note.note;
+        const modifierShift = cursorNote.getModifierContext()?.getLeftShift() ?? 0;
+        return {
+          x: cursorNote.getAbsoluteX() + -modifierShift,
+          y: stave.getY(),
+          width: Math.max(cursorNote.getWidth(), 15) + modifierShift,
+          height: stave.getHeight(),
+        };
+      }),
+    );
   }
+  // if (cursorNote) {
+  //   const modifierShift = cursorNote.note.getModifierContext()?.getLeftShift() ?? 0;
+
+  //   const originalFillStyle: (typeof context)["fillStyle"] = context.fillStyle;
+  //   context.fillStyle = accent ?? "rgba(88, 176, 51, 0.5)";
+
+  //   drawnNotes.push({
+  //     x: cursorNote.note.getAbsoluteX() + -modifierShift,
+  //     y: stave.getY(),
+  //     width: Math.max(cursorNote.note.getWidth(), 15) + modifierShift,
+  //     height: stave.getHeight(),
+  //   });
+
+  //   context.fillStyle = originalFillStyle;
+  // }
+
+  return drawnNotes;
 }

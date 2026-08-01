@@ -21,6 +21,7 @@ export function Controls() {
 
   return (
     <section className="sheet-maker">
+      <ListScores></ListScores>
       <header className="sheet-maker-header">Score Editor</header>
       <div className="add">
         <Button onClick={addStave}>Add stave</Button>
