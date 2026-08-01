@@ -26,7 +26,7 @@ export function drawScore({
   sheetWidth,
   score,
   index,
-  colors: { background, accent },
+  colors: { background },
   configuration,
 }: DrawScoreProps) {
   const positions = calculateWidthAndPosition({

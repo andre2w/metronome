@@ -81,7 +81,7 @@ export const SheetRenderer = forwardRef<VexflowScoreHandle, VexflowScoreProps>((
       );
 
       if (drawn) {
-        canvas.fillStyle = "rgba(88, 176, 51, 0.5)";
+        canvas.fillStyle = accentColor ?? "rgba(88, 176, 51, 0.5)";
 
         console.log(drawn);
 
