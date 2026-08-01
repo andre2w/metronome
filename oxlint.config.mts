@@ -16,7 +16,9 @@ export default defineConfig({
   categories: {
     correctness: "error",
   },
-  rules: {},
+  rules: {
+    "unicorn/filename-case": ["error", { case: "kebabCase" }],
+  },
   env: {
     builtin: true,
   },
