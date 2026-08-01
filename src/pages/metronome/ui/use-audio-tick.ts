@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { Sampler, ToneAudioBuffer, now } from "tone";
 import { calculateBeatTime } from "../model/beat-time";
 import { nextInLoop } from "~/shared/lib/loop";
+import { useScoreStore } from "~/entities/score/model/state/score-store-provider";
 
 interface UseAudioTicksProps {
   notes: number;
