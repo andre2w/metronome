@@ -38,7 +38,6 @@ export const SheetRenderer = forwardRef<VexflowScoreHandle, VexflowScoreProps>((
   const configuration = useConfiguration();
   const cursorCanvasRef = useRef<HTMLCanvasElement>(null);
   const zippedNotes = useRef<{ play: Note; drawn?: ReturnType<typeof drawScore>[number] }[]>([]);
-  const a = useWaveform();
   useEffect(() => {
     if (boxRef.current) {
       colorRef.current = getRgbaColorString(boxRef.current);
@@ -81,7 +80,7 @@ export const SheetRenderer = forwardRef<VexflowScoreHandle, VexflowScoreProps>((
       );
 
       if (drawn) {
-        canvas.fillStyle = accentColor ?? "rgba(88, 176, 51, 0.5)";
+        canvas.fillStyle = colorRef.current ?? "rgba(88, 176, 51, 0.5)";
 
         console.log(drawn);
 
