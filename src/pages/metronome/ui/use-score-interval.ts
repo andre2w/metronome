@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef } from "react";
 import { useToggle } from "usehooks-ts";
 import { useScoreStoreShallow } from "~/entities/score/model/state/score-store-provider";
-import { calculateBeatTime } from "../model/beat-time";
+import { calculateBeatTime } from "../../../shared/lib/metronome/beat-time";
 
 export interface UseScoreIntervalProps {
   onTick?: () => Promise<void>;
@@ -9,7 +9,7 @@ export interface UseScoreIntervalProps {
 
 export function useScoreInterval({ onTick }: UseScoreIntervalProps) {
   const { bpm, score } = useScoreStoreShallow((state) => ({
-    bpm: state.configuration.bpm,
+    bpm: state.metronome.bpm,
     score: state.score,
   }));
   const flatScore = score.bars.flatMap((n) =>

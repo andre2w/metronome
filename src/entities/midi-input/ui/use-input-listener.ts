@@ -27,7 +27,7 @@ export function useInputListener() {
         input.removeListener("noteon", listener);
       };
     }
-  }, [input]);
+  }, [input, configuration]);
 
   return {
     getPlayedNotes: () => notesPlayedRef.current,

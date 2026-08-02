@@ -8,7 +8,7 @@ import { useConfiguration } from "~/shared/lib/configuration/configuration-provi
 
 export function Controls() {
   const { addStave, clear, removeStave, score } = useScoreStoreShallow(
-    ({ addStave, score, toggleNote, removeStave, setSticking, clear }) => ({
+    ({ addBar: addStave, score, toggleNote, removeBar: removeStave, setSticking, clear }) => ({
       addStave,
       score,
       toggleNote,

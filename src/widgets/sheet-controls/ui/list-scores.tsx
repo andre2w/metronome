@@ -2,19 +2,19 @@ import { Button, Dialog, Flex, Separator, Text } from "@radix-ui/themes";
 import { useLiveQuery } from "dexie-react-hooks";
 import { useCallback, useState } from "react";
 import React from "react";
-import { db } from "../../../entities/score/model/local-storage/indexed-db";
-import type { FullScore } from "../../../entities/score/model/types";
 import { useScoreStore } from "~/entities/score/model/state/score-store-provider";
+import { scoresDb } from "~/shared/lib/score/indexed-db";
+import { Score } from "~/shared/lib/score/score";
 
 export function ListScores() {
   const [isOpen, setIsOpen] = useState(false);
   const loadScore = useScoreStore((state) => state.loadScore);
   const scores = useLiveQuery(async () => {
-    return await db.scores.toArray();
+    return await scoresDb.scores.toArray();
   });
 
   const deleteScore = useCallback(async (id: number) => {
-    await db.scores.delete(id);
+    await scoresDb.scores.delete(id);
   }, []);
 
   return (
@@ -51,7 +51,7 @@ export function ListScores() {
 }
 
 interface ScoreRowProps {
-  score: FullScore & { id: number };
+  score: Score & { id: number };
   onLoad?: () => void;
   onDelete?: () => void;
 }
@@ -90,7 +90,7 @@ function ScoreRow({ score, onLoad, onDelete }: ScoreRowProps) {
           {score.name}
         </Text>
         <Flex gap="3">
-          <Text>{score.bpm}BPM</Text> - <Text>1/{score.signature}</Text>
+          <Text>{score.bpm}BPM</Text>
         </Flex>
       </Flex>
 

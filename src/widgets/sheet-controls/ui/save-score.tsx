@@ -1,16 +1,12 @@
 import { Button, Dialog, Flex, Text, TextField } from "@radix-ui/themes";
 import { useState } from "react";
-import { db } from "~/entities/score/model/local-storage/indexed-db";
 import { useScoreStoreShallow } from "~/entities/score/model/state/score-store-provider";
 
 export function SaveScore() {
-  const { configuration, onChangeConfiguration, score } = useScoreStoreShallow(
-    ({ configuration, score, onChangeConfiguration }) => ({
-      configuration,
-      score,
-      onChangeConfiguration,
-    }),
-  );
+  const { score, updateMetadata } = useScoreStoreShallow(({ score, updateMetadata }) => ({
+    score,
+    updateMetadata,
+  }));
   const [isOpen, setIsOpen] = useState(false);
 
   return (
@@ -28,32 +24,32 @@ export function SaveScore() {
           </Text>
           <TextField.Root
             placeholder="What's the name of this score?"
-            value={configuration.name}
+            value={score.name}
             onChange={(event) =>
-              onChangeConfiguration({
-                ...configuration,
+              updateMetadata({
                 name: event.target.value,
               })
             }
           />
           <Button
             onClick={async () => {
-              if (!configuration.name) {
+              if (!score.name) {
                 return;
               }
 
-              if (configuration.id) {
-                await db.scores.update(configuration.id, {
-                  ...configuration,
-                  score,
-                });
-              } else {
-                await db.scores.add({
-                  ...configuration,
-                  score,
-                  name: configuration.name,
-                });
-              }
+              // TODO
+              // if (score.id) {
+              //   await db.scores.update(configuration.id, {
+              //     ...configuration,
+              //     score,
+              //   });
+              // } else {
+              //   await db.scores.add({
+              //     ...configuration,
+              //     score,
+              //     name: configuration.name,
+              //   });
+              // }
               setIsOpen(false);
             }}
           >

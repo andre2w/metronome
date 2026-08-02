@@ -8,13 +8,12 @@ import {
   useRef,
 } from "react";
 import { useResizeObserver } from "usehooks-ts";
-import { Renderer, StemmableNote } from "vexflow";
+import { Renderer } from "vexflow";
 import { getRgbaColorString } from "../model/vexflow/color";
 import { drawScore } from "../model";
 import { useScoreStore } from "~/entities/score/model/state/score-store-provider";
 import { useConfiguration } from "~/shared/lib/configuration/configuration-provider";
-import { Note } from "~/entities/score/model/types";
-import { useWaveform } from "../../../pages/waveform/ui/use-waveform";
+import { Note } from "~/shared/lib/score/score";
 
 export type VexflowScoreProps = {};
 
@@ -81,8 +80,6 @@ export const SheetRenderer = forwardRef<VexflowScoreHandle, VexflowScoreProps>((
 
       if (drawn) {
         canvas.fillStyle = colorRef.current ?? "rgba(88, 176, 51, 0.5)";
-
-        console.log(drawn);
 
         canvas.fillRect(drawn.x, drawn.y, drawn.width, drawn.height);
       }

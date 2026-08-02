@@ -1,6 +1,6 @@
 import { ChangeEvent, useCallback, useEffect, useState } from "react";
 import { useWaveform } from "./use-waveform";
-import { calculateBeatTime } from "~/pages/metronome/model/beat-time";
+import { calculateBeatTime } from "~/shared/lib/metronome/beat-time";
 
 // Give regions a random color when they are created
 const random = (min: number, max: number) => Math.random() * (max - min) + min;

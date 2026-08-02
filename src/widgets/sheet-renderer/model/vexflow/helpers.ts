@@ -1,7 +1,7 @@
 import { Annotation, Dot, ModifierPosition, Parenthesis, StaveNote, Stem } from "vexflow";
-import { Part, type Bar, type Note } from "../../../../entities/score/model/types";
 import { REST_KEY } from "./constants";
 import { Configuration } from "~/shared/lib/configuration/configuration-provider";
+import { Bar, Note, Part } from "~/shared/lib/score/score";
 
 export interface CalculateWidthAndPositionProps {
   sheetWidth: number;

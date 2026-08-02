@@ -1,7 +1,8 @@
 import { describe, expect, it, vi } from "vitest";
 import { createStore } from "zustand/vanilla";
 import { ScoreContextValue } from "~/entities/score/model/state/score-state";
-import { createMetronomeSlice, MetronomeValues } from "./store";
+import { createMetronomeSlice } from "./store";
+import { MetronomeValues } from "~/shared/lib/metronome";
 
 describe("store", () => {
   describe("toggle", () => {
@@ -9,22 +10,28 @@ describe("store", () => {
       const store = createTestStore();
 
       expect(store.getState()).toMatchObject({
-        started: false,
-        ticks: 0,
-        cursor: { bar: 0, part: 0, note: 0 },
+        metronome: {
+          started: false,
+          ticks: 0,
+          cursor: { bar: 0, part: 0, note: 0 },
+        },
       });
       store.getState().toggle();
       expect(store.getState()).toMatchObject({
-        started: true,
-        ticks: 0,
-        cursor: { bar: 0, part: 0, note: 0 },
+        metronome: {
+          started: true,
+          ticks: 0,
+          cursor: { bar: 0, part: 0, note: 0 },
+        },
       });
 
       store.getState().toggle();
       expect(store.getState()).toMatchObject({
-        started: false,
-        ticks: 0,
-        cursor: { bar: 0, part: 0, note: 0 },
+        metronome: {
+          started: false,
+          ticks: 0,
+          cursor: { bar: 0, part: 0, note: 0 },
+        },
       });
     });
 
@@ -34,15 +41,19 @@ describe("store", () => {
       store.getState().toggle();
       store.getState().next();
       expect(store.getState()).toMatchObject({
-        started: true,
-        ticks: 1,
-        cursor: { bar: 0, part: 0, note: 1 },
+        metronome: {
+          started: true,
+          ticks: 1,
+          cursor: { bar: 0, part: 0, note: 1 },
+        },
       });
       store.getState().toggle();
       expect(store.getState()).toMatchObject({
-        started: false,
-        ticks: 0,
-        cursor: { bar: 0, part: 0, note: 0 },
+        metronome: {
+          started: false,
+          ticks: 0,
+          cursor: { bar: 0, part: 0, note: 0 },
+        },
       });
     });
   });
@@ -52,34 +63,44 @@ describe("store", () => {
       const store = createTestStore();
 
       expect(store.getState()).toMatchObject({
-        started: false,
-        ticks: 0,
-        cursor: { bar: 0, part: 0, note: 0 },
+        metronome: {
+          started: false,
+          ticks: 0,
+          cursor: { bar: 0, part: 0, note: 0 },
+        },
       });
       store.getState().toggle();
       expect(store.getState()).toMatchObject({
-        started: true,
-        ticks: 0,
-        cursor: { bar: 0, part: 0, note: 0 },
+        metronome: {
+          started: true,
+          ticks: 0,
+          cursor: { bar: 0, part: 0, note: 0 },
+        },
       });
       store.getState().next();
       expect(store.getState()).toMatchObject({
-        started: true,
-        ticks: 1,
-        cursor: { bar: 0, part: 0, note: 1 },
+        metronome: {
+          started: true,
+          ticks: 1,
+          cursor: { bar: 0, part: 0, note: 1 },
+        },
       });
       store.getState().next();
       expect(store.getState()).toMatchObject({
-        started: true,
-        ticks: 2,
-        cursor: { bar: 0, part: 0, note: 2 },
+        metronome: {
+          started: true,
+          ticks: 2,
+          cursor: { bar: 0, part: 0, note: 2 },
+        },
       });
 
       store.getState().next();
       expect(store.getState()).toMatchObject({
-        started: true,
-        ticks: 3,
-        cursor: { bar: 0, part: 0, note: 3 },
+        metronome: {
+          started: true,
+          ticks: 3,
+          cursor: { bar: 0, part: 0, note: 3 },
+        },
       });
     });
 
@@ -91,10 +112,16 @@ describe("store", () => {
         store.getState().next();
       }
 
-      expect(store.getState().cursor).toEqual({
-        bar: 0,
-        part: 1,
-        note: 0,
+      expect(store.getState()).toMatchObject({
+        metronome: {
+          started: true,
+          ticks: 4,
+          cursor: {
+            bar: 0,
+            part: 1,
+            note: 0,
+          },
+        },
       });
     });
 
@@ -106,10 +133,16 @@ describe("store", () => {
         store.getState().next();
       }
 
-      expect(store.getState().cursor).toEqual({
-        bar: 1,
-        part: 0,
-        note: 0,
+      expect(store.getState()).toMatchObject({
+        metronome: {
+          started: true,
+          ticks: 12,
+          cursor: {
+            bar: 1,
+            part: 0,
+            note: 0,
+          },
+        },
       });
     });
 
@@ -121,10 +154,16 @@ describe("store", () => {
         store.getState().next();
       }
 
-      expect(store.getState().cursor).toEqual({
-        bar: 0,
-        part: 0,
-        note: 0,
+      expect(store.getState()).toMatchObject({
+        metronome: {
+          started: true,
+          ticks: 28,
+          cursor: {
+            bar: 0,
+            part: 0,
+            note: 0,
+          },
+        },
       });
     });
   });
@@ -133,7 +172,8 @@ describe("store", () => {
 function createTestStore() {
   return createStore<MetronomeValues & ScoreContextValue>()((...args) => ({
     ...createMetronomeSlice(...args),
-    addStave: vi.fn(),
+    updateMetadata: vi.fn(),
+    addBar: vi.fn(),
     clear: vi.fn(),
     configuration: {
       bpm: 100,
@@ -144,8 +184,12 @@ function createTestStore() {
     setSticking: vi.fn(),
     onChangeConfiguration: vi.fn(),
     loadScore: vi.fn(),
-    removeStave: vi.fn(),
+    removeBar: vi.fn(),
+
     score: {
+      author: "",
+      bpm: 100,
+      name: "",
       type: "score",
       bars: [
         {

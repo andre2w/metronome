@@ -1,8 +1,8 @@
-import { Formatter, type Renderer, Stave, StemmableNote, Voice } from "vexflow";
-import type { Score } from "../../../../entities/score/model/types";
+import { Formatter, type Renderer, Stave, Voice } from "vexflow";
 import { calculateWidthAndPosition } from "./helpers";
 import { parse } from "./parser";
 import { Configuration } from "~/shared/lib/configuration/configuration-provider";
+import { Score } from "~/shared/lib/score/score";
 
 const Y_OFFSET = 50;
 const STAVE_HEIGHT = 150;

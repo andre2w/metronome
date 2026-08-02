@@ -1,12 +1,12 @@
 import { Cross1Icon } from "@radix-ui/react-icons";
 import { Button, Text } from "@radix-ui/themes";
-import type { Bar } from "../../../../entities/score/model/types";
 import "./bar.css";
 import { Note } from "./note";
 import { counting } from "../../model/constants";
+import { Bar as ScoreBar } from "~/shared/lib/score/score";
 
 export interface StaveProps {
-  bar: Bar;
+  bar: ScoreBar;
   barIndex: number;
   onRemoveStave: () => void;
   className?: string;
@@ -17,7 +17,7 @@ export function Bar({ bar, barIndex, onRemoveStave }: StaveProps) {
     const tempoCounting = counting[part.tempo];
 
     return part.notes.map((note, noteIndex) => {
-      const noteCount = tempoCounting[partIndex]?.[noteIndex];
+      const noteCount = tempoCounting?.[partIndex]?.[noteIndex];
 
       if (!noteCount) {
         throw new Error(
