@@ -1,11 +1,11 @@
 import { NotePlayed } from "~/shared/lib/score/note-played";
-import type { Score, Ticks } from "../../../entities/score/model/types";
 import { Key } from "~/shared/lib/score/key-data";
+import { Score } from "~/shared/lib/score/score";
 
 export interface CalculateResultProps {
-  ticks: Ticks;
+  ticks: number[];
   notesPlayed: NotePlayed[];
-  score: Score;
+  score: Pick<Score, "bars">;
   graceTime: number;
 }
 

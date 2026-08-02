@@ -1,8 +1,9 @@
 import { Beam, type StemmableNote } from "vexflow";
-import type { Bar, Part, Sticking } from "../../../../entities/score/model/types";
 import { createStaveNote } from "./helpers";
 import { Configuration } from "~/shared/lib/configuration/configuration-provider";
 import { Key } from "~/shared/lib/score/key-data";
+import { Bar, Part } from "~/shared/lib/score/score";
+import { Sticking } from "~/shared/lib/score/sticking";
 
 interface ReducedStaveNote {
   notes: Key[];

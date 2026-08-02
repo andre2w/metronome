@@ -1,122 +1,113 @@
-import { createStore } from "zustand";
-import { createJSONStorage, persist } from "zustand/middleware";
-import { immer } from "zustand/middleware/immer";
-import { InitialState } from "./initial-state";
+import { Score } from "~/shared/lib/score/score";
 import { createBar, ScoreContextValue } from "./score-state";
-import { FullScore } from "../types";
-import { StateStorage } from "zustand/middleware";
+import { StateCreator } from "zustand/vanilla";
+import { MetronomeValues } from "~/shared/lib/metronome";
 
-export interface CreateScoreStoreProps {
-  initialState: InitialState;
-  storage: StateStorage;
-}
+export type ScoreSlice = StateCreator<
+  ScoreContextValue & MetronomeValues,
+  [["zustand/persist", unknown], ["zustand/immer", never]],
+  [],
+  ScoreContextValue
+>;
 
-export function createScoreStore({ initialState, storage }: CreateScoreStoreProps) {
-  return createStore<ScoreContextValue>()(
-    persist(
-      immer((set) => ({
-        score: initialState.score,
-        configuration: initialState.configuration,
-        addStave: () =>
-          set((state) => {
-            state.score.bars.push(createBar(state.configuration.signature));
-          }),
+export const createScoreSlice: (initialScore?: Score) => ScoreSlice = (initialScore) => {
+  return (set) => ({
+    score: {
+      author: initialScore?.author ?? "",
+      bars: initialScore?.bars ?? [createBar("quarter")],
+      name: initialScore?.name ?? "",
+      type: "score",
+      bpm: initialScore?.bpm ?? 100,
+    },
+    addBar: () =>
+      set((state) => {
+        const previousTempo = state.score.bars.at(-1)?.parts.at(-1)?.tempo ?? "quarter";
+        state.score.bars.push(createBar(previousTempo));
+      }),
 
-        toggleNote: ({ key, barIndex, partIndex, noteIndex }) =>
-          set((state) => {
-            const noteInPart = state.score?.bars?.[barIndex]?.parts?.[partIndex]?.notes[noteIndex];
+    toggleNote: ({ key, barIndex, partIndex, noteIndex }) =>
+      set((state) => {
+        const noteInPart = state.score.bars?.[barIndex]?.parts?.[partIndex]?.notes[noteIndex];
 
-            if (!noteInPart) {
-              state.score?.bars?.[barIndex]?.parts?.[partIndex]?.notes.push({
-                type: "note",
-                keys: [{ type: "key", ...key }],
-              });
-              return;
-            }
-
-            if (!noteInPart.keys.some((n) => n.note === key.note)) {
-              noteInPart.keys.push({ type: "key", ...key });
-            } else {
-              const noteIndex = noteInPart.keys.findIndex((n) => n.note === key.note);
-              if (noteIndex >= 0) {
-                /**
-                 * Replace the existing note with one with the modifier
-                 */
-                const shouldReplace = noteInPart.keys.at(noteIndex)?.modifier !== key.modifier;
-                noteInPart.keys.splice(noteIndex, 1);
-                if (shouldReplace) {
-                  noteInPart.keys.push({ type: "key", ...key });
-                }
-              }
-            }
-          }),
-
-        removeStave: (staveIndex) =>
-          set((state) => {
-            state.score.bars.splice(staveIndex, 1);
-            if (state.score.bars.length === 0) {
-              state.score.bars.push(createBar(state.configuration.signature));
-            }
-          }),
-
-        setSticking: ({ barIndex, noteIndex, partIndex, sticking }) =>
-          set((state) => {
-            const notesWithSticking =
-              state.score?.bars[barIndex]?.parts[partIndex]?.notes[noteIndex];
-
-            if (!notesWithSticking) {
-              throw new Error(
-                `Cloudn't find Bar for index ${barIndex} - ${partIndex} - ${noteIndex}`,
-              );
-            }
-
-            if (sticking !== null) {
-              notesWithSticking.sticking = sticking;
-            } else {
-              notesWithSticking.sticking = undefined;
-            }
-          }),
-
-        onChangeConfiguration: (configuration) =>
-          set((state) => {
-            state.configuration = configuration;
-
-            if (
-              state.score.bars.length === 1 &&
-              state.score?.bars[0]?.parts.length !== state.configuration.signature &&
-              state.score?.bars[0]?.parts.every(
-                (part) =>
-                  part.notes.length === 0 || part.notes.every((note) => note.keys.length === 0),
-              )
-            ) {
-              state.score = { type: "score", bars: [createBar(state.configuration.signature)] };
-            }
-          }),
-
-        clear: () =>
-          set((state) => {
-            state.score = { type: "score", bars: [createBar(state.configuration.signature)] };
-          }),
-
-        loadScore: (score: FullScore & { id: number }) => {
-          set((state) => {
-            state.score = score.score;
-            state.configuration = {
-              bpm: score.bpm,
-              graceTime: score.graceTime,
-              signature: score.signature,
-              name: score.name,
-              id: score.id,
-            };
+        if (!noteInPart) {
+          state.score.bars?.[barIndex]?.parts?.[partIndex]?.notes.push({
+            type: "note",
+            keys: [{ type: "key", ...key }],
           });
-        },
-      })),
-      {
-        name: "score",
-        storage: createJSONStorage(() => storage),
-      },
-    ),
-  );
-}
+          return;
+        }
 
-export type ScoreStore = ReturnType<typeof createScoreStore>;
+        if (!noteInPart.keys.some((n) => n.note === key.note)) {
+          noteInPart.keys.push({ type: "key", ...key });
+        } else {
+          const noteIndex = noteInPart.keys.findIndex((n) => n.note === key.note);
+          if (noteIndex >= 0) {
+            /**
+             * Replace the existing note with one with the modifier
+             */
+            const shouldReplace = noteInPart.keys.at(noteIndex)?.modifier !== key.modifier;
+            noteInPart.keys.splice(noteIndex, 1);
+            if (shouldReplace) {
+              noteInPart.keys.push({ type: "key", ...key });
+            }
+          }
+        }
+      }),
+
+    removeBar: (barIndex) =>
+      set((state) => {
+        state.score.bars.splice(barIndex, 1);
+        const previousTempo = state.score.bars.at(-1)?.parts.at(-1)?.tempo ?? "quarter";
+        if (state.score.bars.length === 0) {
+          state.score.bars.push(createBar(previousTempo));
+        }
+      }),
+
+    setSticking: ({ barIndex, noteIndex, partIndex, sticking }) =>
+      set((state) => {
+        const notesWithSticking = state.score.bars[barIndex]?.parts[partIndex]?.notes[noteIndex];
+
+        if (!notesWithSticking) {
+          throw new Error(`Cloudn't find Bar for index ${barIndex} - ${partIndex} - ${noteIndex}`);
+        }
+
+        if (sticking !== null) {
+          notesWithSticking.sticking = sticking;
+        } else {
+          notesWithSticking.sticking = undefined;
+        }
+      }),
+
+    clear: () =>
+      set((state) => {
+        const previousTempo = state.score.bars.at(-1)?.parts.at(-1)?.tempo ?? "quarter";
+        const cleanBar = createBar(previousTempo);
+        state.score = {
+          bars: [cleanBar],
+          type: "score",
+          name: "",
+          author: "",
+          bpm: 100,
+        };
+      }),
+
+    updateMetadata: (props) => {
+      set((state) => {
+        return {
+          score: {
+            ...state.score,
+            ...props,
+          },
+        };
+      });
+    },
+
+    loadScore: (score: Score) => {
+      set(() => {
+        return {
+          score: score,
+        };
+      });
+    },
+  });
+};

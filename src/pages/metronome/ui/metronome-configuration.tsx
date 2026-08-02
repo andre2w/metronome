@@ -1,21 +1,26 @@
-import { Select, TextField } from "@radix-ui/themes";
-import { calculateBeatTime } from "../model/beat-time";
+import { TextField } from "@radix-ui/themes";
+import { calculateBeatTime } from "../../../shared/lib/metronome/beat-time";
 import { useScoreStore } from "../../../entities/score/model/state/score-store-provider";
 import { useShallow } from "zustand/react/shallow";
 import "./metronome-configuration.css";
+import { useEffect } from "react";
 
 export function MetronomeConfiguration() {
-  const { configuration, onChangeConfiguration } = useScoreStore(
-    useShallow(({ configuration, onChangeConfiguration }) => ({
-      configuration,
-      onChangeConfiguration,
+  const { metronome, setMetronomeConfig, score, updateMetadata } = useScoreStore(
+    useShallow(({ metronome, setMetronomeConfig, score, updateMetadata }) => ({
+      metronome,
+      setMetronomeConfig,
+      score,
+      updateMetadata,
     })),
   );
 
-  const maxGraceTime = calculateBeatTime(configuration.bpm, configuration.signature) - 2;
-  if (configuration.graceTime > maxGraceTime) {
-    onChangeConfiguration({ ...configuration, graceTime: maxGraceTime });
-  }
+  useEffect(() => {
+    const maxGraceTime = calculateBeatTime(metronome.bpm, 16) - 2;
+    if (metronome.graceTime > maxGraceTime) {
+      setMetronomeConfig({ graceTime: maxGraceTime });
+    }
+  }, [metronome]);
 
   return (
     <div className="metronome-config">
@@ -24,18 +29,13 @@ export function MetronomeConfiguration() {
         <TextField.Root
           size="1"
           type="text"
-          value={configuration.name}
-          onChange={(e) =>
-            onChangeConfiguration({
-              ...configuration,
-              name: e.target.value,
-            })
-          }
+          value={score.name}
+          onChange={(e) => updateMetadata({ name: e.target.value })}
         />
       </label>
-      <label className="metronome-config-field">
-        <span className="metronome-config-label">Signature</span>
-        <Select.Root
+      {/*<label className="metronome-config-field">*/}
+      {/*<span className="metronome-config-label">Signature</span>*/}
+      {/*<Select.Root
           size="1"
           value={String(configuration.signature)}
           onValueChange={(value) =>
@@ -52,17 +52,16 @@ export function MetronomeConfiguration() {
             <Select.Item value="8">1/8</Select.Item>
             <Select.Item value="16">1/16</Select.Item>
           </Select.Content>
-        </Select.Root>
-      </label>
+        </Select.Root>*/}
+      {/*</label>*/}
       <label className="metronome-config-field">
         <span className="metronome-config-label">BPM</span>
         <TextField.Root
           size="1"
           type="number"
-          value={configuration.bpm}
+          value={metronome.bpm}
           onChange={(e) =>
-            onChangeConfiguration({
-              ...configuration,
+            setMetronomeConfig({
               bpm: Number(e.target.value),
             })
           }
@@ -74,10 +73,9 @@ export function MetronomeConfiguration() {
         <TextField.Root
           size="1"
           type="number"
-          value={configuration.graceTime}
+          value={metronome.graceTime}
           onChange={(e) =>
-            onChangeConfiguration({
-              ...configuration,
+            setMetronomeConfig({
               graceTime: e.target.value ? Number(e.target.value) : 0,
             })
           }

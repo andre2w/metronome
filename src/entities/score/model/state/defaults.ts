@@ -1,4 +1,4 @@
-import { calculateBeatTime } from "../../../../pages/metronome/model/beat-time";
+import { calculateBeatTime } from "../../../../shared/lib/metronome/beat-time";
 
 export interface MetronomeConfigurationProps {
   bpm: number;

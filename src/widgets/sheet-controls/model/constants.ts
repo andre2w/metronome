@@ -1,4 +1,4 @@
-import { Tempo } from "~/entities/score/model/types";
+import { Tempo } from "~/shared/lib/score/score";
 
 export const counting: Record<Tempo, string[][]> = {
   quarter: [["1"], ["2"], ["3"], ["4"]],

@@ -1,13 +1,13 @@
 import { Text } from "@radix-ui/themes";
-import { type Note } from "../../../../entities/score/model/types";
 import "./note.css";
 import { Key } from "./key";
 import { Tile } from "./tile";
 import { useScoreStore } from "~/entities/score/model/state/score-store-provider";
 import { useConfiguration } from "~/shared/lib/configuration/configuration-provider";
+import { Note as NoteWithSticking } from "~/shared/lib/score/score";
 
 export interface NoteProps {
-  notesWithSticking: Note;
+  notesWithSticking: NoteWithSticking;
   noteCount?: string;
   className?: string;
   index: {

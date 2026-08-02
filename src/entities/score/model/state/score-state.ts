@@ -1,57 +1,36 @@
 import { Key } from "~/shared/lib/score/key-data";
-import { Bar, FullScore, Note, Part, Score, Sticking, Tempo } from "../types";
-import { MetronomeConfigurationProps } from "~/entities/score/model/state/defaults";
+import { Bar, Note, Part, Score, Tempo } from "~/shared/lib/score/score";
+import { Sticking } from "~/shared/lib/score/sticking";
 
 export interface ScoreContextValue {
   score: Score;
-  addStave: () => void;
+  addBar: () => void;
   toggleNote: (props: { barIndex: number; partIndex: number; noteIndex: number; key: Key }) => void;
-  removeStave: (staveIndex: number) => void;
+  removeBar: (barIndex: number) => void;
   setSticking: (props: {
     barIndex: number;
     partIndex: number;
     noteIndex: number;
     sticking: Sticking | null;
   }) => void;
-  loadScore: (score: FullScore & { id: number }) => void;
-  configuration: MetronomeConfigurationProps & { id?: number; name?: string };
-  onChangeConfiguration: (configuration: MetronomeConfigurationProps & { name?: string }) => void;
+  loadScore: (score: Score) => void;
   clear: () => void;
+  updateMetadata: (props: Partial<Pick<Score, "author" | "name" | "bpm">>) => void;
 }
 
-export function createBar(notes: number): Bar {
-  let tempo: Tempo | undefined;
-  switch (notes) {
-    case 4:
-      tempo = "quarter";
-      break;
-    case 8:
-      tempo = "eights";
-      break;
-    case 3:
-      tempo = "triplet";
-      break;
-    case 16:
-      tempo = "sixteens";
-      break;
-  }
-
-  if (!tempo) {
-    throw new Error("Could not translate value into tempo");
-  }
-
+export function createBar(tempo: Tempo): Bar {
   let notesPerPart: number;
-  switch (notes) {
-    case 4:
+  switch (tempo) {
+    case "quarter":
       notesPerPart = 1;
       break;
-    case 8:
+    case "eights":
       notesPerPart = 2;
       break;
-    case 3:
+    case "triplet":
       notesPerPart = 3;
       break;
-    case 16:
+    case "sixteens":
       notesPerPart = 4;
       break;
     default:

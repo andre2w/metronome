@@ -1,26 +1,7 @@
 import { StateCreator } from "zustand";
 import { ScoreContextValue } from "~/entities/score/model/state/score-state";
-import { Score } from "~/entities/score/model/types";
-
-export interface MetronomeCursor {
-  bar: number;
-  part: number;
-  note: number;
-}
-
-export interface MetronomeValues {
-  bpm: number;
-  graceTime: number;
-  started: boolean;
-  ticks: number;
-  cursor: {
-    bar: number;
-    part: number;
-    note: number;
-  };
-  toggle: () => void;
-  next: () => void;
-}
+import type { MetronomeValues, MetronomeCursor } from "~/shared/lib/metronome";
+import { Score } from "~/shared/lib/score/score";
 
 export const createMetronomeSlice: StateCreator<
   MetronomeValues & ScoreContextValue,
@@ -28,31 +9,46 @@ export const createMetronomeSlice: StateCreator<
   [],
   MetronomeValues
 > = (set) => ({
-  bpm: 60,
-  graceTime: 100,
-  ticks: 0,
-  cursor: {
-    bar: 0,
-    part: 0,
-    note: 0,
+  metronome: {
+    bpm: 60,
+    graceTime: 100,
+    ticks: 0,
+    cursor: {
+      bar: 0,
+      part: 0,
+      note: 0,
+    },
+    started: false,
   },
-  started: false,
   toggle: () =>
     set((state) => {
       return {
-        started: !state.started,
-        ticks: 0,
-        cursor: { bar: 0, part: 0, note: 0 },
+        metronome: {
+          ...state.metronome,
+          started: !state.metronome.started,
+          ticks: 0,
+          cursor: { bar: 0, part: 0, note: 0 },
+        },
       };
     }),
   next: () =>
     set((state) => {
-      if (!state.started) {
-        return state;
+      if (!state.metronome.started) {
+        return { metronome: state.metronome };
       }
       return {
-        ticks: state.ticks + 1,
-        cursor: moveCursorForward(state.score, state.cursor),
+        metronome: {
+          ...state.metronome,
+          ticks: state.metronome.ticks + 1,
+          cursor: moveCursorForward(state.score, state.metronome.cursor),
+        },
+      };
+    }),
+
+  setMetronomeConfig: (props) =>
+    set((state) => {
+      return {
+        metronome: { ...state.metronome, props },
       };
     }),
 });

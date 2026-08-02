@@ -16,9 +16,19 @@ import { KEYS } from "~/entities/score/model/notes";
 import { mappings } from "~/entities/midi-input/config/mappings/roland-td07";
 import { ReactNode, useState } from "react";
 import { TestableInputConfigurationProvider } from "./testable-input-configuration-provider";
-import { ScoreContext } from "~/entities/score/model/state/score-store-provider";
-import { createScoreStore } from "~/entities/score/model/state/store";
-import { createTestStorage } from "./test-store";
+import {
+  ScoreContext,
+  ScoreProviderProps,
+} from "~/entities/score/model/state/score-store-provider";
+import { StateStorage } from "zustand/middleware";
+import { MetronomeValues } from "../lib/metronome";
+import { ScoreContextValue } from "~/entities/score/model/state/score-state";
+import { persist } from "zustand/middleware";
+import { createStore } from "zustand/vanilla";
+import { immer } from "zustand/middleware/immer";
+import { createScoreSlice } from "~/entities/score/model/state/store";
+import { createMetronomeSlice } from "~/entities/metronome/model/store";
+import { createJSONStorage } from "zustand/middleware";
 
 type RendererableContainer = ReactDOMClient.Container;
 type HydrateableContainer = Parameters<(typeof ReactDOMClient)["hydrateRoot"]>[0];
@@ -45,7 +55,7 @@ export function renderHook<
   BaseElement extends RendererableContainer | HydrateableContainer = Container,
 >(
   render: (initialProps: Props) => Result,
-  options?: RenderHookOptions<Props, Q, Container, BaseElement>  ,
+  options?: RenderHookOptions<Props, Q, Container, BaseElement>,
 ): RenderHookResult<Result, Props> {
   const UserWrapper = options?.wrapper;
 
@@ -65,21 +75,26 @@ export function renderHook<
   });
 }
 
-function TestWrapper({ children }: { children: ReactNode }) {
+function TestScoreProvider({ children }: ScoreProviderProps) {
   const [scoreStore] = useState(() => {
-    return createScoreStore({
-      initialState: {
-        configuration: {
-          bpm: 100,
-          graceTime: 100,
-          signature: 4,
+    return createStore<ScoreContextValue & MetronomeValues>()(
+      persist(
+        immer((...args) => ({
+          ...createScoreSlice()(...args),
+          ...createMetronomeSlice(...args),
+        })),
+        {
+          name: "score",
+          storage: createJSONStorage(() => createStorage()),
         },
-        score: { type: "score", bars: [] },
-      },
-      storage: createTestStorage(),
-    });
+      ),
+    );
   });
 
+  return <ScoreContext.Provider value={scoreStore}>{children}</ScoreContext.Provider>;
+}
+
+function TestWrapper({ children }: { children: ReactNode }) {
   return (
     <Theme
       accentColor={"amber"}
@@ -91,10 +106,24 @@ function TestWrapper({ children }: { children: ReactNode }) {
     >
       <TestableInputConfigurationProvider>
         <ConfigurationContextProvider keyMap={KEYS} mappings={mappings}>
-          <ScoreContext.Provider value={scoreStore}>{children}</ScoreContext.Provider>
-          {children}
+          <TestScoreProvider>{children}</TestScoreProvider>
         </ConfigurationContextProvider>
       </TestableInputConfigurationProvider>
     </Theme>
   );
+}
+
+function createStorage(): StateStorage {
+  const storage = new Map<string, string>();
+  return {
+    getItem: (key) => {
+      return storage.get(key) ?? "";
+    },
+    removeItem: (key) => {
+      storage.delete(key);
+    },
+    setItem: (key, value) => {
+      storage.set(key, JSON.stringify(value));
+    },
+  };
 }

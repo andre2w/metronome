@@ -1,7 +1,6 @@
 import "./metronome.css";
 import { useRef, useState } from "react";
 import { calculateResult } from "../model/result-calculator";
-import type { Ticks } from "../../../entities/score/model/types";
 import { Result, type ResultProps } from "./result";
 import { Timer } from "./timer";
 import type { TicksHandle } from "./ticks";
@@ -20,18 +19,20 @@ export interface MetronomeProps {
 }
 
 export function Metronome({ className }: MetronomeProps) {
-  const { score, configuration } = useScoreStoreShallow(({ score, configuration }) => ({
+  const { score, bpm, graceTime } = useScoreStoreShallow(({ metronome, score }) => ({
     score,
-    configuration,
+    bpm: metronome.bpm,
+    graceTime: metronome.graceTime,
   }));
+
   const selectedRef = useRef<number>(-1);
   const vexflowScoreRef = useRef<VexflowScoreHandle>(null);
-  const ticksRef = useRef<Ticks>([]);
+  const ticksRef = useRef<number[]>([]);
   const [result, setResult] = useState<ResultProps | undefined>(undefined);
   const tickSymbolsRef = useRef<TicksHandle | null>(null);
   const { playNextTick: playNextAudioTick, reset: resetAudioTicks } = useAudioTicks({
-    notes: configuration.signature,
-    bpm: configuration.bpm,
+    notes: 4,
+    bpm: bpm,
   });
   const { getPlayedNotes, resetPlayedNotes } = useInputListener();
 
@@ -51,7 +52,7 @@ export function Metronome({ className }: MetronomeProps) {
           ticks: ticksRef.current,
           notesPlayed: getPlayedNotes(),
           score,
-          graceTime: configuration.graceTime,
+          graceTime,
         }),
       );
     } else {

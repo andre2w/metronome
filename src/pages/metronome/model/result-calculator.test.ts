@@ -1,7 +1,7 @@
 import { NotePlayed } from "~/shared/lib/score/note-played";
-import type { Score } from "../../../entities/score/model/types";
 import { calculateResult, type CalculateResultProps } from "./result-calculator";
 import { describe, test, expect } from "vitest";
+import { Score } from "~/shared/lib/score/score";
 
 describe("calculateResult", () => {
   test("calculate results for simple score with a single part being played", () => {
@@ -16,7 +16,7 @@ describe("calculateResult", () => {
       { timestamp: 40, note: { note: "SNARE" } },
       { timestamp: 50, note: { note: "SNARE" } },
     ];
-    const score: Score = {
+    const score: Pick<Score, "type" | "bars"> = {
       type: "score",
       bars: [
         {
@@ -92,7 +92,7 @@ describe("calculateResult", () => {
       { timestamp: 40, note: { note: "SNARE" } },
       { timestamp: 50, note: { note: "SNARE" } },
     ];
-    const score: Score = {
+    const score: Pick<Score, "type" | "bars"> = {
       type: "score",
       bars: [
         {
@@ -183,7 +183,7 @@ describe("calculateResult", () => {
       { timestamp: 40, note: { note: "SNARE" } },
       { timestamp: 50, note: { note: "SNARE" } },
     ];
-    const score: Score = {
+    const score: Pick<Score, "type" | "bars"> = {
       type: "score",
       bars: [
         {
@@ -276,7 +276,7 @@ describe("calculateResult", () => {
       { timestamp: 40, note: { note: "SNARE" } },
       { timestamp: 50, note: { note: "SNARE" } },
     ];
-    const score: Score = {
+    const score: Pick<Score, "type" | "bars"> = {
       type: "score",
       bars: [
         {
@@ -368,7 +368,7 @@ describe("calculateResult", () => {
       { timestamp: 70, note: { note: "SNARE" } },
       { timestamp: 80, note: { note: "SNARE" } },
     ];
-    const score: Score = {
+    const score: Pick<Score, "type" | "bars"> = {
       type: "score",
       bars: [
         {
@@ -460,7 +460,7 @@ describe("calculateResult", () => {
       { timestamp: 70, note: { note: "SNARE" } },
       { timestamp: 80, note: { note: "SNARE" } },
     ];
-    const score: Score = {
+    const score: Pick<Score, "type" | "bars"> = {
       type: "score",
       bars: [
         {
@@ -519,7 +519,7 @@ describe("calculateResult", () => {
       { timestamp: 70, note: { note: "SNARE" } },
       { timestamp: 80, note: { note: "SNARE" } },
     ];
-    const score: Score = {
+    const score: Pick<Score, "type" | "bars"> = {
       type: "score",
       bars: [
         {
@@ -642,7 +642,7 @@ describe("calculateResult", () => {
       { timestamp: 106, note: { note: "SNARE" } },
       { timestamp: 107, note: { note: "SNARE" } },
     ];
-    const score: Score = {
+    const score: Pick<Score, "type" | "bars"> = {
       type: "score",
       bars: [
         {
@@ -707,7 +707,7 @@ describe("calculateResult", () => {
   test("when no notes were played", () => {
     const ticks = [10, 15, 20, 25, 30, 35, 40, 50];
     const notesPlayed: NotePlayed[] = [];
-    const score: Score = {
+    const score: Pick<Score, "type" | "bars"> = {
       type: "score",
       bars: [
         {
@@ -772,7 +772,7 @@ describe("calculateResult", () => {
   test("when there is no score", () => {
     const ticks = [10, 15, 20, 25, 30, 35, 40, 50];
     const notesPlayed: NotePlayed[] = [];
-    const score: Score = { type: "score", bars: [] };
+    const score: Pick<Score, "type" | "bars"> = { type: "score", bars: [] };
 
     expect(calculateResult({ ticks, notesPlayed, score, graceTime: 0 })).toEqual({
       missed: 0,
@@ -863,7 +863,6 @@ describe("calculateResult", () => {
         },
       ],
       score: {
-        type: "score",
         bars: [
           {
             type: "bar",

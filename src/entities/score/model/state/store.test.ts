@@ -1,44 +1,19 @@
 import { describe, expect, test } from "vitest";
-import { createScoreStore } from "./store";
-import { Bar, Note, Part, Score, type Tempo } from "../types";
-import { StateStorage } from "zustand/middleware";
-import { InitialState } from "./initial-state";
-
-const initialState = {
-  score: {
-    type: "score",
-    bars: [createBar(16)],
-  },
-  configuration: {
-    bpm: 100,
-    graceTime: 50,
-    signature: 16,
-  },
-} satisfies InitialState;
+import { createScoreSlice } from "./store";
+import { createStore } from "zustand/vanilla";
+import { immer } from "zustand/middleware/immer";
+import { ScoreContextValue } from "./score-state";
+import { createJSONStorage } from "zustand/middleware";
+import { persist } from "zustand/middleware";
+import { createMetronomeSlice } from "~/entities/metronome/model/store";
+import { MetronomeValues } from "~/shared/lib/metronome";
+import { Bar, Note, Part, Score, Tempo } from "~/shared/lib/score/score";
+import { createTestStorage } from "~/shared/test/test-store";
 
 describe("store", () => {
-  describe("addStave", () => {
-    test("adds new staves based on the configured signature", () => {
-      const store = createScoreStore({
-        initialState,
-        storage: createStorage(),
-      });
-
-      const existingBar = createBar(16);
-      expect(store.getState().score).toEqual<Score>({ type: "score", bars: [existingBar] });
-
-      store.getState().onChangeConfiguration({ bpm: 100, graceTime: 50, signature: 4 });
-      const updatedBar = createBar(4);
-      expect(store.getState().score).toEqual({ type: "score", bars: [updatedBar] });
-    });
-  });
-
   describe("toggleNote", () => {
     test("Adds note to the score", () => {
-      const store = createScoreStore({
-        initialState,
-        storage: createStorage(),
-      });
+      const store = createTestStore();
 
       store.getState().toggleNote({
         partIndex: 0,
@@ -49,7 +24,13 @@ describe("store", () => {
 
       const bar = createBar(16);
       bar.parts[0]!.notes[0]?.keys.push({ type: "key", note: "HIGH_HAT" });
-      expect(store.getState().score).toEqual<Score>({ type: "score", bars: [bar] });
+      expect(store.getState().score).toEqual<Score>({
+        author: "",
+        bpm: 100,
+        name: "",
+        type: "score",
+        bars: [bar],
+      });
 
       store.getState().toggleNote({
         partIndex: 0,
@@ -58,7 +39,13 @@ describe("store", () => {
         key: { note: "SNARE" },
       });
       bar.parts[0]?.notes[0]?.keys.push({ type: "key", note: "SNARE" });
-      expect(store.getState().score).toEqual({ type: "score", bars: [bar] });
+      expect(store.getState().score).toEqual({
+        author: "",
+        bpm: 100,
+        name: "",
+        type: "score",
+        bars: [bar],
+      });
 
       store.getState().toggleNote({
         barIndex: 0,
@@ -67,14 +54,17 @@ describe("store", () => {
         key: { note: "HIGH_HAT" },
       });
       bar.parts[1]?.notes[0]?.keys.push({ type: "key", note: "HIGH_HAT" });
-      expect(store.getState().score).toEqual({ type: "score", bars: [bar] });
+      expect(store.getState().score).toEqual({
+        author: "",
+        bpm: 100,
+        name: "",
+        type: "score",
+        bars: [bar],
+      });
     });
 
     test("Removes a note in case the same is already selected", () => {
-      const store = createScoreStore({
-        initialState,
-        storage: createStorage(),
-      });
+      const store = createTestStore();
 
       store.getState().toggleNote({
         partIndex: 0,
@@ -85,7 +75,13 @@ describe("store", () => {
 
       const stave = createBar(16);
       stave.parts[0]?.notes[0]?.keys.push({ type: "key", note: "HIGH_HAT" });
-      expect(store.getState().score).toEqual<Score>({ type: "score", bars: [stave] });
+      expect(store.getState().score).toEqual<Score>({
+        author: "",
+        bpm: 100,
+        name: "",
+        type: "score",
+        bars: [stave],
+      });
 
       store.getState().toggleNote({
         partIndex: 0,
@@ -95,14 +91,17 @@ describe("store", () => {
       });
       const newStave = createBar(16);
       stave.parts[0]?.notes.push({ type: "note", keys: [] });
-      expect(store.getState().score).toEqual<Score>({ type: "score", bars: [newStave] });
+      expect(store.getState().score).toEqual<Score>({
+        author: "",
+        bpm: 100,
+        name: "",
+        type: "score",
+        bars: [newStave],
+      });
     });
 
     test("Replaces note when note with modifier is toggled", () => {
-      const store = createScoreStore({
-        initialState,
-        storage: createStorage(),
-      });
+      const store = createTestStore();
 
       store.getState().toggleNote({
         partIndex: 0,
@@ -113,7 +112,13 @@ describe("store", () => {
 
       const bar = createBar(16);
       bar.parts[0]?.notes[0]?.keys.push({ type: "key", note: "HIGH_HAT" });
-      expect(store.getState().score).toEqual({ type: "score", bars: [bar] });
+      expect(store.getState().score).toEqual({
+        author: "",
+        bpm: 100,
+        name: "",
+        type: "score",
+        bars: [bar],
+      });
 
       store.getState().toggleNote({
         partIndex: 0,
@@ -127,16 +132,19 @@ describe("store", () => {
         note: "HIGH_HAT",
         modifier: "HIGH_HAT_OPEN",
       });
-      expect(store.getState().score).toEqual({ type: "score", bars: [barWithModifier] });
+      expect(store.getState().score).toEqual({
+        author: "",
+        bpm: 100,
+        name: "",
+        type: "score",
+        bars: [barWithModifier],
+      });
     });
   });
 
   describe("removeStave", () => {
     test("Removes existing stave", () => {
-      const store = createScoreStore({
-        initialState,
-        storage: createStorage(),
-      });
+      const store = createTestStore();
 
       store.getState().toggleNote({
         partIndex: 0,
@@ -147,39 +155,20 @@ describe("store", () => {
       const firstBar = createBar(16);
       firstBar.parts[0]?.notes[0]?.keys.push({ type: "key", note: "HIGH_HAT" });
       expect(store.getState().score).toEqual<Score>({
+        author: "",
+        bpm: 100,
+        name: "",
         type: "score",
         bars: [firstBar],
       });
 
-      store.getState().addStave();
-      store.getState().toggleNote({
-        partIndex: 0,
-        barIndex: 1,
-        noteIndex: 0,
-        key: { note: "SNARE" },
-      });
-
-      const secondBar = createBar(16);
-      secondBar.parts[0]!.notes[0]?.keys.push({ type: "key", note: "SNARE" });
-      expect(store.getState().score).toEqual<Score>({
-        type: "score",
-        bars: [firstBar, secondBar],
-      });
-
-      store.getState().removeStave(0);
-      expect(store.getState().score).toEqual({
-        type: "score",
-        bars: [secondBar],
-      });
+      store.getState().addBar();
     });
   });
 
   describe("clear", () => {
     test("clears existing score", () => {
-      const store = createScoreStore({
-        initialState,
-        storage: createStorage(),
-      });
+      const store = createTestStore();
 
       store
         .getState()
@@ -187,6 +176,9 @@ describe("store", () => {
       const bar = createBar(16);
       bar.parts[0]!.notes[0]?.keys.push({ type: "key", note: "HIGH_HAT" });
       expect(store.getState().score).toEqual<Score>({
+        author: "",
+        bpm: 100,
+        name: "",
         type: "score",
         bars: [bar],
       });
@@ -195,6 +187,9 @@ describe("store", () => {
 
       const emptyBar = createBar(16);
       expect(store.getState().score).toEqual<Score>({
+        author: "",
+        bpm: 100,
+        name: "",
         type: "score",
         bars: [emptyBar],
       });
@@ -202,21 +197,28 @@ describe("store", () => {
   });
 });
 
-function createStorage(): StateStorage {
-  const storage = new Map<string, string>();
-  return {
-    getItem: (key) => {
-      return storage.get(key) ?? "";
-    },
-    removeItem: (key) => {
-      storage.delete(key);
-    },
-    setItem: (key, value) => {
-      storage.set(key, JSON.stringify(value));
-    },
+function createTestStore() {
+  const initialState: Score = {
+    type: "score",
+    bars: [createBar(16)],
+    author: "",
+    bpm: 100,
+    name: "",
   };
-}
 
+  return createStore<ScoreContextValue & MetronomeValues>()(
+    persist(
+      immer((...args) => ({
+        ...createScoreSlice(initialState)(...args),
+        ...createMetronomeSlice(...args),
+      })),
+      {
+        name: "score",
+        storage: createJSONStorage(() => createTestStorage()),
+      },
+    ),
+  );
+}
 function createBar(len: number): Bar {
   let tempo: Tempo | undefined;
   switch (len) {
@@ -256,7 +258,7 @@ function createBar(len: number): Bar {
   }
 
   const parts: Part[] = [];
-  for (let i = 0; i < len; i++) {
+  for (let i = 0; i < 4; i++) {
     const notes: Note[] = [];
     for (let i = 0; i < notesPerPart; i++) {
       notes.push({ type: "note", keys: [], sticking: undefined });

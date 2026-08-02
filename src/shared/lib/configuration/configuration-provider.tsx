@@ -7,6 +7,7 @@ export class Configuration {
     private readonly keyMap: Record<string, KeyData>,
     private readonly mappings: MidiInputMappings,
   ) {}
+
   /**
    * List all the keys that are available for rendering
    */
