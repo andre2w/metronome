@@ -20,8 +20,8 @@ export function useScoreInterval({ onTick }: UseScoreIntervalProps) {
   const timeout = useRef<number | undefined>(undefined);
   const scoreIndex = useRef(0);
 
-  const ticker = useCallback(async () => {
-    await onTick?.();
+  const ticker = useCallback(() => {
+    void onTick?.();
     const note = flatScore[scoreIndex.current];
     if (!note) {
       throw new Error("Missing note");
@@ -47,7 +47,7 @@ export function useScoreInterval({ onTick }: UseScoreIntervalProps) {
     }
 
     timeout.current = setTimeout(() => {
-      void ticker();
+      ticker();
     }, beatTime);
   }, [onTick, flatScore, bpm]);
 
@@ -59,7 +59,7 @@ export function useScoreInterval({ onTick }: UseScoreIntervalProps) {
         clearTimeout(timeout.current);
       }
     } else {
-      void ticker();
+      ticker();
     }
   }, [isToggled, ticker]);
 
