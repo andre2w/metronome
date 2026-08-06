@@ -14,14 +14,14 @@ export const createScoreSlice: (initialScore?: Score) => ScoreSlice = (initialSc
   return (set) => ({
     score: {
       author: initialScore?.author ?? "",
-      bars: initialScore?.bars ?? [createBar("quarter")],
+      bars: initialScore?.bars ?? [createBar("sixteens")],
       name: initialScore?.name ?? "",
       type: "score",
       bpm: initialScore?.bpm ?? 100,
     },
     addBar: () =>
       set((state) => {
-        const previousTempo = state.score.bars.at(-1)?.parts.at(-1)?.tempo ?? "quarter";
+        const previousTempo = state.score.bars.at(-1)?.parts.at(-1)?.tempo ?? "sixteens";
         state.score.bars.push(createBar(previousTempo));
       }),
 
@@ -57,7 +57,7 @@ export const createScoreSlice: (initialScore?: Score) => ScoreSlice = (initialSc
     removeBar: (barIndex) =>
       set((state) => {
         state.score.bars.splice(barIndex, 1);
-        const previousTempo = state.score.bars.at(-1)?.parts.at(-1)?.tempo ?? "quarter";
+        const previousTempo = state.score.bars.at(-1)?.parts.at(-1)?.tempo ?? "sixteens";
         if (state.score.bars.length === 0) {
           state.score.bars.push(createBar(previousTempo));
         }
@@ -80,7 +80,7 @@ export const createScoreSlice: (initialScore?: Score) => ScoreSlice = (initialSc
 
     clear: () =>
       set((state) => {
-        const previousTempo = state.score.bars.at(-1)?.parts.at(-1)?.tempo ?? "quarter";
+        const previousTempo = state.score.bars.at(-1)?.parts.at(-1)?.tempo ?? "sixteens";
         const cleanBar = createBar(previousTempo);
         state.score = {
           bars: [cleanBar],

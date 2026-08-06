@@ -1,6 +1,7 @@
 import { StateCreator } from "zustand";
 import { ScoreContextValue } from "~/entities/score/model/state/score-state";
 import type { MetronomeValues, MetronomeCursor } from "~/shared/lib/metronome";
+import { calculateBeatTime } from "~/shared/lib/metronome/beat-time";
 import { Score } from "~/shared/lib/score/score";
 
 export const createMetronomeSlice: StateCreator<
@@ -8,7 +9,7 @@ export const createMetronomeSlice: StateCreator<
   [],
   [],
   MetronomeValues
-> = (set) => ({
+> = (set, get) => ({
   metronome: {
     bpm: 60,
     graceTime: 100,
@@ -45,12 +46,17 @@ export const createMetronomeSlice: StateCreator<
       };
     }),
 
-  setMetronomeConfig: (props) =>
+  setMetronomeConfig: (props) => {
+    const bpm = props.bpm ?? get().metronome.bpm;
+    const graceTime = props.graceTime ?? get().metronome.graceTime;
+    const beatTime = calculateBeatTime(bpm, 4);
+
     set((state) => {
       return {
-        metronome: { ...state.metronome, props },
+        metronome: { ...state.metronome, bpm, graceTime: Math.min(graceTime, beatTime) },
       };
-    }),
+    });
+  },
 });
 
 function moveCursorForward(score: Score, cursor: MetronomeCursor): MetronomeCursor {
