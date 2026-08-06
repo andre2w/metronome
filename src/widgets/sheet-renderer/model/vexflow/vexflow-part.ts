@@ -15,7 +15,7 @@ export class VexflowPart {
       if (note.keys.length > 0) {
         this.reducedNotes.push({
           duration: part.tempo,
-          notes: note.keys,
+          notes: note.keys.map((k) => ({ note: k.note, modifier: k.modifier })),
           sticking: note.sticking,
           withDot: false,
           type: "note",
@@ -35,11 +35,12 @@ export class VexflowPart {
 
       const playableNote = this.getLastPlayableNote();
 
+      this.reducedNotes.push({
+        type: "rest",
+        duration: part.tempo,
+      });
+
       if (!playableNote) {
-        this.reducedNotes.push({
-          type: "rest",
-          duration: part.tempo,
-        });
         continue;
       }
 
