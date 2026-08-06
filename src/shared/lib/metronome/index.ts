@@ -11,7 +11,7 @@ export interface MetronomeValues {
     ticks: number;
     cursor: MetronomeCursor;
   };
-  setMetronomeConfig: (props: Partial<MetronomeConfiguration>) => void;
+  setMetronomeConfig: (props: Partial<Omit<MetronomeConfiguration, "started">>) => void;
   toggle: () => void;
   next: () => void;
 }

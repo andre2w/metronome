@@ -3,12 +3,10 @@ import { useRef, useState } from "react";
 import { calculateResult } from "../model/result-calculator";
 import { Result, type ResultProps } from "./result";
 import { Timer } from "./timer";
-import type { TicksHandle } from "./ticks";
 import { useAudioTicks } from "./use-audio-tick";
 import { useInputListener } from "../../../entities/midi-input/ui/use-input-listener";
 import { start } from "tone";
 import { SheetRenderer } from "~/widgets/sheet-renderer";
-import { VexflowScoreHandle } from "~/widgets/sheet-renderer/ui/sheet-renderer";
 import { SheetControls } from "~/widgets/sheet-controls";
 import { useScoreStoreShallow } from "~/entities/score/model/state/score-store-provider";
 import { MetronomeConfiguration } from "./metronome-configuration";
@@ -25,11 +23,8 @@ export function Metronome({ className }: MetronomeProps) {
     graceTime: metronome.graceTime,
   }));
 
-  const selectedRef = useRef<number>(-1);
-  const vexflowScoreRef = useRef<VexflowScoreHandle>(null);
   const ticksRef = useRef<number[]>([]);
   const [result, setResult] = useState<ResultProps | undefined>(undefined);
-  const tickSymbolsRef = useRef<TicksHandle | null>(null);
   const { playNextTick: playNextAudioTick, reset: resetAudioTicks } = useAudioTicks({
     notes: 4,
     bpm: bpm,
@@ -38,9 +33,7 @@ export function Metronome({ className }: MetronomeProps) {
 
   const tick = async () => {
     await playNextAudioTick();
-    tickSymbolsRef.current?.next();
     ticksRef.current.push(performance.now());
-    vexflowScoreRef.current?.next();
   };
   const { isToggled, toggle: startStop } = useScoreInterval({ onTick: tick });
 
@@ -58,10 +51,7 @@ export function Metronome({ className }: MetronomeProps) {
     } else {
       resetPlayedNotes();
       ticksRef.current = [];
-      selectedRef.current = -1;
-      tickSymbolsRef.current?.clear();
       resetAudioTicks();
-      vexflowScoreRef.current?.reset();
       setResult(undefined);
     }
     startStop();
@@ -87,7 +77,7 @@ export function Metronome({ className }: MetronomeProps) {
               >
                 {isToggled ? "Stop" : "Start"}
               </button>
-              <Timer started={isToggled} />
+              <Timer />
             </div>
           </div>
 
@@ -97,7 +87,7 @@ export function Metronome({ className }: MetronomeProps) {
           </div>
         </div>
       </section>
-      <SheetRenderer ref={vexflowScoreRef} />
+      <SheetRenderer />
       <SheetControls />
     </>
   );

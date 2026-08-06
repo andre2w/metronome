@@ -1,26 +1,19 @@
 import { TextField } from "@radix-ui/themes";
-import { calculateBeatTime } from "../../../shared/lib/metronome/beat-time";
 import { useScoreStore } from "../../../entities/score/model/state/score-store-provider";
-import { useShallow } from "zustand/react/shallow";
 import "./metronome-configuration.css";
-import { useEffect } from "react";
 
 export function MetronomeConfiguration() {
-  const { metronome, setMetronomeConfig, score, updateMetadata } = useScoreStore(
-    useShallow(({ metronome, setMetronomeConfig, score, updateMetadata }) => ({
-      metronome,
-      setMetronomeConfig,
-      score,
-      updateMetadata,
-    })),
-  );
+  const metronome = useScoreStore((state) => state.metronome);
+  const setMetronomeConfig = useScoreStore((state) => state.setMetronomeConfig);
+  const score = useScoreStore((state) => state.score);
+  const updateMetadata = useScoreStore((state) => state.updateMetadata);
 
-  useEffect(() => {
-    const maxGraceTime = calculateBeatTime(metronome.bpm, 16) - 2;
-    if (metronome.graceTime > maxGraceTime) {
-      setMetronomeConfig({ graceTime: maxGraceTime });
-    }
-  }, [metronome]);
+  // useEffect(() => {
+  //   const maxGraceTime = calculateBeatTime(metronome.bpm, 16) - 2;
+  //   if (metronome.graceTime > maxGraceTime) {
+  //     setMetronomeConfig({ graceTime: maxGraceTime });
+  //   }
+  // }, [metronome]);
 
   return (
     <div className="metronome-config">
@@ -60,11 +53,12 @@ export function MetronomeConfiguration() {
           size="1"
           type="number"
           value={metronome.bpm}
-          onChange={(e) =>
+          onChange={(e) => {
+            console.log("Update Metronome", e.target.value);
             setMetronomeConfig({
               bpm: Number(e.target.value),
-            })
-          }
+            });
+          }}
           step={1}
         />
       </label>

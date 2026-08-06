@@ -51,7 +51,7 @@ export function drawScore({
     context.strokeStyle = "white";
   }
 
-  const drawnNotes: { x: number; y: number; width: number; height: number }[] = [];
+  const drawnNotes: { x: number; y: number; width: number; height: number }[][][] = [];
   for (let i = 0; i < score.bars.length; i++) {
     const position = positions[i];
     if (!position) {
@@ -101,34 +101,29 @@ export function drawScore({
       beam.setContext(context).drawWithStyle();
     }
 
-    drawnNotes.push(
-      ...notes.flat().map((note) => {
+    drawnNotes.push([]);
+    for (let partIndex = 0; partIndex < notes.length; partIndex++) {
+      drawnNotes[i]?.push([]);
+      const noteGroup = notes.at(partIndex);
+      if (!noteGroup) {
+        throw new Error("This is wrong");
+      }
+      for (let noteIndex = 0; noteIndex < noteGroup.length; noteIndex++) {
+        const note = notes[partIndex]?.[noteIndex];
+        if (!note) {
+          throw new Error("This is wrong");
+        }
         const cursorNote = note.note;
         const modifierShift = cursorNote.getModifierContext()?.getLeftShift() ?? 0;
-        return {
+        drawnNotes[i]?.[partIndex]?.push({
           x: cursorNote.getAbsoluteX() + -modifierShift,
           y: stave.getY(),
           width: Math.max(cursorNote.getWidth(), 15) + modifierShift,
           height: stave.getHeight(),
-        };
-      }),
-    );
+        });
+      }
+    }
   }
-  // if (cursorNote) {
-  //   const modifierShift = cursorNote.note.getModifierContext()?.getLeftShift() ?? 0;
-
-  //   const originalFillStyle: (typeof context)["fillStyle"] = context.fillStyle;
-  //   context.fillStyle = accent ?? "rgba(88, 176, 51, 0.5)";
-
-  //   drawnNotes.push({
-  //     x: cursorNote.note.getAbsoluteX() + -modifierShift,
-  //     y: stave.getY(),
-  //     width: Math.max(cursorNote.note.getWidth(), 15) + modifierShift,
-  //     height: stave.getHeight(),
-  //   });
-
-  //   context.fillStyle = originalFillStyle;
-  // }
 
   return drawnNotes;
 }

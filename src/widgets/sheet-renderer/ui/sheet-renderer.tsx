@@ -1,28 +1,18 @@
 import { useThemeContext } from "@radix-ui/themes";
-import {
-  forwardRef,
-  RefObject,
-  useEffect,
-  useImperativeHandle,
-  useLayoutEffect,
-  useRef,
-} from "react";
+import { RefObject, useCallback, useEffect, useLayoutEffect, useRef } from "react";
 import { useResizeObserver } from "usehooks-ts";
 import { Renderer } from "vexflow";
 import { getRgbaColorString } from "../model/vexflow/color";
 import { drawScore } from "../model";
-import { useScoreStore } from "~/entities/score/model/state/score-store-provider";
+import {
+  useScoreStore,
+  useScoreStoreSubscription,
+} from "~/entities/score/model/state/score-store-provider";
 import { useConfiguration } from "~/shared/lib/configuration/configuration-provider";
-import { Note } from "~/shared/lib/score/score";
+import { isCursorEquals, MetronomeCursor } from "~/shared/lib/metronome/cursor";
+import { VexflowWrapper } from "../model/vexflow/vexflow-wrapper";
 
-export type VexflowScoreProps = {};
-
-export interface VexflowScoreHandle {
-  next: () => void;
-  reset: () => void;
-}
-
-export const SheetRenderer = forwardRef<VexflowScoreHandle, VexflowScoreProps>((_, ref) => {
+export function SheetRenderer() {
   const score = useScoreStore((state) => state.score);
   const scoreRef = useRef<HTMLCanvasElement>(null);
   const boxRef = useRef<HTMLDivElement>(null);
@@ -30,13 +20,66 @@ export const SheetRenderer = forwardRef<VexflowScoreHandle, VexflowScoreProps>((
   const scoreSize = useResizeObserver({
     ref: boxRef as RefObject<HTMLDivElement>,
   });
-  const scoreIndexRef = useRef(0);
-  const flatScore = score.bars.flatMap((n) => n.parts.flatMap((part) => part.notes));
   const colorRef = useRef<string | undefined>(undefined);
   const { accentColor, appearance } = useThemeContext();
   const configuration = useConfiguration();
   const cursorCanvasRef = useRef<HTMLCanvasElement>(null);
-  const zippedNotes = useRef<{ play: Note; drawn?: ReturnType<typeof drawScore>[number] }[]>([]);
+  const drawnNotesRef = useRef<ReturnType<typeof drawScore>>([]);
+
+  const next = useCallback(
+    (cursor: MetronomeCursor) => {
+      if (!scoreRef.current) {
+        return;
+      }
+
+      if (!rendererRef.current) {
+        rendererRef.current = new Renderer(scoreRef.current, Renderer.Backends.CANVAS);
+      }
+
+      const drawnNote = drawnNotesRef.current.at(cursor.bar)?.at(cursor.part)?.at(cursor.note);
+      if (!drawnNote) {
+        throw new Error("Could not find note for cursor");
+      }
+
+      const canvas = cursorCanvasRef.current?.getContext("2d");
+
+      if (!canvas) {
+        throw new Error("Could not get canvas");
+      }
+
+      canvas.clearRect(
+        0,
+        0,
+        cursorCanvasRef.current?.width ?? 0,
+        cursorCanvasRef.current?.height ?? 0,
+      );
+
+      const noteToPlay = score.bars.at(cursor.bar)?.parts.at(cursor.part)?.notes.at(cursor.note);
+      if (!noteToPlay) {
+        throw new Error("Could no find note for cursor");
+      }
+
+      if (noteToPlay.keys.length === 0) {
+        return;
+      }
+
+      if (drawnNote) {
+        canvas.fillStyle = colorRef.current ?? "rgba(88, 176, 51, 0.5)";
+        canvas.fillRect(drawnNote.x, drawnNote.y, drawnNote.width, drawnNote.height);
+      }
+    },
+    [score],
+  );
+
+  useScoreStoreSubscription((state, oldState) => {
+    console.log({ state, oldState });
+    if (isCursorEquals(state.metronome.cursor, oldState.metronome.cursor)) {
+      return;
+    }
+
+    next(state.metronome.cursor);
+  });
+
   useEffect(() => {
     if (boxRef.current) {
       colorRef.current = getRgbaColorString(boxRef.current);
@@ -46,49 +89,6 @@ export const SheetRenderer = forwardRef<VexflowScoreHandle, VexflowScoreProps>((
   const canvasSize = useResizeObserver({
     ref: scoreRef as RefObject<HTMLCanvasElement>,
   });
-
-  useImperativeHandle(ref, () => ({
-    next: () => {
-      if (!scoreRef.current) {
-        return;
-      }
-
-      if (!rendererRef.current) {
-        rendererRef.current = new Renderer(scoreRef.current, Renderer.Backends.CANVAS);
-      }
-
-      if (scoreIndexRef.current >= flatScore.length) {
-        scoreIndexRef.current = 0;
-      }
-
-      const zippedNote = zippedNotes.current.at(scoreIndexRef.current);
-      if (!zippedNote) {
-        throw new Error("Missing note");
-      }
-      const { drawn } = zippedNote;
-      const canvas = cursorCanvasRef.current?.getContext("2d");
-
-      if (!canvas) {
-        throw new Error("Could not get canvas");
-      }
-      canvas.clearRect(
-        0,
-        0,
-        cursorCanvasRef.current?.width ?? 0,
-        cursorCanvasRef.current?.height ?? 0,
-      );
-
-      if (drawn) {
-        canvas.fillStyle = colorRef.current ?? "rgba(88, 176, 51, 0.5)";
-
-        canvas.fillRect(drawn.x, drawn.y, drawn.width, drawn.height);
-      }
-      scoreIndexRef.current++;
-    },
-    reset: () => {
-      scoreIndexRef.current = 0;
-    },
-  }));
 
   useEffect(() => {
     if (!scoreRef.current) {
@@ -113,6 +113,12 @@ export const SheetRenderer = forwardRef<VexflowScoreHandle, VexflowScoreProps>((
     if (!renderer) {
       throw new Error("Renderer not set");
     }
+
+    const wrapper = new VexflowWrapper(
+      configuration,
+      appearance === "inherit" ? "light" : appearance,
+    );
+    console.log(wrapper.draw({ renderer, score, sheetWidth }));
     const drawnNotes = drawScore({
       renderer,
       score,
@@ -124,19 +130,8 @@ export const SheetRenderer = forwardRef<VexflowScoreHandle, VexflowScoreProps>((
       },
       configuration,
     });
-    const zipped: { play: Note; drawn?: ReturnType<typeof drawScore>[number] }[] = [];
-    for (const note of flatScore) {
-      if (note.keys.length > 0) {
-        const drawn = drawnNotes.shift();
-        if (!drawn) {
-          throw new Error("Failed to get drawn note");
-        }
-        zipped.push({ drawn, play: note });
-      } else {
-        zipped.push({ play: note });
-      }
-    }
-    zippedNotes.current = zipped;
+
+    drawnNotesRef.current = drawnNotes;
   }, [score, scoreSize.width, appearance, accentColor]);
 
   useLayoutEffect(() => {
@@ -160,4 +155,4 @@ export const SheetRenderer = forwardRef<VexflowScoreHandle, VexflowScoreProps>((
       <canvas ref={cursorCanvasRef} style={{ position: "absolute" }} />
     </div>
   );
-});
+}

@@ -1,4 +1,4 @@
-import { createContext, ReactNode, useContext, useState } from "react";
+import { createContext, ReactNode, useContext, useEffect, useState } from "react";
 import { createScoreSlice } from "./store";
 import { getInitialStateFromHash } from "./initial-state";
 import { useStore } from "zustand/react";
@@ -12,9 +12,9 @@ import { createJSONStorage } from "zustand/middleware";
 import { createMetronomeSlice } from "~/entities/metronome/model/store";
 import { MetronomeValues } from "~/shared/lib/metronome";
 
-export const ScoreContext = createContext<
-  StoreApi<ScoreContextValue & MetronomeValues> | undefined
->(undefined);
+export type StoreContent = ScoreContextValue & MetronomeValues;
+
+export const ScoreContext = createContext<StoreApi<StoreContent> | undefined>(undefined);
 
 export interface ScoreProviderProps {
   children: ReactNode;
@@ -22,7 +22,7 @@ export interface ScoreProviderProps {
 
 export function ScoreProvider({ children }: ScoreProviderProps) {
   const [scoreStore] = useState(() => {
-    return createStore<ScoreContextValue & MetronomeValues>()(
+    return createStore<StoreContent>()(
       persist(
         immer((...args) => ({
           ...createScoreSlice(getInitialStateFromHash())(...args),
@@ -55,4 +55,28 @@ export function useScoreStoreShallow<U>(
     throw new Error("ScoreContext is not set");
   }
   return useStore(score, useShallow(selector));
+}
+
+export function useScoreStoreSubscription(
+  listener: (state: StoreContent, oldState: StoreContent) => void,
+) {
+  const score = useContext(ScoreContext);
+  if (!score) {
+    throw new Error("ScoreContext is not set");
+  }
+
+  useEffect(() => {
+    const unsubscribe = score.subscribe(listener);
+
+    return unsubscribe;
+  }, [listener]);
+}
+
+export function useScoreContext() {
+  const score = useContext(ScoreContext);
+  if (!score) {
+    throw new Error("ScoreContext is not set");
+  }
+
+  return score;
 }

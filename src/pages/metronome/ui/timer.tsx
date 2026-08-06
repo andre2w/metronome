@@ -1,11 +1,9 @@
 import { useState } from "react";
 import { useInterval } from "usehooks-ts";
+import { useScoreStore } from "~/entities/score/model/state/score-store-provider";
 
-export interface TimerProps {
-  started: boolean;
-}
-
-export function Timer({ started }: TimerProps) {
+export function Timer() {
+  const started = useScoreStore((state) => state.metronome.started);
   const [elapsed, setElapsed] = useState(0);
   if (!started && elapsed !== 0) {
     setElapsed(0);

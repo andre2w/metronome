@@ -13,6 +13,11 @@ interface ReducedStaveNote {
   hasCursor?: boolean;
 }
 
+export interface ParsedNote {
+  note: StemmableNote;
+  shouldDraw: boolean;
+}
+
 /**
  * Duration 'q` for a quarter note
  */
@@ -28,7 +33,7 @@ export function parse({
   cursorIndex: number;
   configuration: Configuration;
 }) {
-  const notes: { note: StemmableNote; hasCursor: boolean }[][] = [];
+  const notes: ParsedNote[][] = [];
   const beams: Beam[] = [];
 
   for (const part of bar.parts) {
@@ -48,7 +53,7 @@ export function parse({
               keys: [],
             },
           }),
-          hasCursor: false,
+          shouldDraw: false,
         },
       ]);
       continue;
@@ -88,7 +93,7 @@ export function parse({
       }
     }
 
-    const steammableNotes: { note: StemmableNote; hasCursor: boolean }[] = [];
+    const steammableNotes: ParsedNote[] = [];
     const beamNotes: StemmableNote[] = [];
     for (const reducedNote of reducedNotes) {
       const staveNote = createStaveNote({
@@ -104,7 +109,7 @@ export function parse({
       });
       steammableNotes.push({
         note: staveNote,
-        hasCursor: reducedNote.hasCursor ?? false,
+        shouldDraw: true,
       });
       if (reducedNote.notes.length > 0) {
         beamNotes.push(staveNote);

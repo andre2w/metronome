@@ -112,7 +112,7 @@ export function createStaveNote({
 }: {
   duration: Part["tempo"];
   bar: Note;
-  background: "light" | "dark";
+  background: "black" | "white";
   withDot?: boolean;
   configuration: Configuration;
 }) {
@@ -128,9 +128,7 @@ export function createStaveNote({
     staveNote.setStem(stem);
   }
 
-  if (background === "dark") {
-    staveNote.setStyle({ strokeStyle: "white" });
-  }
+  staveNote.setStyle({ strokeStyle: background });
 
   for (const { note, modifier } of bar.keys) {
     if (!modifier) {

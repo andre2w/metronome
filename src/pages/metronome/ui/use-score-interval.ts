@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useRef } from "react";
-import { useToggle } from "usehooks-ts";
-import { useScoreStoreShallow } from "~/entities/score/model/state/score-store-provider";
+import { useScoreContext, useScoreStore } from "~/entities/score/model/state/score-store-provider";
 import { calculateBeatTime } from "../../../shared/lib/metronome/beat-time";
 
 export interface UseScoreIntervalProps {
@@ -8,26 +7,32 @@ export interface UseScoreIntervalProps {
 }
 
 export function useScoreInterval({ onTick }: UseScoreIntervalProps) {
-  const { bpm, score } = useScoreStoreShallow((state) => ({
-    bpm: state.metronome.bpm,
-    score: state.score,
-  }));
-  const flatScore = score.bars.flatMap((n) =>
-    n.parts.flatMap((part) => part.notes.map((note) => ({ note, tempo: part.tempo }))),
-  );
-  const index = useRef(0);
-  const [isToggled, toggle] = useToggle();
+  const store = useScoreContext();
+  const next = useScoreStore((state) => state.next);
+  const toggle = useScoreStore((state) => state.toggle);
+  const score = useScoreStore((state) => state.score);
+  const bpm = useScoreStore((state) => state.metronome.bpm);
+  const started = useScoreStore((state) => state.metronome.started);
+  console.log({ store, next, toggle, score, bpm, started });
+
   const timeout = useRef<number | undefined>(undefined);
-  const scoreIndex = useRef(0);
 
   const ticker = useCallback(() => {
     void onTick?.();
-    const note = flatScore[scoreIndex.current];
+    next();
+
+    const cursor = store.getState().metronome.cursor;
+    const part = score.bars.at(cursor.bar)?.parts.at(cursor.part);
+    if (!part) {
+      throw new Error("Missing part");
+    }
+
+    const note = part.notes.at(cursor.note);
     if (!note) {
       throw new Error("Missing note");
     }
     let beatTime: number;
-    switch (note.tempo) {
+    switch (part.tempo) {
       case "sixteens":
         beatTime = calculateBeatTime(16, bpm);
         break;
@@ -40,28 +45,20 @@ export function useScoreInterval({ onTick }: UseScoreIntervalProps) {
       default:
         throw new Error("NOT SUPPORTED");
     }
-    index.current++;
-    scoreIndex.current++;
-    if (scoreIndex.current >= flatScore.length) {
-      scoreIndex.current = 0;
-    }
-
+    console.log(cursor, beatTime);
     timeout.current = setTimeout(() => {
       ticker();
     }, beatTime);
-  }, [onTick, flatScore, bpm]);
+  }, [onTick, bpm, store, score, next]);
 
   useEffect(() => {
-    if (!isToggled) {
-      index.current = 0;
-      scoreIndex.current = 0;
-      if (timeout.current) {
-        clearTimeout(timeout.current);
-      }
-    } else {
+    if (timeout.current) {
+      clearTimeout(timeout.current);
+    }
+    if (started) {
       ticker();
     }
-  }, [isToggled, ticker]);
+  }, [ticker, started, score]);
 
-  return { isToggled, toggle };
+  return { isToggled: started, toggle };
 }

@@ -35,6 +35,11 @@ export function Controls() {
         <div className="parts">
           <Box height="35px" className="part-name">
             <Text as="p" wrap="nowrap" align="right">
+              Tempo
+            </Text>
+          </Box>
+          <Box height="35px" className="part-name">
+            <Text as="p" wrap="nowrap" align="right">
               Stickings
             </Text>
           </Box>

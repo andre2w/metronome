@@ -167,6 +167,61 @@ describe("store", () => {
       });
     });
   });
+
+  describe("setMetronomeConfig", () => {
+    it.each<Partial<MetronomeValues["metronome"]>>([{ bpm: 150 }, { graceTime: 20 }])(
+      "updates the metronome configuration",
+      (updateValue) => {
+        const store = createTestStore();
+
+        expect(store.getState().metronome).toEqual({
+          started: false,
+          ticks: 0,
+          cursor: { bar: 0, part: 0, note: 0 },
+          bpm: 60,
+          graceTime: 100,
+        });
+
+        store.getState().setMetronomeConfig(updateValue);
+
+        expect(store.getState().metronome).toEqual({
+          started: false,
+          ticks: 0,
+          cursor: { bar: 0, part: 0, note: 0 },
+          bpm: 60,
+          graceTime: 100,
+          ...updateValue,
+        });
+      },
+    );
+  });
+
+  it("does not allow graceTime to be set to a value greater than the time between two ticks", () => {
+    const store = createTestStore();
+
+    store.getState().setMetronomeConfig({ graceTime: 1500 });
+
+    expect(store.getState().metronome).toEqual({
+      started: false,
+      ticks: 0,
+      cursor: { bar: 0, part: 0, note: 0 },
+      bpm: 60,
+      graceTime: 1000,
+    });
+  });
+
+  it("does not allow graceTime to be greater than ceiling for a bpm when bpm is updated", () => {
+    const store = createTestStore();
+
+    store.getState().setMetronomeConfig({ bpm: 1000 });
+    expect(store.getState().metronome).toEqual({
+      started: false,
+      ticks: 0,
+      cursor: { bar: 0, part: 0, note: 0 },
+      bpm: 1000,
+      graceTime: 60,
+    });
+  });
 });
 
 function createTestStore() {
