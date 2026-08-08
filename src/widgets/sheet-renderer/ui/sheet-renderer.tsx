@@ -1,9 +1,8 @@
 import { useThemeContext } from "@radix-ui/themes";
-import { RefObject, useCallback, useEffect, useLayoutEffect, useRef } from "react";
+import { RefObject, useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { useResizeObserver } from "usehooks-ts";
 import { Renderer } from "vexflow";
 import { getRgbaColorString } from "../model/vexflow/color";
-import { drawScore } from "../model";
 import {
   useScoreStore,
   useScoreStoreSubscription,
@@ -24,7 +23,9 @@ export function SheetRenderer() {
   const { accentColor, appearance } = useThemeContext();
   const configuration = useConfiguration();
   const cursorCanvasRef = useRef<HTMLCanvasElement>(null);
-  const drawnNotesRef = useRef<ReturnType<typeof drawScore>>([]);
+  const [vexflowWrapper] = useState(() => {
+    return new VexflowWrapper(configuration, appearance === "inherit" ? "light" : appearance);
+  });
 
   const next = useCallback(
     (cursor: MetronomeCursor) => {
@@ -34,11 +35,6 @@ export function SheetRenderer() {
 
       if (!rendererRef.current) {
         rendererRef.current = new Renderer(scoreRef.current, Renderer.Backends.CANVAS);
-      }
-
-      const drawnNote = drawnNotesRef.current.at(cursor.bar)?.at(cursor.part)?.at(cursor.note);
-      if (!drawnNote) {
-        throw new Error("Could not find note for cursor");
       }
 
       const canvas = cursorCanvasRef.current?.getContext("2d");
@@ -60,6 +56,11 @@ export function SheetRenderer() {
       }
 
       if (noteToPlay.keys.length === 0) {
+        return;
+      }
+
+      const drawnNote = vexflowWrapper.getNoteAt(cursor);
+      if (!drawnNote) {
         return;
       }
 
@@ -114,24 +115,7 @@ export function SheetRenderer() {
       throw new Error("Renderer not set");
     }
 
-    const wrapper = new VexflowWrapper(
-      configuration,
-      appearance === "inherit" ? "light" : appearance,
-    );
-    console.log(wrapper.draw({ renderer, score, sheetWidth }));
-    const drawnNotes = drawScore({
-      renderer,
-      score,
-      sheetWidth,
-      index: -1,
-      colors: {
-        background: appearance === "inherit" ? "light" : appearance,
-        accent: colorRef.current,
-      },
-      configuration,
-    });
-
-    drawnNotesRef.current = drawnNotes;
+    vexflowWrapper.draw({ renderer, score, sheetWidth });
   }, [score, scoreSize.width, appearance, accentColor]);
 
   useLayoutEffect(() => {

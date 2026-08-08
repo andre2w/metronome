@@ -1,7 +1,8 @@
 import { afterAll, beforeAll, describe, expect, test, vi } from "vitest";
 import { renderHook } from "~/shared/test/render";
 import { useScoreInterval } from "./use-score-interval";
-import { act } from "react";
+import { act } from "@testing-library/react";
+
 describe("useScoreInterval", () => {
   beforeAll(() => {
     vi.useFakeTimers();
@@ -26,7 +27,7 @@ describe("useScoreInterval", () => {
     expect(hook.result.current.isToggled).toBeTruthy();
     expect(onTick).toHaveBeenCalledTimes(1);
 
-    await vi.advanceTimersByTimeAsync(1_000);
+    await vi.advanceTimersByTimeAsync(260);
     expect(hook.result.current.isToggled).toBeTruthy();
     expect(onTick).toHaveBeenCalledTimes(2);
 

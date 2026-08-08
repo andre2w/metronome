@@ -13,7 +13,6 @@ export function useScoreInterval({ onTick }: UseScoreIntervalProps) {
   const score = useScoreStore((state) => state.score);
   const bpm = useScoreStore((state) => state.metronome.bpm);
   const started = useScoreStore((state) => state.metronome.started);
-  console.log({ store, next, toggle, score, bpm, started });
 
   const timeout = useRef<number | undefined>(undefined);
 
