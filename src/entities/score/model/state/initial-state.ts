@@ -13,7 +13,7 @@ export function getInitialStateFromHash(): Score {
   return {
     type: "score",
     author: "",
-    bars: [createBar("quarter")],
+    bars: [createBar("sixteens")],
     bpm: 100,
     name: "",
   };
