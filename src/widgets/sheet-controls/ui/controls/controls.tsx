@@ -50,10 +50,15 @@ export function Controls() {
             </Box>
           ))}
         </div>
-        <div style={{ display: "flex", flexDirection: "row" }}>
+        <div style={{ display: "flex", flexDirection: "row" }} role="list">
           {score.bars.map((bar, staveIndex) => {
             return (
-              <Bar bar={bar} barIndex={staveIndex} onRemoveStave={() => removeStave(staveIndex)} />
+              <Bar
+                role="listitem"
+                bar={bar}
+                barIndex={staveIndex}
+                onRemoveStave={() => removeStave(staveIndex)}
+              />
             );
           })}
         </div>
