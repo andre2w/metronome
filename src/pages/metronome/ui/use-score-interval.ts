@@ -44,7 +44,6 @@ export function useScoreInterval({ onTick }: UseScoreIntervalProps) {
       default:
         throw new Error("NOT SUPPORTED");
     }
-    console.log(cursor, beatTime);
     timeout.current = setTimeout(() => {
       ticker();
     }, beatTime);

@@ -7,7 +7,6 @@ import { Key } from "~/shared/lib/score/key-data";
 import { Sticking } from "~/shared/lib/score/sticking";
 import { MetronomeCursor } from "~/shared/lib/metronome";
 import { VexflowBar } from "./vexflow-bar";
-import { ThemeProps } from "@radix-ui/themes";
 
 export type BackgroundType = "light" | "dark";
 
@@ -19,13 +18,14 @@ export interface DrawProps {
 
 export interface PlayableNote {
   type: "note";
-  position: { x: number; y: number; width: number; height: number };
-  duration: Tempo;
+  x: number;
+  y: number;
+  width: number;
+  height: number;
 }
 
 export interface RestNote {
   type: "rest";
-  duration: Tempo;
 }
 
 export type DrawnNote = PlayableNote | RestNote;
@@ -119,6 +119,6 @@ export class VexflowWrapper {
   }
 
   getNoteAt({ bar, ...cursor }: MetronomeCursor) {
-    return this.#bars?.at(bar)?.getNoteAt(cursor);
+    return this.#bars?.at(bar)?.getNoteAt(cursor) ?? null;
   }
 }

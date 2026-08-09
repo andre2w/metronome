@@ -14,7 +14,7 @@ describe("useScoreInterval", () => {
 
   test("Advances time based on tempo", async () => {
     const onTick = vi.fn();
-    const hook = renderHook(useScoreInterval, {
+    const hook = await renderHook(useScoreInterval, {
       initialProps: { onTick },
     });
 

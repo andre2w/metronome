@@ -60,14 +60,12 @@ export function SheetRenderer() {
       }
 
       const drawnNote = vexflowWrapper.getNoteAt(cursor);
-      if (!drawnNote) {
+      if (!drawnNote || drawnNote.type === "rest") {
         return;
       }
 
-      if (drawnNote) {
-        canvas.fillStyle = colorRef.current ?? "rgba(88, 176, 51, 0.5)";
-        canvas.fillRect(drawnNote.x, drawnNote.y, drawnNote.width, drawnNote.height);
-      }
+      canvas.fillStyle = colorRef.current ?? "rgba(88, 176, 51, 0.5)";
+      canvas.fillRect(drawnNote.x, drawnNote.y, drawnNote.width, drawnNote.height);
     },
     [score],
   );

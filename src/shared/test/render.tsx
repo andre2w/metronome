@@ -1,20 +1,8 @@
 import { Theme } from "@radix-ui/themes";
-import {
-  render as baseRender,
-  renderHook as baseRenderHook,
-  queries,
-  Queries,
-  RenderHookOptions,
-  RenderHookResult,
-  RenderOptions,
-  RenderResult,
-} from "@testing-library/react";
-import userEvent, { UserEvent } from "@testing-library/user-event";
-import ReactDOMClient from "react-dom/client";
 import { ConfigurationContextProvider } from "../lib/configuration/configuration-provider";
 import { KEYS } from "~/entities/score/model/notes";
 import { mappings } from "~/entities/midi-input/config/mappings/roland-td07";
-import { ReactNode, useState } from "react";
+import { type ReactNode, useState } from "react";
 import { TestableInputConfigurationProvider } from "./testable-input-configuration-provider";
 import {
   ScoreContext,
@@ -29,49 +17,30 @@ import { immer } from "zustand/middleware/immer";
 import { createScoreSlice } from "~/entities/score/model/state/store";
 import { createMetronomeSlice } from "~/entities/metronome/model/store";
 import { createJSONStorage } from "zustand/middleware";
+import {
+  render as baseRender,
+  renderHook as baseRenderHook,
+  ComponentRenderOptions,
+  RenderHookOptions,
+  RenderHookResult,
+  RenderOptions,
+  RenderResult,
+} from "vitest-browser-react";
 
-type RendererableContainer = ReactDOMClient.Container;
-type HydrateableContainer = Parameters<(typeof ReactDOMClient)["hydrateRoot"]>[0];
-
-export function render<
-  Q extends Queries = typeof queries,
-  Container extends RendererableContainer | HydrateableContainer = HTMLElement,
-  BaseElement extends RendererableContainer | HydrateableContainer = Container,
->(
-  ui: React.ReactNode,
-  options: RenderOptions<Q, Container, BaseElement>,
-): { component: RenderResult<Q, Container, BaseElement>; user: UserEvent } {
-  const user = userEvent.setup();
-  const component = baseRender(ui, options);
-
-  return { user, component };
+export async function render(ui: React.ReactNode, options?: RenderOptions): Promise<RenderResult> {
+  return await baseRender(ui, {
+    ...options,
+    wrapper: createWrapper(options?.wrapper),
+  });
 }
 
-export function renderHook<
-  Result,
-  Props,
-  Q extends Queries = typeof queries,
-  Container extends RendererableContainer | HydrateableContainer = HTMLElement,
-  BaseElement extends RendererableContainer | HydrateableContainer = Container,
->(
+export async function renderHook<Props, Result>(
   render: (initialProps: Props) => Result,
-  options?: RenderHookOptions<Props, Q, Container, BaseElement>,
-): RenderHookResult<Result, Props> {
-  const UserWrapper = options?.wrapper;
-
-  return baseRenderHook(render, {
+  options?: RenderHookOptions<Props>,
+): Promise<RenderHookResult<Result, Props>> {
+  return baseRenderHook(render as (initialProps?: Props) => Result, {
     ...options,
-    wrapper: ({ children }) => {
-      if (UserWrapper) {
-        return (
-          <TestWrapper>
-            <UserWrapper>{children}</UserWrapper>
-          </TestWrapper>
-        );
-      }
-
-      return <TestWrapper>{children}</TestWrapper>;
-    },
+    wrapper: createWrapper(options?.wrapper),
   });
 }
 
@@ -125,5 +94,20 @@ function createStorage(): StateStorage {
     setItem: (key, value) => {
       storage.set(key, JSON.stringify(value));
     },
+  };
+}
+
+function createWrapper(wrapper: ComponentRenderOptions["wrapper"]) {
+  const UserWrapper = wrapper;
+  return ({ children }: { children: ReactNode }) => {
+    if (UserWrapper) {
+      return (
+        <TestWrapper>
+          <UserWrapper>{children}</UserWrapper>
+        </TestWrapper>
+      );
+    }
+
+    return <TestWrapper>{children}</TestWrapper>;
   };
 }
