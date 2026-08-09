@@ -3,21 +3,22 @@ import { Button, Text } from "@radix-ui/themes";
 import "./bar.css";
 import { Bar as ScoreBar } from "~/shared/lib/score/score";
 import { Part } from "./part";
+import { ComponentProps } from "react";
 
-export interface StaveProps {
+export interface StaveProps extends ComponentProps<"div"> {
   bar: ScoreBar;
   barIndex: number;
   onRemoveStave: () => void;
   className?: string;
 }
 
-export function Bar({ bar, barIndex, onRemoveStave }: StaveProps) {
+export function Bar({ bar, barIndex, onRemoveStave, className, ...props }: StaveProps) {
   const parts = bar.parts.flatMap((part, partIndex) => {
     return <Part part={part} barIndex={barIndex} partIndex={partIndex} />;
   });
 
   return (
-    <div className="stave">
+    <div className="stave" {...props}>
       <div className="stave-content">
         <Text>{barIndex + 1}</Text>
         <Button onClick={onRemoveStave} variant="ghost" aria-label="Remove bar">
