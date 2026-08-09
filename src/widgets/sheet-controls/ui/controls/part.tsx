@@ -2,7 +2,6 @@ import { Part as ScorePart, Tempo } from "~/shared/lib/score/score";
 import { counting } from "../../model/constants";
 import { Note } from "./note";
 import { Box, Flex, Text } from "@radix-ui/themes";
-import { Tile } from "./tile";
 
 export interface PartProps {
   part: ScorePart;
@@ -37,7 +36,7 @@ export function Part({ part, barIndex, className, partIndex }: PartProps) {
   });
 
   return (
-    <Flex direction="column">
+    <Flex direction="column" className={className}>
       <Box height="35px" className="part-name" style={{ justifyContent: "center" }}>
         <Text as="p" wrap="nowrap" align="right">
           {tempoLabel(part.tempo)}

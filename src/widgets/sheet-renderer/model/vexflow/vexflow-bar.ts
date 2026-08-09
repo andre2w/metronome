@@ -38,7 +38,7 @@ export class VexflowBar {
     const beams: Beam[] = [];
     for (const part of this.#parts) {
       const { beam, staveNotes } = part.draw();
-      allNotes.push(...staveNotes);
+      allNotes.push(...staveNotes.filter((s) => s !== null));
       if (beam) {
         beams.push(beam);
       }

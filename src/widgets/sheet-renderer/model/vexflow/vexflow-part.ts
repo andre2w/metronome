@@ -18,7 +18,7 @@ export class VexflowPart {
   reducedNotes: ReducedStaveNote[] = [];
   #configuration: Configuration;
   #color: RenderColor;
-  #staveNotes: StaveNote[] | null = null;
+  #staveNotes: (StaveNote | null)[] | null = null;
   #drawnNotes: DrawnNote[] | null = null;
 
   constructor(part: Part, configuration: Configuration, color: RenderColor) {
@@ -103,6 +103,7 @@ export class VexflowPart {
     const beamNotes: StaveNote[] = [];
     for (const reducedNote of this.reducedNotes) {
       if (reducedNote.type === "noop") {
+        this.#staveNotes.push(null);
         continue;
       }
 
@@ -128,8 +129,14 @@ export class VexflowPart {
 
     this.#drawnNotes = [];
     for (const staveNote of this.#staveNotes) {
+      if (staveNote === null) {
+        this.#drawnNotes.push({ type: "rest" });
+        continue;
+      }
+
       const modifierShift = staveNote.getModifierContext()?.getLeftShift() ?? 0;
       this.#drawnNotes.push({
+        type: "note",
         x: staveNote.getAbsoluteX() + -modifierShift,
         y: stave.getY(),
         width: Math.max(staveNote.getWidth(), 15) + modifierShift,
