@@ -1,5 +1,5 @@
 import { useThemeContext } from "@radix-ui/themes";
-import { RefObject, useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
+import { RefObject, useCallback, useEffect, useLayoutEffect, useMemo, useRef } from "react";
 import { useResizeObserver } from "usehooks-ts";
 import { Renderer } from "vexflow";
 import { getRgbaColorString } from "../model/vexflow/color";
@@ -23,11 +23,11 @@ export function SheetRenderer() {
   const { accentColor, appearance } = useThemeContext();
   const configuration = useConfiguration();
   const cursorCanvasRef = useRef<HTMLCanvasElement>(null);
-  const [vexflowWrapper] = useState(() => {
+  const vexflowWrapper = useMemo(() => {
     return new VexflowWrapper(configuration, appearance === "inherit" ? "light" : appearance);
-  });
+  }, [appearance, configuration]);
 
-  const next = useCallback(
+  const renderCursor = useCallback(
     (cursor: MetronomeCursor) => {
       if (!scoreRef.current) {
         return;
@@ -71,12 +71,11 @@ export function SheetRenderer() {
   );
 
   useScoreStoreSubscription((state, oldState) => {
-    console.log({ state, oldState });
     if (isCursorEquals(state.metronome.cursor, oldState.metronome.cursor)) {
       return;
     }
 
-    next(state.metronome.cursor);
+    renderCursor(state.metronome.cursor);
   });
 
   useEffect(() => {
@@ -98,13 +97,6 @@ export function SheetRenderer() {
       rendererRef.current = new Renderer(scoreRef.current, Renderer.Backends.CANVAS);
     }
 
-    if (boxRef.current) {
-      const boxElement = boxRef.current.getBoundingClientRect();
-      scoreRef.current.width = boxElement.width;
-      scoreRef.current.height = boxElement.height;
-      colorRef.current = getRgbaColorString(boxRef.current);
-    }
-
     const element = scoreRef.current;
 
     const sheetWidth = scoreSize.width ?? element.getBoundingClientRect().width;
@@ -112,9 +104,8 @@ export function SheetRenderer() {
     if (!renderer) {
       throw new Error("Renderer not set");
     }
-
     vexflowWrapper.draw({ renderer, score, sheetWidth });
-  }, [score, scoreSize.width, appearance, accentColor]);
+  }, [score, scoreSize.width, vexflowWrapper]);
 
   useLayoutEffect(() => {
     if (cursorCanvasRef.current) {

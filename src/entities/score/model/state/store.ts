@@ -1,5 +1,5 @@
-import { Score } from "~/shared/lib/score/score";
-import { createBar, ScoreContextValue } from "./score-state";
+import { Score, Tempo } from "~/shared/lib/score/score";
+import { createBar, createPart, ScoreContextValue } from "./score-state";
 import { StateCreator } from "zustand/vanilla";
 import { MetronomeValues } from "~/shared/lib/metronome";
 
@@ -107,6 +107,21 @@ export const createScoreSlice: (initialScore?: Score) => ScoreSlice = (initialSc
         return {
           score: score,
         };
+      });
+    },
+
+    changeTempo: ({
+      index,
+      tempo,
+    }: {
+      index: { barIndex: number; partIndex: number };
+      tempo: Tempo;
+    }) => {
+      set((state) => {
+        const part = state.score.bars.at(index.barIndex)?.parts.at(index.partIndex)!;
+        const updatedPart = createPart(tempo);
+        part.tempo = tempo;
+        part.notes = updatedPart.notes;
       });
     },
   });

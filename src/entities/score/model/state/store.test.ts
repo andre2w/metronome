@@ -195,6 +195,20 @@ describe("store", () => {
       });
     });
   });
+
+  describe("changeTempo", () => {
+    test("changes tempo of an existing part", () => {
+      const store = createTestStore();
+
+      store.getState().changeTempo({ index: { barIndex: 0, partIndex: 0 }, tempo: "quarter" });
+
+      expect(store.getState().score.bars.at(0)?.parts.at(0)).toEqual<Part>({
+        type: "part",
+        notes: [{ type: "note", keys: [] }],
+        tempo: "quarter",
+      });
+    });
+  });
 });
 
 function createTestStore() {
