@@ -68,6 +68,7 @@ export class VexflowWrapper {
 
   setColor(background: BackgroundType) {
     this.#color = background === "light" ? "black" : "white";
+    console.log("Color set to", this.#color, background);
   }
 
   setConfiguration(configuration: Configuration) {
@@ -95,6 +96,7 @@ export class VexflowWrapper {
 
     context.fillStyle = this.#color;
     context.strokeStyle = this.#color;
+    console.log("COLOR WRAPPER", this.#color);
 
     this.#bars = [];
     for (let barIndex = 0; barIndex < score.bars.length; barIndex++) {

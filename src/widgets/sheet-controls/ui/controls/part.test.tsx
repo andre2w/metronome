@@ -43,4 +43,16 @@ describe("Part", () => {
     const tiles = component.getByRole("button").all();
     expect(tiles).toHaveLength(tileCount);
   });
+
+  test("allow to change tempo by clicking on it", async () => {
+    const component = await render(<Part barIndex={0} partIndex={0} part={quarterPart} />);
+
+    const tempo = component.getByText("1/4");
+    await expect.element(tempo).toBeVisible();
+
+    await tempo.click();
+
+    const updatedTempo = component.getByText("1/8");
+    await expect.element(updatedTempo).toBeVisible();
+  });
 });

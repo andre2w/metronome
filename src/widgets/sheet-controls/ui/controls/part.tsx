@@ -2,6 +2,9 @@ import { Part as ScorePart, Tempo } from "~/shared/lib/score/score";
 import { counting } from "../../model/constants";
 import { Note } from "./note";
 import { Box, Flex, Text } from "@radix-ui/themes";
+import { useScoreStore } from "~/entities/score/model/state/score-store-provider";
+import { nextValueInLoop } from "~/shared/lib/loop";
+import "./part.css";
 
 export interface PartProps {
   part: ScorePart;
@@ -10,8 +13,11 @@ export interface PartProps {
   className?: string;
 }
 
+const tempoLoop: Tempo[] = ["quarter", "eights", "sixteens"];
+
 export function Part({ part, barIndex, className, partIndex }: PartProps) {
   const tempoCounting = counting[part.tempo];
+  const changeTempo = useScoreStore((state) => state.changeTempo);
 
   const notes = part.notes.map((note, noteIndex) => {
     const noteCount = tempoCounting?.[partIndex]?.[noteIndex];
@@ -36,7 +42,15 @@ export function Part({ part, barIndex, className, partIndex }: PartProps) {
 
   return (
     <Flex direction="column" className={className}>
-      <Box height="35px" className="part-name" style={{ justifyContent: "center" }}>
+      <Box
+        height="35px"
+        className="part-name tempo"
+        style={{ justifyContent: "center" }}
+        onClick={() => {
+          const nextTempo = nextValueInLoop(tempoLoop, part.tempo);
+          changeTempo({ index: { barIndex, partIndex }, tempo: nextTempo });
+        }}
+      >
         <Text as="p" wrap="nowrap" align="right">
           {tempoLabel(part.tempo)}
         </Text>

@@ -31,7 +31,7 @@ describe("Bar", () => {
     await expect.element(barIndex).toBeVisible();
   });
 
-  test("Render bars with index and parts", async () => {
+  test("Allows to remove existing bars", async () => {
     const onRemoveStave = vi.fn();
     const component = await render(
       <Bar bar={bar} barIndex={0} onRemoveStave={onRemoveStave}></Bar>,
