@@ -23,14 +23,19 @@ import {
   RenderOptions,
   RenderResult,
 } from "vitest-browser-react";
+import { Score } from "../lib/score/score";
+import "../../app/entrypoint/styles.css";
+import "../../app/entrypoint/root.css";
 
 export async function render(
   ui: React.ReactNode,
-  options?: RenderOptions,
+  options?: RenderOptions & { initalScore?: Score },
 ): Promise<RenderResult & { store: TestStore }> {
-  const store = createTestStore();
+  const { initalScore, ...renderOptions } = options ?? {};
+  const store = createTestStore(initalScore);
+
   const rendered = await baseRender(ui, {
-    ...options,
+    ...renderOptions,
     wrapper: createWrapper(options?.wrapper, store),
   });
 
@@ -39,22 +44,23 @@ export async function render(
 
 export async function renderHook<Props, Result>(
   render: (initialProps: Props) => Result,
-  options?: RenderHookOptions<Props>,
+  options?: RenderHookOptions<Props> & { initialScore?: Score },
 ): Promise<RenderHookResult<Result, Props> & { store: TestStore }> {
-  const store = createTestStore();
+  const { initialScore, ...renderOptions } = options ?? {};
+  const store = createTestStore(initialScore);
   const rendered = await baseRenderHook(render as (initialProps?: Props) => Result, {
-    ...options,
+    ...renderOptions,
     wrapper: createWrapper(options?.wrapper, store),
   });
 
   return { ...rendered, store };
 }
 
-function createTestStore() {
+function createTestStore(initialScore?: Score) {
   return createStore<ScoreContextValue & MetronomeValues>()(
     persist(
       immer((...args) => ({
-        ...createScoreSlice()(...args),
+        ...createScoreSlice(initialScore)(...args),
         ...createMetronomeSlice(...args),
       })),
       {

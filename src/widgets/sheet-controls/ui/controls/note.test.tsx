@@ -8,7 +8,7 @@ describe("Note", () => {
     const component = await render(
       <Note
         index={{ barIndex: 0, noteIndex: 0, partIndex: 0 }}
-        notesWithSticking={{ type: "note", keys: [] }}
+
         noteCount="1"
       />,
     );
@@ -23,7 +23,7 @@ describe("Note", () => {
     const component = await render(
       <Note
         index={{ barIndex: 0, noteIndex: 0, partIndex: 0 }}
-        notesWithSticking={{ type: "note", keys: [] }}
+
         noteCount="1"
       />,
     );
@@ -64,7 +64,7 @@ describe("Note", () => {
     const component = await render(
       <Note
         index={{ barIndex: 0, noteIndex: 0, partIndex: 0 }}
-        notesWithSticking={{ type: "note", keys: [] }}
+
         noteCount="1"
       />,
     );
@@ -82,7 +82,7 @@ describe("Note", () => {
     const component = await render(
       <Note
         index={{ barIndex: 0, noteIndex: 0, partIndex: 0 }}
-        notesWithSticking={{ type: "note", keys: [] }}
+
         noteCount="1"
       />,
     );

@@ -46,6 +46,8 @@ export function Part({ part, barIndex, className, partIndex }: PartProps) {
         height="35px"
         className="part-name tempo"
         style={{ justifyContent: "center" }}
+        role="button"
+        aria-label={part.tempo}
         onClick={() => {
           const nextTempo = nextValueInLoop(tempoLoop, part.tempo);
           changeTempo({ index: { barIndex, partIndex }, tempo: nextTempo });
