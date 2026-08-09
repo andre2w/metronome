@@ -96,7 +96,6 @@ export class VexflowWrapper {
 
     context.fillStyle = this.#color;
     context.strokeStyle = this.#color;
-    console.log("COLOR WRAPPER", this.#color);
 
     this.#bars = [];
     for (let barIndex = 0; barIndex < score.bars.length; barIndex++) {
