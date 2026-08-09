@@ -20,7 +20,7 @@ export function Bar({ bar, barIndex, onRemoveStave }: StaveProps) {
     <div className="stave">
       <div className="stave-content">
         <Text>{barIndex + 1}</Text>
-        <Button onClick={onRemoveStave} variant="ghost">
+        <Button onClick={onRemoveStave} variant="ghost" aria-label="Remove bar">
           <Cross1Icon />
         </Button>
       </div>
