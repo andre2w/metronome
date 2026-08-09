@@ -25,7 +25,7 @@ export function Metronome({ className }: MetronomeProps) {
 
   const ticksRef = useRef<number[]>([]);
   const [result, setResult] = useState<ResultProps | undefined>(undefined);
-  const { playNextTick: playNextAudioTick, reset: resetAudioTicks } = useAudioTicks({
+  const { playNextTick: playNextAudioTick } = useAudioTicks({
     notes: 4,
     bpm: bpm,
   });
@@ -51,7 +51,6 @@ export function Metronome({ className }: MetronomeProps) {
     } else {
       resetPlayedNotes();
       ticksRef.current = [];
-      resetAudioTicks();
       setResult(undefined);
     }
     startStop();

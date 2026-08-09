@@ -240,7 +240,7 @@ function createTestStore() {
     onChangeConfiguration: vi.fn(),
     loadScore: vi.fn(),
     removeBar: vi.fn(),
-
+    changeTempo: vi.fn(),
     score: {
       author: "",
       bpm: 100,

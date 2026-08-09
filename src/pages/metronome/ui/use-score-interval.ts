@@ -18,7 +18,6 @@ export function useScoreInterval({ onTick }: UseScoreIntervalProps) {
 
   const ticker = useCallback(() => {
     void onTick?.();
-    next();
 
     const cursor = store.getState().metronome.cursor;
     const part = score.bars.at(cursor.bar)?.parts.at(cursor.part);
@@ -33,18 +32,20 @@ export function useScoreInterval({ onTick }: UseScoreIntervalProps) {
     let beatTime: number;
     switch (part.tempo) {
       case "sixteens":
-        beatTime = calculateBeatTime(16, bpm);
+        beatTime = calculateBeatTime(bpm, 16);
         break;
       case "quarter":
-        beatTime = calculateBeatTime(4, bpm);
+        beatTime = calculateBeatTime(bpm, 4);
         break;
       case "eights":
-        beatTime = calculateBeatTime(8, bpm);
+        beatTime = calculateBeatTime(bpm, 8);
         break;
       default:
         throw new Error("NOT SUPPORTED");
     }
+    console.log(beatTime);
     timeout.current = setTimeout(() => {
+      next();
       ticker();
     }, beatTime);
   }, [onTick, bpm, store, score, next]);
