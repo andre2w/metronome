@@ -173,7 +173,6 @@ export class VexflowPart {
       stemDirection: 1,
     });
     staveNote.setStem(stem);
-    console.log("PART COLOR", this.#color);
     staveNote.setStyle({ strokeStyle: this.#color });
 
     for (const { note, modifier } of reducedStaveNote.keys) {
