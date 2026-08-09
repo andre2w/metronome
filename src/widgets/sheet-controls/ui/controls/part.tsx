@@ -28,7 +28,6 @@ export function Part({ part, barIndex, className, partIndex }: PartProps) {
       <Note
         key={`${barIndex}#${partIndex}#${noteIndex}`}
         noteCount={noteCount}
-        notesWithSticking={note}
         index={{ barIndex, partIndex, noteIndex }}
         className={withSpace ? "with-space-left" : undefined}
       />

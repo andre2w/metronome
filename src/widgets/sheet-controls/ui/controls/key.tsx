@@ -41,6 +41,7 @@ export function Key({ children, note, index, isSelected, modifier }: KeyProps) {
       className="key"
       onClick={onClick}
       variant={isSelected ? "selected" : undefined}
+      aria-label={note}
     >
       {children}
     </Tile>
@@ -54,6 +55,7 @@ export function Key({ children, note, index, isSelected, modifier }: KeyProps) {
           {Object.entries(noteData.modifiers).map(([modifier, modifierData]) => {
             return (
               <ContextMenu.Item
+                key={`Key#${index.barIndex}#${index.partIndex}#${index.noteIndex}#${modifier}`}
                 onClick={() => {
                   toggleNote({
                     noteIndex: index.noteIndex,

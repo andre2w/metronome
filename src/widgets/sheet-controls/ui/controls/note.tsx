@@ -4,10 +4,8 @@ import { Key } from "./key";
 import { Tile } from "./tile";
 import { useScoreStore } from "~/entities/score/model/state/score-store-provider";
 import { useConfiguration } from "~/shared/lib/configuration/configuration-provider";
-import { Note as NoteWithSticking } from "~/shared/lib/score/score";
 
 export interface NoteProps {
-  notesWithSticking: NoteWithSticking;
   noteCount?: string;
   className?: string;
   index: {
@@ -19,14 +17,22 @@ export interface NoteProps {
 
 const stickingsLoop = [null, "L", "R", "R/L"] as const;
 
-export function Note({ notesWithSticking, noteCount, className, index }: NoteProps) {
+export function Note({ noteCount, className, index }: NoteProps) {
   const configuration = useConfiguration();
-  const { keys: selectedNotes, sticking } = notesWithSticking;
   const setSticking = useScoreStore((state) => state.setSticking);
-  const stickingIndex = Math.max(
-    stickingsLoop.findIndex((s) => s === sticking),
-    0,
+  const note = useScoreStore((state) =>
+    state.score.bars.at(index.barIndex)?.parts.at(index.partIndex)?.notes.at(index.noteIndex),
   );
+  if (!note) {
+    throw new Error("Could not find note in score");
+  }
+  const { keys: selectedNotes, sticking } = note;
+  const stickingIndex = sticking
+    ? Math.max(
+        stickingsLoop.findIndex((s) => s === sticking),
+        0,
+      )
+    : 0;
   const nextIndex = stickingIndex + 1 >= stickingsLoop.length ? 0 : stickingIndex + 1;
   const nextSticking = stickingsLoop[nextIndex];
   if (typeof nextSticking === "undefined") {
@@ -50,6 +56,7 @@ export function Note({ notesWithSticking, noteCount, className, index }: NotePro
         const selectedNote = selectedNotes.find((n) => n.note === key.key);
         return (
           <Key
+            key={`Key#${index.barIndex}#${index.partIndex}#${index.noteIndex}#${key.key}`}
             isSelected={!!selectedNote}
             note={key.key}
             modifier={selectedNote?.modifier}

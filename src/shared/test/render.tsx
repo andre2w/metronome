@@ -2,12 +2,9 @@ import { Theme } from "@radix-ui/themes";
 import { ConfigurationContextProvider } from "../lib/configuration/configuration-provider";
 import { KEYS } from "~/entities/score/model/notes";
 import { mappings } from "~/entities/midi-input/config/mappings/roland-td07";
-import { type ReactNode, useState } from "react";
+import { type ReactNode } from "react";
 import { TestableInputConfigurationProvider } from "./testable-input-configuration-provider";
-import {
-  ScoreContext,
-  ScoreProviderProps,
-} from "~/entities/score/model/state/score-store-provider";
+import { ScoreContext } from "~/entities/score/model/state/score-store-provider";
 import { StateStorage } from "zustand/middleware";
 import { MetronomeValues } from "../lib/metronome";
 import { ScoreContextValue } from "~/entities/score/model/state/score-state";
@@ -27,43 +24,50 @@ import {
   RenderResult,
 } from "vitest-browser-react";
 
-export async function render(ui: React.ReactNode, options?: RenderOptions): Promise<RenderResult> {
-  return await baseRender(ui, {
+export async function render(
+  ui: React.ReactNode,
+  options?: RenderOptions,
+): Promise<RenderResult & { store: TestStore }> {
+  const store = createTestStore();
+  const rendered = await baseRender(ui, {
     ...options,
-    wrapper: createWrapper(options?.wrapper),
+    wrapper: createWrapper(options?.wrapper, store),
   });
+
+  return { ...rendered, store };
 }
 
 export async function renderHook<Props, Result>(
   render: (initialProps: Props) => Result,
   options?: RenderHookOptions<Props>,
-): Promise<RenderHookResult<Result, Props>> {
-  return baseRenderHook(render as (initialProps?: Props) => Result, {
+): Promise<RenderHookResult<Result, Props> & { store: TestStore }> {
+  const store = createTestStore();
+  const rendered = await baseRenderHook(render as (initialProps?: Props) => Result, {
     ...options,
-    wrapper: createWrapper(options?.wrapper),
-  });
-}
-
-function TestScoreProvider({ children }: ScoreProviderProps) {
-  const [scoreStore] = useState(() => {
-    return createStore<ScoreContextValue & MetronomeValues>()(
-      persist(
-        immer((...args) => ({
-          ...createScoreSlice()(...args),
-          ...createMetronomeSlice(...args),
-        })),
-        {
-          name: "score",
-          storage: createJSONStorage(() => createStorage()),
-        },
-      ),
-    );
+    wrapper: createWrapper(options?.wrapper, store),
   });
 
-  return <ScoreContext.Provider value={scoreStore}>{children}</ScoreContext.Provider>;
+  return { ...rendered, store };
 }
 
-function TestWrapper({ children }: { children: ReactNode }) {
+function createTestStore() {
+  return createStore<ScoreContextValue & MetronomeValues>()(
+    persist(
+      immer((...args) => ({
+        ...createScoreSlice()(...args),
+        ...createMetronomeSlice(...args),
+      })),
+      {
+        name: "score",
+        storage: createJSONStorage(() => createStorage()),
+      },
+    ),
+  );
+}
+
+export type TestStore = ReturnType<typeof createTestStore>;
+
+function TestWrapper({ children, store }: { children: ReactNode; store: TestStore }) {
   return (
     <Theme
       accentColor={"amber"}
@@ -75,7 +79,7 @@ function TestWrapper({ children }: { children: ReactNode }) {
     >
       <TestableInputConfigurationProvider>
         <ConfigurationContextProvider keyMap={KEYS} mappings={mappings}>
-          <TestScoreProvider>{children}</TestScoreProvider>
+          <ScoreContext.Provider value={store}>{children}</ScoreContext.Provider>
         </ConfigurationContextProvider>
       </TestableInputConfigurationProvider>
     </Theme>
@@ -97,17 +101,17 @@ function createStorage(): StateStorage {
   };
 }
 
-function createWrapper(wrapper: ComponentRenderOptions["wrapper"]) {
+function createWrapper(wrapper: ComponentRenderOptions["wrapper"], store: TestStore) {
   const UserWrapper = wrapper;
   return ({ children }: { children: ReactNode }) => {
     if (UserWrapper) {
       return (
-        <TestWrapper>
+        <TestWrapper store={store}>
           <UserWrapper>{children}</UserWrapper>
         </TestWrapper>
       );
     }
 
-    return <TestWrapper>{children}</TestWrapper>;
+    return <TestWrapper store={store}>{children}</TestWrapper>;
   };
 }
