@@ -4,15 +4,16 @@ import { useResizeObserver } from "usehooks-ts";
 import { Renderer } from "vexflow";
 import { getRgbaColorString } from "../model/vexflow/color";
 import {
-  useScoreStore,
+  useScoreStoreShallow,
   useScoreStoreSubscription,
 } from "~/entities/score/model/state/score-store-provider";
 import { useConfiguration } from "~/shared/lib/configuration/configuration-provider";
 import { isCursorEquals, MetronomeCursor } from "~/shared/lib/metronome/cursor";
 import { VexflowWrapper } from "../model/vexflow/vexflow-wrapper";
+import { Score } from "~/shared/lib/score/score";
 
 export function SheetRenderer() {
-  const score = useScoreStore((state) => state.score);
+  const bars = useScoreStoreShallow((state) => state.score.bars);
   const scoreRef = useRef<HTMLCanvasElement>(null);
   const boxRef = useRef<HTMLDivElement>(null);
   const rendererRef = useRef<Renderer | undefined>(undefined);
@@ -50,7 +51,7 @@ export function SheetRenderer() {
         cursorCanvasRef.current?.height ?? 0,
       );
 
-      const noteToPlay = score.bars.at(cursor.bar)?.parts.at(cursor.part)?.notes.at(cursor.note);
+      const noteToPlay = bars.at(cursor.bar)?.parts.at(cursor.part)?.notes.at(cursor.note);
       if (!noteToPlay) {
         throw new Error("Could no find note for cursor");
       }
@@ -67,7 +68,7 @@ export function SheetRenderer() {
       canvas.fillStyle = colorRef.current ?? "rgba(88, 176, 51, 0.5)";
       canvas.fillRect(drawnNote.x, drawnNote.y, drawnNote.width, drawnNote.height);
     },
-    [score],
+    [bars],
   );
 
   useScoreStoreSubscription((state, oldState) => {
@@ -104,8 +105,15 @@ export function SheetRenderer() {
     if (!renderer) {
       throw new Error("Renderer not set");
     }
+    const score: Score = {
+      author: "",
+      bars,
+      bpm: 100,
+      name: "",
+      type: "score",
+    };
     vexflowWrapper.draw({ renderer, score, sheetWidth });
-  }, [score, scoreSize.width, vexflowWrapper]);
+  }, [bars, scoreSize.width, vexflowWrapper]);
 
   useLayoutEffect(() => {
     if (cursorCanvasRef.current) {

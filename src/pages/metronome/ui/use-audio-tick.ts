@@ -12,6 +12,7 @@ export function useAudioTicks({ notes, bpm }: UseAudioTicksProps) {
   const [isLoaded, setLoaded] = useState(false);
   const sampler = useRef<Sampler | null>(null);
   const beatTime = calculateBeatTime(bpm, notes);
+
   const store = useScoreContext();
 
   useEffect(() => {

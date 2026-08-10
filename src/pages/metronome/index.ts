@@ -1,1 +1,1 @@
-export { Metronome, type MetronomeProps } from "./ui/metronome";
+export { Metronome } from "./ui/metronome";
