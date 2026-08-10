@@ -26,13 +26,13 @@ export function WaveformView() {
     return () => {
       window.removeEventListener("keypress", handler);
     };
-  }, []);
+  }, [regions, waveSurferRef]);
 
   const onLoadFile = useCallback(
     (e: ChangeEvent<HTMLInputElement, HTMLInputElement>) => {
       const file = e.target.files?.[0];
       if (file && file.size > 0) {
-        loadFile(file).then(() => {
+        void loadFile(file).then(() => {
           setDisplayControls(true);
           if (waveSurferRef.current) {
             const waveSurfer = waveSurferRef.current;
@@ -53,7 +53,7 @@ export function WaveformView() {
         });
       }
     },
-    [setDisplayControls, loadFile],
+    [setDisplayControls, loadFile, waveSurferRef, regions],
   );
 
   return (

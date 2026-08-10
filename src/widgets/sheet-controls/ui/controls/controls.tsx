@@ -56,6 +56,7 @@ export function Controls() {
           {bars.map((bar, staveIndex) => {
             return (
               <Bar
+                key={`Bar#${staveIndex}`}
                 role="listitem"
                 bar={bar}
                 barIndex={staveIndex}

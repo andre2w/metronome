@@ -68,7 +68,7 @@ export function SheetRenderer() {
       canvas.fillStyle = colorRef.current ?? "rgba(88, 176, 51, 0.5)";
       canvas.fillRect(drawnNote.x, drawnNote.y, drawnNote.width, drawnNote.height);
     },
-    [bars],
+    [bars, vexflowWrapper],
   );
 
   useScoreStoreSubscription((state, oldState) => {
