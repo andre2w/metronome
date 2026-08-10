@@ -3,7 +3,7 @@ import { Bar, Note, Part, Score, Tempo } from "~/shared/lib/score/score";
 import { Sticking } from "~/shared/lib/score/sticking";
 
 export interface ScoreContextValue {
-  score: Score;
+  score: Score & { id?: number };
   addBar: () => void;
   toggleNote: (props: { barIndex: number; partIndex: number; noteIndex: number; key: Key }) => void;
   removeBar: (barIndex: number) => void;

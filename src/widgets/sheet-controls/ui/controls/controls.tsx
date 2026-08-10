@@ -5,19 +5,21 @@ import { ListScores } from "../list-scores";
 import { SaveScore } from "../save-score";
 import { useScoreStoreShallow } from "~/entities/score/model/state/score-store-provider";
 import { useConfiguration } from "~/shared/lib/configuration/configuration-provider";
+import { useMemo } from "react";
 
 export function Controls() {
-  const { addStave, clear, removeStave, score } = useScoreStoreShallow(
-    ({ addBar: addStave, score, toggleNote, removeBar: removeStave, setSticking, clear }) => ({
+  const { addStave, clear, removeStave } = useScoreStoreShallow(
+    ({ addBar: addStave, removeBar: removeStave, clear }) => ({
       addStave,
-      score,
-      toggleNote,
       removeStave,
-      setSticking,
       clear,
     }),
   );
+  const bars = useScoreStoreShallow((state) => state.score.bars);
   const configuration = useConfiguration();
+  const instrumentKeys = useMemo(() => {
+    return Object.entries(configuration.keys());
+  }, [configuration]);
 
   return (
     <section className="sheet-maker">
@@ -42,7 +44,7 @@ export function Controls() {
               Stickings
             </Text>
           </Box>
-          {Object.entries(configuration.keys()).map(([part, data]) => (
+          {instrumentKeys.map(([part, data]) => (
             <Box height="35px" key={part} className="part-name">
               <Text as="p" wrap="nowrap" align="right">
                 {`${data.label}${Object.hasOwn(data, "modifiers") ? " *" : ""}`}
@@ -51,7 +53,7 @@ export function Controls() {
           ))}
         </div>
         <div style={{ display: "flex", flexDirection: "row" }} role="list">
-          {score.bars.map((bar, staveIndex) => {
+          {bars.map((bar, staveIndex) => {
             return (
               <Bar
                 role="listitem"
