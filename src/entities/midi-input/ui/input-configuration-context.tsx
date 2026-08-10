@@ -29,7 +29,7 @@ export function InputConfigurationProvider({ children }: { children: ReactNode }
   } = useSelectedDevice();
   const [webmidi, setWebMidi] = useState<WebMidiApi | undefined>(undefined);
 
-  const enableWebMidi = async () => {
+  const enableWebMidi = useCallback(async () => {
     if (webmidi) {
       return;
     }
@@ -37,11 +37,11 @@ export function InputConfigurationProvider({ children }: { children: ReactNode }
     setWebMidi(webMidiInstance);
 
     enable(webMidiInstance.inputs ?? []);
-  };
+  }, [webmidi, enable]);
 
   useEffect(() => {
-    enableWebMidi();
-  }, []);
+    void enableWebMidi();
+  }, [enableWebMidi]);
 
   const selectDevice = useCallback(
     (id: string) => {
@@ -55,7 +55,7 @@ export function InputConfigurationProvider({ children }: { children: ReactNode }
       const device = webmidi?.getInputById(id);
       setSelectedDevice(device);
     },
-    [webmidi],
+    [webmidi, setSelectedDevice],
   );
 
   return (

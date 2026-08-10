@@ -69,7 +69,7 @@ export function useScoreStoreSubscription(
     const unsubscribe = score.subscribe(listener);
 
     return unsubscribe;
-  }, [listener]);
+  }, [listener, score]);
 }
 
 export function useScoreContext() {

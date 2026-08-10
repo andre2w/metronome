@@ -37,7 +37,7 @@ export function ListScores() {
                     setIsOpen(false);
                   }}
                   onDelete={() => {
-                    deleteScore(score.id);
+                    void deleteScore(score.id);
                   }}
                 />
                 {index < scores.length - 1 && <Separator size="4" orientation="horizontal" />}

@@ -9,12 +9,18 @@ export interface StaveProps extends ComponentProps<"div"> {
   bar: ScoreBar;
   barIndex: number;
   onRemoveStave: () => void;
-  className?: string;
 }
 
-export function Bar({ bar, barIndex, onRemoveStave, className, ...props }: StaveProps) {
+export function Bar({ bar, barIndex, onRemoveStave, ...props }: StaveProps) {
   const parts = bar.parts.flatMap((part, partIndex) => {
-    return <Part part={part} barIndex={barIndex} partIndex={partIndex} />;
+    return (
+      <Part
+        key={`Bar#${barIndex}#Part#${partIndex}`}
+        part={part}
+        barIndex={barIndex}
+        partIndex={partIndex}
+      />
+    );
   });
 
   return (

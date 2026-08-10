@@ -34,7 +34,7 @@ export function MetronomeHeader() {
   const { isToggled, toggle: startStop } = useScoreInterval({ onTick: tick });
 
   const toggle = () => {
-    start();
+    void start();
     if (isToggled) {
       setResult(
         calculateResult({
