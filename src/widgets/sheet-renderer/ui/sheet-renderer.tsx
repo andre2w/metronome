@@ -173,7 +173,7 @@ export const SheetRenderer = forwardRef<SheetRendererRef, {}>((_, ref) => {
     if (!store.getState().metronome.started && hoveredRef.current) {
       renderCursor(hoveredRef.current);
     }
-  }, [bars, scoreSize.width, vexflowWrapper]);
+  }, [bars, scoreSize.width, vexflowWrapper, store, renderCursor]);
 
   useLayoutEffect(() => {
     if (cursorCanvasRef.current) {
