@@ -75,4 +75,8 @@ export class VexflowBar {
   getNoteAt(cursor: Pick<MetronomeCursor, "note" | "part">) {
     return this.#parts.at(cursor.part)?.getNoteAt({ note: cursor.note });
   }
+
+  getPosition() {
+    return this.position;
+  }
 }

@@ -6,15 +6,18 @@ import { SaveScore } from "../save-score";
 import { useScoreStoreShallow } from "~/entities/score/model/state/score-store-provider";
 import { useConfiguration } from "~/shared/lib/configuration/configuration-provider";
 import { useMemo } from "react";
+import { MetronomeCursor } from "~/shared/lib/metronome";
 
-export function Controls() {
-  const { addStave, clear, removeStave } = useScoreStoreShallow(
-    ({ addBar: addStave, removeBar: removeStave, clear }) => ({
-      addStave,
-      removeStave,
-      clear,
-    }),
-  );
+export interface ControlProps {
+  onHoverNote?: (cursor: MetronomeCursor | null) => void;
+  onHoverBar?: (cursor: Pick<MetronomeCursor, "bar"> | null) => void;
+}
+
+export function Controls({ onHoverNote, onHoverBar }: ControlProps) {
+  const { addStave, clear } = useScoreStoreShallow(({ addBar: addStave, clear }) => ({
+    addStave,
+    clear,
+  }));
   const bars = useScoreStoreShallow((state) => state.score.bars);
   const configuration = useConfiguration();
   const instrumentKeys = useMemo(() => {
@@ -60,7 +63,8 @@ export function Controls() {
                 role="listitem"
                 bar={bar}
                 barIndex={staveIndex}
-                onRemoveStave={() => removeStave(staveIndex)}
+                onHoverNote={onHoverNote}
+                onHoverBar={onHoverBar}
               />
             );
           })}

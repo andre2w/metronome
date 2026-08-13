@@ -1,9 +1,19 @@
 import { useThemeContext } from "@radix-ui/themes";
-import { RefObject, useCallback, useEffect, useLayoutEffect, useMemo, useRef } from "react";
+import {
+  forwardRef,
+  RefObject,
+  useCallback,
+  useEffect,
+  useImperativeHandle,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+} from "react";
 import { useResizeObserver } from "usehooks-ts";
 import { Renderer } from "vexflow";
 import { getRgbaColorString } from "../model/vexflow/color";
 import {
+  useScoreContext,
   useScoreStoreShallow,
   useScoreStoreSubscription,
 } from "~/entities/score/model/state/score-store-provider";
@@ -11,8 +21,16 @@ import { useConfiguration } from "~/shared/lib/configuration/configuration-provi
 import { isCursorEquals, MetronomeCursor } from "~/shared/lib/metronome/cursor";
 import { VexflowWrapper } from "../model/vexflow/vexflow-wrapper";
 import { Score } from "~/shared/lib/score/score";
+import { STAVE_HEIGHT } from "../model/constants";
 
-export function SheetRenderer() {
+export interface SheetRendererRef {
+  hightlightNote: (cursor: MetronomeCursor | null) => void;
+  hightlightBar: (cursor: Pick<MetronomeCursor, "bar"> | null) => void;
+}
+
+type HoveredCursor = MetronomeCursor | Pick<MetronomeCursor, "bar"> | null;
+
+export const SheetRenderer = forwardRef<SheetRendererRef, {}>((_, ref) => {
   const bars = useScoreStoreShallow((state) => state.score.bars);
   const scoreRef = useRef<HTMLCanvasElement>(null);
   const boxRef = useRef<HTMLDivElement>(null);
@@ -24,12 +42,35 @@ export function SheetRenderer() {
   const { accentColor, appearance } = useThemeContext();
   const configuration = useConfiguration();
   const cursorCanvasRef = useRef<HTMLCanvasElement>(null);
+  const store = useScoreContext();
   const vexflowWrapper = useMemo(() => {
     return new VexflowWrapper(configuration, appearance === "inherit" ? "light" : appearance);
   }, [appearance, configuration]);
+  /**
+   * We keep this hoveredRef for when we rerender the canvas for other reasons we
+   * also highlight the same
+   */
+  const hoveredRef = useRef<HoveredCursor>(null);
+
+  useImperativeHandle(ref, () => ({
+    hightlightBar: (cursor) => {
+      if (store.getState().metronome.started) {
+        return;
+      }
+      hoveredRef.current = cursor;
+      renderCursor(cursor);
+    },
+    hightlightNote: (cursor) => {
+      if (store.getState().metronome.started) {
+        return;
+      }
+      hoveredRef.current = cursor;
+      renderCursor(cursor);
+    },
+  }));
 
   const renderCursor = useCallback(
-    (cursor: MetronomeCursor) => {
+    (cursor: HoveredCursor) => {
       if (!scoreRef.current) {
         return;
       }
@@ -51,22 +92,37 @@ export function SheetRenderer() {
         cursorCanvasRef.current?.height ?? 0,
       );
 
-      const noteToPlay = bars.at(cursor.bar)?.parts.at(cursor.part)?.notes.at(cursor.note);
-      if (!noteToPlay) {
-        throw new Error("Could no find note for cursor");
-      }
-
-      if (noteToPlay.keys.length === 0) {
+      if (cursor === null) {
         return;
       }
 
-      const drawnNote = vexflowWrapper.getNoteAt(cursor);
-      if (!drawnNote || drawnNote.type === "rest") {
-        return;
+      let position: { x: number; y: number; width: number; height: number };
+      if ("note" in cursor) {
+        const noteToPlay = bars.at(cursor.bar)?.parts.at(cursor.part)?.notes.at(cursor.note);
+        if (!noteToPlay) {
+          throw new Error("Could no find note for cursor");
+        }
+
+        if (noteToPlay.keys.length === 0) {
+          return;
+        }
+
+        const drawnNote = vexflowWrapper.getNoteAt(cursor);
+        if (!drawnNote || drawnNote.type === "rest") {
+          return;
+        }
+
+        position = drawnNote;
+      } else {
+        const barPosition = vexflowWrapper.getBarPosition(cursor);
+        if (!barPosition) {
+          throw new Error("Cloud not find bar for cursor");
+        }
+        position = { ...barPosition, height: STAVE_HEIGHT };
       }
 
       canvas.fillStyle = colorRef.current ?? "rgba(88, 176, 51, 0.5)";
-      canvas.fillRect(drawnNote.x, drawnNote.y, drawnNote.width, drawnNote.height);
+      canvas.fillRect(position.x, position.y, position.width, STAVE_HEIGHT);
     },
     [bars, vexflowWrapper],
   );
@@ -113,6 +169,10 @@ export function SheetRenderer() {
       type: "score",
     };
     vexflowWrapper.draw({ renderer, score, sheetWidth });
+
+    if (!store.getState().metronome.started && hoveredRef.current) {
+      renderCursor(hoveredRef.current);
+    }
   }, [bars, scoreSize.width, vexflowWrapper]);
 
   useLayoutEffect(() => {
@@ -136,4 +196,4 @@ export function SheetRenderer() {
       <canvas ref={cursorCanvasRef} style={{ position: "absolute" }} />
     </div>
   );
-}
+});

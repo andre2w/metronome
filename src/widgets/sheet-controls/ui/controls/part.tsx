@@ -5,17 +5,19 @@ import { Box, Flex, Text } from "@radix-ui/themes";
 import { useScoreStore } from "~/entities/score/model/state/score-store-provider";
 import { nextValueInLoop } from "~/shared/lib/loop";
 import "./part.css";
+import { MetronomeCursor } from "~/shared/lib/metronome";
 
 export interface PartProps {
   part: ScorePart;
   barIndex: number;
   partIndex: number;
   className?: string;
+  onHoverNote?: (cursor: MetronomeCursor | null) => void;
 }
 
 const tempoLoop: Tempo[] = ["quarter", "eights", "sixteens"];
 
-export function Part({ part, barIndex, className, partIndex }: PartProps) {
+export function Part({ part, barIndex, className, partIndex, onHoverNote }: PartProps) {
   const tempoCounting = counting[part.tempo];
   const changeTempo = useScoreStore((state) => state.changeTempo);
 
@@ -36,6 +38,7 @@ export function Part({ part, barIndex, className, partIndex }: PartProps) {
         noteCount={noteCount}
         index={{ barIndex, partIndex, noteIndex }}
         className={withSpace ? "with-space-left" : undefined}
+        onHover={onHoverNote}
       />
     );
   });

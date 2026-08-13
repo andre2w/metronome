@@ -122,4 +122,8 @@ export class VexflowWrapper {
   getNoteAt({ bar, ...cursor }: MetronomeCursor) {
     return this.#bars?.at(bar)?.getNoteAt(cursor) ?? null;
   }
+
+  getBarPosition({ bar }: Pick<MetronomeCursor, "bar">) {
+    return this.#bars?.at(bar)?.getPosition() ?? null;
+  }
 }

@@ -1,6 +1,6 @@
-import { describe, expect, test } from "vitest";
+import { describe, expect, test, vi } from "vitest";
 import { render } from "~/shared/test/render";
-import { Note } from "./note";
+import { Note, NoteProps } from "./note";
 import { page } from "vitest/browser";
 
 describe("Note", () => {
@@ -97,5 +97,22 @@ describe("Note", () => {
       type: "note",
       keys: [{ type: "key", note: "SNARE", modifier: "GHOST_SNARE" }],
     });
+  });
+
+  test("selects note when hovering the tile", async () => {
+    const onHover = vi.fn<NonNullable<NoteProps["onHover"]>>();
+    const component = await render(
+      <Note index={{ barIndex: 0, noteIndex: 0, partIndex: 0 }} onHover={onHover} noteCount="1" />,
+    );
+
+    const snareButton = component.locator.getByRole("button", { name: "SNARE" });
+    await component.userEvent.hover(snareButton);
+
+    expect(onHover).toHaveBeenCalledTimes(1);
+    expect(onHover).toHaveBeenCalledWith({ bar: 0, note: 0, part: 0 });
+
+    await component.userEvent.unhover(snareButton);
+    expect(onHover).toHaveBeenCalledTimes(2);
+    expect(onHover).toHaveBeenCalledWith(null);
   });
 });

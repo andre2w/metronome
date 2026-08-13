@@ -3,35 +3,45 @@ import { Button, Text } from "@radix-ui/themes";
 import "./bar.css";
 import { Bar as ScoreBar } from "~/shared/lib/score/score";
 import { Part } from "./part";
-import { ComponentProps } from "react";
+import React, { ComponentProps } from "react";
+import { MetronomeCursor } from "~/shared/lib/metronome";
+import { useScoreStore } from "~/entities/score/model/state/score-store-provider";
 
 export interface StaveProps extends ComponentProps<"div"> {
   bar: ScoreBar;
   barIndex: number;
-  onRemoveStave: () => void;
+  onHoverNote?: (cursor: MetronomeCursor | null) => void;
+  onHoverBar?: (cursor: Pick<MetronomeCursor, "bar"> | null) => void;
 }
 
-export function Bar({ bar, barIndex, onRemoveStave, ...props }: StaveProps) {
-  const parts = bar.parts.flatMap((part, partIndex) => {
+export const Bar = React.memo(
+  ({ bar, barIndex, onHoverNote, onHoverBar, ...props }: StaveProps) => {
+    const removeBar = useScoreStore((state) => state.removeBar);
+    const parts = bar.parts.flatMap((part, partIndex) => {
+      return (
+        <Part
+          key={`Bar#${barIndex}#Part#${partIndex}`}
+          part={part}
+          barIndex={barIndex}
+          partIndex={partIndex}
+          onHoverNote={onHoverNote}
+        />
+      );
+    });
+
+    const onMouseEnter = onHoverBar ? () => onHoverBar({ bar: barIndex }) : undefined;
+    const onMouseLeave = onHoverBar ? () => onHoverBar(null) : undefined;
+
     return (
-      <Part
-        key={`Bar#${barIndex}#Part#${partIndex}`}
-        part={part}
-        barIndex={barIndex}
-        partIndex={partIndex}
-      />
-    );
-  });
-
-  return (
-    <div className="stave" {...props}>
-      <div className="stave-content">
-        <Text>{barIndex + 1}</Text>
-        <Button onClick={onRemoveStave} variant="ghost" aria-label="Remove bar">
-          <Cross1Icon />
-        </Button>
+      <div className="stave" {...props} onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave}>
+        <div className="stave-content">
+          <Text>{barIndex + 1}</Text>
+          <Button onClick={() => removeBar(barIndex)} variant="ghost" aria-label="Remove bar">
+            <Cross1Icon />
+          </Button>
+        </div>
+        <div className="stave-notes">{parts}</div>
       </div>
-      <div className="stave-notes">{parts}</div>
-    </div>
-  );
-}
+    );
+  },
+);

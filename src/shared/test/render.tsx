@@ -23,14 +23,21 @@ import {
   RenderOptions,
   RenderResult,
 } from "vitest-browser-react";
+import { userEvent as vitestUserEvent, type UserEvent } from "vitest/browser";
 import { Score } from "../lib/score/score";
 import "../../app/entrypoint/styles.css";
 import "../../app/entrypoint/root.css";
 
+export interface ExtraRenderValues {
+  store: TestStore;
+  userEvent: UserEvent;
+}
+
 export async function render(
   ui: React.ReactNode,
   options?: RenderOptions & { initalScore?: Score },
-): Promise<RenderResult & { store: TestStore }> {
+): Promise<RenderResult & ExtraRenderValues> {
+  const userEvent = vitestUserEvent.setup();
   const { initalScore, ...renderOptions } = options ?? {};
   const store = createTestStore(initalScore);
 
@@ -39,13 +46,14 @@ export async function render(
     wrapper: createWrapper(options?.wrapper, store),
   });
 
-  return { ...rendered, store };
+  return { ...rendered, store, userEvent };
 }
 
 export async function renderHook<Props, Result>(
   render: (initialProps: Props) => Result,
   options?: RenderHookOptions<Props> & { initialScore?: Score },
-): Promise<RenderHookResult<Result, Props> & { store: TestStore }> {
+): Promise<RenderHookResult<Result, Props> & ExtraRenderValues> {
+  const userEvent = vitestUserEvent.setup();
   const { initialScore, ...renderOptions } = options ?? {};
   const store = createTestStore(initialScore);
   const rendered = await baseRenderHook(render as (initialProps?: Props) => Result, {
@@ -53,7 +61,7 @@ export async function renderHook<Props, Result>(
     wrapper: createWrapper(options?.wrapper, store),
   });
 
-  return { ...rendered, store };
+  return { ...rendered, store, userEvent };
 }
 
 function createTestStore(initialScore?: Score) {

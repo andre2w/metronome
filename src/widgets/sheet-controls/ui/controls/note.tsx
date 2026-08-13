@@ -4,6 +4,7 @@ import { Key } from "./key";
 import { Tile } from "./tile";
 import { useScoreStore } from "~/entities/score/model/state/score-store-provider";
 import { useConfiguration } from "~/shared/lib/configuration/configuration-provider";
+import { MetronomeCursor } from "~/shared/lib/metronome";
 
 export interface NoteProps {
   noteCount?: string;
@@ -13,16 +14,24 @@ export interface NoteProps {
     partIndex: number;
     noteIndex: number;
   };
+  onHover?: (cursor: MetronomeCursor | null) => void;
 }
 
 const stickingsLoop = [null, "L", "R", "R/L"] as const;
 
-export function Note({ noteCount, className, index }: NoteProps) {
+export function Note({ noteCount, className, index, onHover }: NoteProps) {
   const configuration = useConfiguration();
   const setSticking = useScoreStore((state) => state.setSticking);
   const note = useScoreStore((state) =>
     state.score.bars.at(index.barIndex)?.parts.at(index.partIndex)?.notes.at(index.noteIndex),
   );
+
+  const hoverEnver = onHover
+    ? () => onHover({ bar: index.barIndex, note: index.noteIndex, part: index.partIndex })
+    : undefined;
+
+  const hoverExit = onHover ? () => onHover(null) : undefined;
+
   if (!note) {
     throw new Error("Could not find note in score");
   }
@@ -33,6 +42,7 @@ export function Note({ noteCount, className, index }: NoteProps) {
         0,
       )
     : 0;
+
   const nextIndex = stickingIndex + 1 >= stickingsLoop.length ? 0 : stickingIndex + 1;
   const nextSticking = stickingsLoop[nextIndex];
   if (typeof nextSticking === "undefined") {
@@ -40,9 +50,14 @@ export function Note({ noteCount, className, index }: NoteProps) {
   }
 
   return (
-    <div className={`stave-note ${className ?? ""}`}>
+    <div
+      className={`stave-note ${className ?? ""}`}
+      onMouseEnter={hoverEnver}
+      onMouseLeave={hoverExit}
+    >
       <Tile
         className="sticking"
+
         onClick={() => {
           setSticking({
             ...index,

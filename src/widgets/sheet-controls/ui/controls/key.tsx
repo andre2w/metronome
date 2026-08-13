@@ -17,8 +17,19 @@ export interface KeyProps {
   };
   isSelected: boolean;
   modifier?: string;
+  onMouseEnter?: () => void;
+  onMouseLeave?: () => void;
 }
-export function Key({ children, note, index, isSelected, modifier }: KeyProps) {
+
+export function Key({
+  children,
+  note,
+  index,
+  isSelected,
+  modifier,
+  onMouseEnter,
+  onMouseLeave,
+}: KeyProps) {
   const toggleNote = useScoreStore((state) => state.toggleNote);
   const configuration = useConfiguration();
   const noteData: KeyData | undefined = note ? configuration.getKeyData(note) : undefined;
@@ -42,6 +53,8 @@ export function Key({ children, note, index, isSelected, modifier }: KeyProps) {
       onClick={onClick}
       variant={isSelected ? "selected" : undefined}
       aria-label={note}
+      onMouseEnter={onMouseEnter}
+      onMouseLeave={onMouseLeave}
     >
       {children}
     </Tile>

@@ -241,4 +241,31 @@ export class VexflowPart {
 
     return this.#drawnNotes.at(cursor.note);
   }
+
+  getPartPosition() {
+    if (this.#drawnNotes === null) {
+      throw new Error("No notes were drawn");
+    }
+
+    let max = Number.MIN_SAFE_INTEGER;
+    let min = Number.MAX_SAFE_INTEGER;
+    let y = Number.MAX_SAFE_INTEGER;
+    let height = Number.MIN_SAFE_INTEGER;
+    for (const note of this.#drawnNotes) {
+      if (note.type === "note") {
+        max = Math.max(note.x, max);
+        min = Math.min(note.x, min);
+        y = Math.min(y, note.y);
+        height = Math.max(height, note.height);
+      }
+    }
+
+    const width = max - min;
+    return {
+      x: min,
+      y,
+      height,
+      width,
+    };
+  }
 }
