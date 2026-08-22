@@ -2,7 +2,7 @@ import { Bar } from "~/shared/lib/score/score";
 import { VexflowPart } from "./vexflow-part";
 import { Configuration } from "~/shared/lib/configuration/configuration-provider";
 import { StavePosition } from "./helpers";
-import { Beam, Formatter, RenderContext, Stave, StaveNote, Voice } from "vexflow";
+import { Beam, Formatter, RenderContext, Stave, StaveNote, Tuplet, Voice } from "vexflow";
 import { RESOLUTION } from "../constants";
 import { MetronomeCursor } from "~/shared/lib/metronome";
 import { RenderColor } from "./vexflow-wrapper";
@@ -36,11 +36,16 @@ export class VexflowBar {
 
     const allNotes: StaveNote[] = [];
     const beams: Beam[] = [];
+    const tuplets: Tuplet[] = [];
     for (const part of this.#parts) {
-      const { beam, staveNotes } = part.draw();
+      const { beam, staveNotes, tuplet } = part.draw();
       allNotes.push(...staveNotes.filter((s) => s !== null));
       if (beam) {
         beams.push(beam);
+      }
+
+      if (tuplet) {
+        tuplets.push(tuplet);
       }
     }
 
@@ -63,6 +68,9 @@ export class VexflowBar {
 
     stave.drawWithStyle();
     voice.drawWithStyle();
+    tuplets.forEach((t) => {
+      t.setContext(context).draw();
+    });
     for (const beam of beams) {
       beam.setContext(context).drawWithStyle();
     }

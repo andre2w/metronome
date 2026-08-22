@@ -184,7 +184,9 @@ function parseTempo(tempo: Part["tempo"]) {
       return "4";
     case "sixteens":
       return "16";
-    case "triplet":
-      return "3";
+    case "eight_triplet":
+      return "8";
+    case "sixteen_triplet":
+      return "16";
   }
 }

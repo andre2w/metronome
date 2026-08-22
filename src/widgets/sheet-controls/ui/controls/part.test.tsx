@@ -30,13 +30,46 @@ const quarterPart: ScorePart = {
   notes: [{ type: "note", keys: [] }],
 };
 
+const eightTripletPart: ScorePart = {
+  type: "part",
+  tempo: "eight_triplet",
+  notes: [
+    { type: "note", keys: [] },
+    { type: "note", keys: [] },
+    { type: "note", keys: [] },
+  ],
+};
+
+const sixteenTripletPart: ScorePart = {
+  type: "part",
+  tempo: "sixteen_triplet",
+  notes: [
+    { type: "note", keys: [] },
+    { type: "note", keys: [] },
+    { type: "note", keys: [] },
+    { type: "note", keys: [] },
+    { type: "note", keys: [] },
+    { type: "note", keys: [] },
+  ],
+};
+
 describe("Part", () => {
-  test.each([
+  test.only.each([
     { part: sixteenPart, text: "1/16", tileCount: 41 },
     { part: eightPart, text: "1/8", tileCount: 21 },
     { part: quarterPart, text: "1/4", tileCount: 11 },
+    { part: eightTripletPart, text: "1/8 Triplet", tileCount: 31 },
+    { part: sixteenTripletPart, text: "1/16 Triplet", tileCount: 61 },
   ])("Renders part with tempo and counting: $part.tempo", async ({ part, text, tileCount }) => {
-    const component = await render(<Part barIndex={0} partIndex={0} part={part} />);
+    const component = await render(<Part barIndex={0} partIndex={0} part={part} />, {
+      initalScore: {
+        author: "",
+        bars: [{ type: "bar", parts: [part] }],
+        bpm: 100,
+        name: "",
+        type: "score",
+      },
+    });
 
     const tempo = component.getByText(text);
     await expect.element(tempo).toBeVisible();

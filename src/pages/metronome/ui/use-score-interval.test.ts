@@ -99,4 +99,69 @@ describe("useScoreInterval", () => {
     expect(hook.result.current.isToggled).toBeTruthy();
     expect(onTick).toHaveBeenCalledTimes(8);
   });
+
+  test("Advances time taking into account triplets", async () => {
+    const onTick = vi.fn();
+    const eightTriplet: Part = {
+      type: "part",
+      tempo: "eight_triplet",
+      notes: [
+        { type: "note", keys: [] },
+        { type: "note", keys: [] },
+        { type: "note", keys: [] },
+      ],
+    };
+    const sixteenTriplet: Part = {
+      type: "part",
+      tempo: "sixteen_triplet",
+      notes: [
+        { type: "note", keys: [] },
+        { type: "note", keys: [] },
+        { type: "note", keys: [] },
+        { type: "note", keys: [] },
+        { type: "note", keys: [] },
+        { type: "note", keys: [] },
+      ],
+    };
+    const tripletBar: Bar = {
+      type: "bar",
+      parts: [eightTriplet, sixteenTriplet],
+    };
+    const hook = await renderHook(useScoreInterval, {
+      initialProps: { onTick },
+      initialScore: {
+        author: "",
+        bars: [tripletBar],
+        bpm: 60,
+        name: "",
+        type: "score",
+      },
+    });
+
+    expect(hook.result.current.isToggled).toBeFalsy();
+
+    act(() => {
+      hook.result.current.toggle();
+    });
+
+    expect(hook.result.current.isToggled).toBeTruthy();
+    expect(onTick).toHaveBeenCalledTimes(1);
+
+    await vi.advanceTimersByTimeAsync(100);
+    expect(onTick).toHaveBeenCalledTimes(1);
+    await vi.advanceTimersByTimeAsync(250);
+    expect(onTick).toHaveBeenCalledTimes(2);
+
+    await vi.advanceTimersByTimeAsync(350);
+    expect(onTick).toHaveBeenCalledTimes(3);
+
+    await vi.advanceTimersByTimeAsync(350);
+    expect(onTick).toHaveBeenCalledTimes(4);
+
+    await vi.advanceTimersByTimeAsync(125);
+    expect(onTick).toHaveBeenCalledTimes(5);
+
+    await vi.advanceTimersByTimeAsync(167);
+    expect(onTick).toHaveBeenCalledTimes(6);
+  });
 });

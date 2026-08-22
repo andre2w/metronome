@@ -52,11 +52,11 @@ function notesForTempo(tempo: Tempo) {
       return 1;
     case "eights":
       return 2;
-    case "triplet":
+    case "eight_triplet":
       return 3;
     case "sixteens":
       return 4;
-    default:
-      throw new Error("Invalid number of notes per part");
+    case "sixteen_triplet":
+      return 6;
   }
 }

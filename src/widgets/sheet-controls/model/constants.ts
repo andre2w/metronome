@@ -14,9 +14,17 @@ export const counting: Record<Tempo, string[][]> = {
     ["3", "e", "&", "a"],
     ["4", "e", "&", "a"],
   ],
-  triplet: [
+  eight_triplet: [
     ["1", "ta", "ta"],
     ["2", "ta", "ta"],
     ["3", "ta", "ta"],
+  ],
+  sixteen_triplet: [
+    ["1", "ta", "ta", "&", "ta", "ta"],
+    ["2", "ta", "ta", "&", "ta", "ta"],
+    ["3", "ta", "ta", "&", "ta", "ta"],
+    ["4", "ta", "ta", "&", "ta", "ta"],
+    ["5", "ta", "ta", "&", "ta", "ta"],
+    ["6", "ta", "ta", "&", "ta", "ta"],
   ],
 };

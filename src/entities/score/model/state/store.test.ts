@@ -242,11 +242,14 @@ function createBar(len: number): Bar {
     case 8:
       tempo = "eights";
       break;
-    case 3:
-      tempo = "triplet";
-      break;
     case 16:
       tempo = "sixteens";
+      break;
+    case 12:
+      tempo = "eight_triplet";
+      break;
+    case 21:
+      tempo = "sixteen_triplet";
       break;
   }
   if (!tempo) {
@@ -261,12 +264,16 @@ function createBar(len: number): Bar {
     case 8:
       notesPerPart = 2;
       break;
-    case 3:
-      notesPerPart = 3;
-      break;
     case 16:
       notesPerPart = 4;
       break;
+    case 12:
+      notesPerPart = 3;
+      break;
+    case 21:
+      notesPerPart = 6;
+      break;
+
     default:
       throw new Error("Invalid number of notes per part");
   }

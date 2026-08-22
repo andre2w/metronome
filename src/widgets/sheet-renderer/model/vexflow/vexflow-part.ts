@@ -10,6 +10,7 @@ import {
   Stave,
   StaveNote,
   Stem,
+  Tuplet,
 } from "vexflow";
 import { REST_KEY } from "./constants";
 import { MetronomeCursor } from "~/shared/lib/metronome";
@@ -20,6 +21,7 @@ export class VexflowPart {
   #color: RenderColor;
   #staveNotes: (StaveNote | null)[] | null = null;
   #drawnNotes: DrawnNote[] | null = null;
+  #isTriplet: boolean = false;
 
   constructor(part: Part, configuration: Configuration, color: RenderColor) {
     this.#configuration = configuration;
@@ -43,6 +45,21 @@ export class VexflowPart {
       for (let i = 1; i < part.notes.length; i++) {
         this.reducedNotes.push({
           type: "noop",
+        });
+      }
+      return;
+    }
+    this.#isTriplet = false;
+
+    if (part.tempo === "eight_triplet" || part.tempo === "sixteen_triplet") {
+      this.#isTriplet = true;
+      for (const note of part.notes) {
+        this.reducedNotes.push({
+          duration: part.tempo,
+          keys: note.keys.map((k) => ({ note: k.note, modifier: k.modifier })),
+          sticking: note.sticking,
+          withDot: false,
+          type: "note",
         });
       }
       return;
@@ -101,6 +118,7 @@ export class VexflowPart {
   draw() {
     this.#staveNotes = [];
     const beamNotes: StaveNote[] = [];
+    let notesOccupied = 0;
     for (const reducedNote of this.reducedNotes) {
       if (reducedNote.type === "noop") {
         this.#staveNotes.push(null);
@@ -108,18 +126,29 @@ export class VexflowPart {
       }
 
       const staveNote = this.createStaveNote(reducedNote);
+
       this.#staveNotes.push(staveNote);
       if (reducedNote.keys.length > 0) {
+        notesOccupied++;
         beamNotes.push(staveNote);
       }
     }
+    let tuplet: Tuplet | undefined;
+    if (this.#isTriplet)
+      tuplet = new Tuplet(
+        this.#staveNotes.filter((n) => n !== null),
+        {
+          notesOccupied: 2,
+          numNotes: 3,
+        },
+      );
 
     let beam: Beam | undefined;
     if (beamNotes.length > 1) {
       beam = new Beam(beamNotes);
     }
 
-    return { staveNotes: this.#staveNotes, beam };
+    return { staveNotes: this.#staveNotes, beam, tuplet };
   }
 
   updatePosition(stave: Stave) {
@@ -229,8 +258,10 @@ export class VexflowPart {
         return "4";
       case "sixteens":
         return "16";
-      case "triplet":
-        return "3";
+      case "eight_triplet":
+        return "8";
+      case "sixteen_triplet":
+        return "16";
     }
   }
 

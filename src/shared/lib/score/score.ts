@@ -6,7 +6,7 @@ import { Sticking } from "./sticking";
  */
 export type Note = { type: "note"; keys: (Key & { type: "key" })[]; sticking?: Sticking };
 
-export type Tempo = "quarter" | "eights" | "sixteens" | "triplet";
+export type Tempo = "quarter" | "eights" | "sixteens" | "eight_triplet" | "sixteen_triplet";
 
 /**
  * A part can be a group of notes to be played. It can go from
@@ -14,7 +14,7 @@ export type Tempo = "quarter" | "eights" | "sixteens" | "triplet";
  */
 export interface Part {
   type: "part";
-  tempo: "quarter" | "eights" | "sixteens" | "triplet";
+  tempo: Tempo;
   notes: Note[];
 }
 

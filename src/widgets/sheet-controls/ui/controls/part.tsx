@@ -15,7 +15,7 @@ export interface PartProps {
   onHoverNote?: (cursor: MetronomeCursor | null) => void;
 }
 
-const tempoLoop: Tempo[] = ["quarter", "eights", "sixteens"];
+const tempoLoop: Tempo[] = ["quarter", "eights", "sixteens", "eight_triplet", "sixteen_triplet"];
 
 export function Part({ part, barIndex, className, partIndex, onHoverNote }: PartProps) {
   const tempoCounting = counting[part.tempo];
@@ -25,9 +25,7 @@ export function Part({ part, barIndex, className, partIndex, onHoverNote }: Part
     const noteCount = tempoCounting?.[partIndex]?.[noteIndex];
 
     if (!noteCount) {
-      throw new Error(
-        `No counting for bar at ${JSON.stringify({ staveIndex: barIndex, partIndex, note })}`,
-      );
+      throw new Error(`No counting for bar at ${JSON.stringify({ partIndex, note, noteIndex })}`);
     }
 
     const withSpace = ["2", "3", "4"].includes(noteCount);
@@ -73,7 +71,9 @@ function tempoLabel(tempo: Tempo) {
       return "1/8";
     case "sixteens":
       return "1/16";
-    case "triplet":
-      return "1/3";
+    case "eight_triplet":
+      return "1/8 Triplet";
+    case "sixteen_triplet":
+      return "1/16 Triplet";
   }
 }

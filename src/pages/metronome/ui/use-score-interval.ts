@@ -40,8 +40,12 @@ export function useScoreInterval({ onTick }: UseScoreIntervalProps) {
       case "eights":
         beatTime = calculateBeatTime(bpm, 8);
         break;
-      default:
-        throw new Error("NOT SUPPORTED");
+      case "eight_triplet":
+        beatTime = calculateBeatTime(bpm, 12);
+        break;
+      case "sixteen_triplet":
+        beatTime = calculateBeatTime(bpm, 24);
+        break;
     }
 
     timeout.current = setTimeout(() => {
