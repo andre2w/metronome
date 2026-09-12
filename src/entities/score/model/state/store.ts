@@ -118,7 +118,10 @@ export const createScoreSlice: (initialScore?: Score) => ScoreSlice = (initialSc
       tempo: Tempo;
     }) => {
       set((state) => {
-        const part = state.score.bars.at(index.barIndex)?.parts.at(index.partIndex)!;
+        const part = state.score.bars.at(index.barIndex)?.parts.at(index.partIndex);
+        if (!part) {
+          throw new Error("Part is not present in bar");
+        }
         const updatedPart = createPart(tempo);
         part.tempo = tempo;
         part.notes = updatedPart.notes;

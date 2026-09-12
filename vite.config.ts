@@ -12,7 +12,7 @@ export default defineConfig({
       routesDirectory: "./src",
       quoteStyle: "double",
     }),
-    react(),
+    react({ compiler: true }),
   ],
   resolve: {
     tsconfigPaths: true,

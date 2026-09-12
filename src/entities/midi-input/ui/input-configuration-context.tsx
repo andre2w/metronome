@@ -1,4 +1,4 @@
-import { type ReactNode, createContext, useCallback, useContext, useEffect, useState } from "react";
+import { type ReactNode, createContext, useCallback, useContext, useState } from "react";
 import { type Input, WebMidi } from "webmidi";
 import { NO_INPUT_SELECTED } from "../config/constants";
 import { useSelectedDevice } from "../model/use-selected-device";
@@ -38,10 +38,6 @@ export function InputConfigurationProvider({ children }: { children: ReactNode }
 
     enable(webMidiInstance.inputs ?? []);
   }, [webmidi, enable]);
-
-  useEffect(() => {
-    void enableWebMidi();
-  }, [enableWebMidi]);
 
   const selectDevice = useCallback(
     (id: string) => {

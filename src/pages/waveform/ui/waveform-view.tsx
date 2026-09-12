@@ -7,7 +7,7 @@ const random = (min: number, max: number) => Math.random() * (max - min) + min;
 const randomColor = () => `rgba(${random(0, 255)}, ${random(0, 255)}, ${random(0, 255)}, 0.5)`;
 
 export function WaveformView() {
-  const { init, loadFile, isLoaded, waveSurferRef, regions } = useWaveform();
+  const { init, loadFile, waveSurferRef, regions } = useWaveform();
   const [_, setDisplayControls] = useState(false);
 
   useEffect(() => {
@@ -72,7 +72,7 @@ export function WaveformView() {
       </div>
       <div
         ref={(el) => {
-          if (el && !isLoaded) {
+          if (el && !waveSurferRef.current) {
             init(el);
           }
         }}

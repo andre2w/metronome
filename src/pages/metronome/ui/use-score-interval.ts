@@ -50,6 +50,7 @@ export function useScoreInterval({ onTick }: UseScoreIntervalProps) {
 
     timeout.current = setTimeout(() => {
       next();
+      // oxlint-disable-next-line react/immutability
       ticker();
     }, beatTime);
   }, [onTick, bpm, store, score, next]);

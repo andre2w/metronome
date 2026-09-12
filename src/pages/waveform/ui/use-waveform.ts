@@ -62,5 +62,5 @@ export function useWaveform() {
     await waveSurferRef.current.loadBlob(audio);
   }, []);
 
-  return { init, loadFile, isLoaded: !!waveSurferRef.current, waveSurferRef, regions: plugins[1] };
+  return { init, loadFile, waveSurferRef, regions: plugins[1] };
 }

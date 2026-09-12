@@ -52,23 +52,6 @@ export const SheetRenderer = forwardRef<SheetRendererRef, {}>((_, ref) => {
    */
   const hoveredRef = useRef<HoveredCursor>(null);
 
-  useImperativeHandle(ref, () => ({
-    hightlightBar: (cursor) => {
-      if (store.getState().metronome.started) {
-        return;
-      }
-      hoveredRef.current = cursor;
-      renderCursor(cursor);
-    },
-    hightlightNote: (cursor) => {
-      if (store.getState().metronome.started) {
-        return;
-      }
-      hoveredRef.current = cursor;
-      renderCursor(cursor);
-    },
-  }));
-
   const renderCursor = useCallback(
     (cursor: HoveredCursor) => {
       if (!scoreRef.current) {
@@ -124,8 +107,25 @@ export const SheetRenderer = forwardRef<SheetRendererRef, {}>((_, ref) => {
       canvas.fillStyle = colorRef.current ?? "rgba(88, 176, 51, 0.5)";
       canvas.fillRect(position.x, position.y, position.width, STAVE_HEIGHT);
     },
-    [bars, vexflowWrapper],
+    [vexflowWrapper, bars],
   );
+
+  useImperativeHandle(ref, () => ({
+    hightlightBar: (cursor) => {
+      if (store.getState().metronome.started) {
+        return;
+      }
+      hoveredRef.current = cursor;
+      renderCursor(cursor);
+    },
+    hightlightNote: (cursor) => {
+      if (store.getState().metronome.started) {
+        return;
+      }
+      hoveredRef.current = cursor;
+      renderCursor(cursor);
+    },
+  }));
 
   useScoreStoreSubscription((state, oldState) => {
     if (isCursorEquals(state.metronome.cursor, oldState.metronome.cursor)) {
