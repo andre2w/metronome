@@ -5,17 +5,17 @@
 /* Global CSS custom properties used across the control tiles. Kept global
  * via :global so they are not scoped/renamed by CSS modules. */
 :global(:root) {
-  --space-note-top: 1px;
-  --space-note-right: 1px;
+  --space-note-top: 2px;
+  --space-note-right: 2px;
 }
 
 .sheet-maker {
   display: flex;
   flex-direction: column;
   gap: 16px;
-  padding: 16px 20px;
-  border: 1px solid var(--gray-a6);
-  background-color: var(--color-background);
+  padding: 20px 24px;
+  border: 2px solid var(--bs-ink);
+  background-color: var(--bs-paper);
   overflow-y: hidden;
   overflow-x: auto;
 }
@@ -26,30 +26,39 @@
   gap: 8px;
   font-family: var(--code-font-family);
   text-transform: uppercase;
-  letter-spacing: 0.16em;
+  letter-spacing: 0.18em;
   font-size: 11px;
-  color: var(--gray-11);
+  font-weight: 600;
+  color: var(--bs-ink);
+  padding-bottom: 10px;
+  border-bottom: 1.5px solid var(--bs-ink);
 }
 
 .sheet-maker-header::before {
   content: "/ ";
-  color: var(--bs-accent);
-  font-weight: 600;
+  color: var(--bs-ink-soft);
+  font-weight: 700;
 }
 
+/* Sheet grid area gets the dotted-grid backdrop seen on the reference cards */
 .sheet {
   display: flex;
   flex-direction: row;
+  padding: 12px;
+  background-color: var(--bs-paper);
+  background-image: radial-gradient(var(--bs-ink) 0.6px, transparent 0.6px);
+  background-size: 12px 12px;
+  border: 1.5px solid var(--bs-ink);
 }
 
 .parts {
   align-self: flex-end;
   position: sticky;
   left: 0;
-  background-color: var(--color-background);
+  background-color: var(--bs-paper);
   margin-right: 12px;
   padding-right: 12px;
-  border-right: 1px solid var(--gray-a6);
+  border-right: 1.5px solid var(--bs-ink);
 }
 
 .part-name {
@@ -58,9 +67,9 @@
   justify-content: flex-end;
   font-family: var(--code-font-family);
   text-transform: uppercase;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.1em;
   font-size: 11px;
-  color: var(--gray-11);
+  color: var(--bs-ink-soft);
   margin-right: var(--space-note-right);
   margin-top: var(--space-note-top);
 }
@@ -73,12 +82,15 @@
   gap: 8px;
 }
 
-/* Tempo cell (part.css) */
+/* Tempo cell */
+.tempo {
+  cursor: pointer;
+}
 .tempo:hover {
-  background-color: var(--gray-a3);
+  background-color: var(--bs-paper-2);
 }
 
-/* Bar (bar.css) */
+/* Bar */
 .stave {
   padding-right: var(--space-7);
 }
@@ -87,20 +99,22 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border-bottom: 1px solid var(--gray-a6);
+  border-bottom: 1.5px solid var(--bs-ink);
   padding: 4px 6px;
-  margin-bottom: 6px;
+  margin-bottom: 8px;
   font-family: var(--code-font-family);
   text-transform: uppercase;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.1em;
   font-size: 11px;
-  color: var(--gray-11);
+  font-weight: 600;
+  color: var(--bs-ink);
 }
 
 .stave-content::before {
   content: "■";
   margin-right: 8px;
   color: var(--bs-accent);
+  -webkit-text-stroke: 0.5px var(--bs-ink);
 }
 
 .stave-content > :first-of-type {
@@ -115,66 +129,68 @@
   margin-left: var(--space-2);
 }
 
-/* Note (note.css) */
+/* Note */
 .stave-note {
   display: flex;
   flex-direction: column;
 }
 
-/* Sticking tile: merges note.css (layout) + controls.css (border reset) */
+/* Sticking tile: layout + border reset */
 .sticking {
   display: flex;
   justify-content: center;
   align-items: center;
   font-family: var(--code-font-family);
   font-size: 12px;
-  color: var(--gray-11);
+  font-weight: 600;
+  color: var(--bs-ink);
   border: unset;
 }
 
-/* Note/key tiles (shared by note.css and key.css) */
+/* Note/key tiles */
 .note {
-  border: 1px solid var(--gray-a8);
-  background-color: transparent;
+  border: 1.5px solid var(--bs-ink);
+  background-color: var(--bs-paper);
   cursor: pointer;
   transition: background-color 80ms linear;
 }
 
 .note:hover {
-  background-color: var(--gray-a3);
+  background-color: var(--bs-paper-2);
 }
 
 .note-selected,
 .note-selected:hover {
   background-color: var(--bs-accent);
-  border-color: var(--bs-accent);
+  border-color: var(--bs-ink);
 }
 
-/* Key tile (key.css) */
+/* Key tile */
 .key {
   margin-right: var(--space-note-right);
   margin-top: var(--space-note-top);
-  border-color: var(--bs-accent);
+  border-color: var(--bs-ink);
 }
 
-/* Tile (tile.css) — base tile used by note/key/sticking */
+/* Tile — base tile used by note/key/sticking */
 .tile {
-  border: 1px solid;
+  border: 1.5px solid var(--bs-ink);
+  background-color: var(--bs-paper);
   cursor: pointer;
   transition: background-color 80ms linear;
 }
 
 .not-selected {
-  border-color: var(--gray-a8);
-  background-color: transparent;
+  border-color: var(--bs-ink);
+  background-color: var(--bs-paper);
 }
 
 .not-selected:hover {
-  background-color: var(--gray-a3);
+  background-color: var(--bs-paper-2);
 }
 
 .selected,
 .selected:hover {
   background-color: var(--bs-accent);
-  border-color: var(--bs-accent);
+  border-color: var(--bs-ink);
 }

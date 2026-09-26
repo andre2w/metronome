@@ -14,8 +14,8 @@ import { ScoreProvider } from "~/entities/score/model/state/score-store-provider
 
 function RootLayout() {
   const [{ appearance, accentColor }, setThemePreferences] = useLocalStorage("theme-preferences", {
-    appearance: "dark" as "light" | "dark",
-    accentColor: "yellow" as ThemeProps["accentColor"],
+    appearance: "light" as "light" | "dark",
+    accentColor: "lime" as ThemeProps["accentColor"],
   });
   return (
     <Theme

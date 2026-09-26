@@ -1,26 +1,37 @@
-/* theme overrides for Radix Themes
- * Palette: yellow #f0fb29, blue #aee3fd, dark #202020, white #fff
- * Type: IBM Plex Sans (body), IBM Plex Mono (labels, UI chrome)
- * Shape: sharp corners, thick borders, all-caps mono labels
+/* Theme overrides for Radix Themes — industrial / brutalist look
+ * Inspired by openjev.com and blacksmith.sh.
+ * Palette: paper #f4f4ef, ink #101010, lime #d4f829, lilac #f3d9f6
+ * Type: IBM Plex Sans (headings/body), IBM Plex Mono (labels, UI chrome)
+ * Shape: sharp corners, thick black borders, hard offset shadows
  */
 
 :root,
 .radix-themes {
-  --bs-dark: #202020;
-  --bs-darker: #161616;
-  --bs-light: #fafafa;
-  --bs-line: rgba(255, 255, 255, 0.12);
-  --bs-line-strong: rgba(255, 255, 255, 0.6);
+  /* Brand palette */
+  --bs-paper: #f4f4ef;
+  --bs-paper-2: #ecece4;
+  --bs-ink: #101010;
+  --bs-ink-soft: #4a4a45;
+  --bs-lime: #d4f829;
+  --bs-lime-strong: #c2e520;
+  --bs-lilac: #f3d9f6;
 
-  /* Accent tokens — driven by the active Radix accent color so the picker
-   * controls every brand-colored surface (hover, selection, glyphs). */
-  --bs-accent: var(--accent-9);
-  --bs-accent-soft: var(--accent-10);
-  --bs-accent-contrast: var(--accent-contrast);
+  /* Hard borders + offset shadow (the "pressed" brutalist button/card look) */
+  --bs-border-width: 1.5px;
+  --bs-border: var(--bs-border-width) solid var(--bs-ink);
+  --bs-shadow: 4px 4px 0 var(--bs-ink);
+  --bs-shadow-sm: 2px 2px 0 var(--bs-ink);
+
+  /* Accent tokens track the active Radix accent so the theme picker controls
+   * every brand-colored surface (buttons, selection, glyphs, highlights) at
+   * once. Lime is the default accent (set in root.tsx) and the fallback here. */
+  --bs-accent: var(--accent-9, var(--bs-lime));
+  --bs-accent-soft: var(--accent-10, var(--bs-lime-strong));
+  --bs-accent-contrast: var(--accent-contrast, var(--bs-ink));
   /* Legacy aliases kept for any stray reference */
   --bs-yellow: var(--bs-accent);
   --bs-yellow-soft: var(--bs-accent-soft);
-  --bs-blue: #aee3fd;
+  --bs-blue: var(--bs-lilac);
 
   --default-font-family: "IBM Plex Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
   --code-font-family: "IBM Plex Mono", Menlo, Monaco, Consolas, monospace;
@@ -28,7 +39,7 @@
   --heading-font-family: "IBM Plex Sans", "Helvetica Neue", Helvetica, sans-serif;
   --em-font-family: "IBM Plex Sans", "Helvetica Neue", Helvetica, sans-serif;
 
-  --heading-letter-spacing: -0.02em;
+  --heading-letter-spacing: -0.03em;
   --default-font-weight-medium: 500;
 
   /* Force square corners across Radix components */
@@ -41,22 +52,25 @@
   --radius-full: 0px;
 }
 
-/* Light/dark base surfaces tuned */
+/* Paper surface everywhere */
 .radix-themes:where([data-is-root-theme="true"]) {
   background-color: var(--color-page-background);
 }
 
+/* Light "paper" is the primary theme */
+.light,
+.light-theme,
+:root {
+  --color-background: var(--bs-paper);
+  --color-page-background: var(--bs-paper);
+}
+
+/* Dark theme kept usable but ink-on-paper is the intended default */
 .dark,
 .dark-theme,
 :root.dark {
-  --color-background: var(--bs-darker);
-  --color-page-background: var(--bs-darker);
-}
-
-.light,
-.light-theme {
-  --color-background: var(--bs-light);
-  --color-page-background: var(--bs-light);
+  --color-background: #17171a;
+  --color-page-background: #101012;
 }
 
 html,
@@ -66,10 +80,11 @@ body,
   padding: 0;
   min-height: 100vh;
   font-family: var(--default-font-family);
+  color: var(--bs-ink);
   background-color: var(--color-page-background);
 }
 
-/* Headings: tight tracking */
+/* Headings: tight tracking, heavy weight like the reference sites */
 .rt-Heading,
 h1,
 h2,
@@ -78,21 +93,32 @@ h4,
 h5 {
   font-family: var(--heading-font-family);
   letter-spacing: var(--heading-letter-spacing);
-  font-weight: 500;
+  font-weight: 700;
 }
 
-/* Buttons: square, mono, uppercase */
+/* Buttons: square, mono, uppercase, black-bordered with a hard offset shadow */
 .rt-Button,
 .rt-reset.rt-Button {
   font-family: var(--code-font-family);
   text-transform: uppercase;
-  letter-spacing: 0.06em;
-  font-weight: 500;
+  letter-spacing: 0.08em;
+  font-weight: 600;
   border-radius: 0;
+  border: var(--bs-border);
+  box-shadow: var(--bs-shadow-sm);
+  transition:
+    transform 60ms ease,
+    box-shadow 60ms ease,
+    background-color 60ms ease;
 }
 
-/* Solid buttons get the dark-on-accent CTA look, with text color
- * automatically picked by Radix to stay readable on any accent. */
+.rt-Button:active,
+.rt-reset.rt-Button:active {
+  transform: translate(2px, 2px);
+  box-shadow: none;
+}
+
+/* Solid buttons get the lime-on-ink CTA look */
 .rt-Button.rt-variant-solid {
   background-color: var(--bs-accent);
   color: var(--bs-accent-contrast);
@@ -101,7 +127,26 @@ h5 {
   background-color: var(--bs-accent-soft);
 }
 
-/* Inputs and selects */
+/* Surface / soft / outline buttons: paper with black border */
+.rt-Button.rt-variant-surface,
+.rt-Button.rt-variant-soft,
+.rt-Button.rt-variant-outline {
+  background-color: var(--bs-paper);
+  color: var(--bs-ink);
+}
+.rt-Button.rt-variant-surface:hover,
+.rt-Button.rt-variant-soft:hover,
+.rt-Button.rt-variant-outline:hover {
+  background-color: var(--bs-paper-2);
+}
+
+/* Ghost buttons stay borderless (used for icon-only actions like remove) */
+.rt-Button.rt-variant-ghost {
+  border: none;
+  box-shadow: none;
+}
+
+/* Inputs and selects: square, mono, black-bordered */
 .rt-TextFieldInput,
 .rt-TextFieldRoot,
 .rt-SelectTrigger,
@@ -109,14 +154,20 @@ h5 {
   border-radius: 0;
   font-family: var(--code-font-family);
   letter-spacing: 0.02em;
+  box-shadow: inset 0 0 0 var(--bs-border-width) var(--bs-ink);
 }
 
 .rt-IconButton {
   border-radius: 0;
+  border: var(--bs-border);
 }
 
-/* Dialogs sharp corners */
-.rt-DialogContent,
+/* Dialogs: sharp corners, hard shadow */
+.rt-DialogContent {
+  border-radius: 0;
+  border: var(--bs-border);
+  box-shadow: var(--bs-shadow);
+}
 .rt-DialogOverlay {
   border-radius: 0;
 }
@@ -132,7 +183,7 @@ h5 {
   text-transform: uppercase;
   letter-spacing: 0.12em;
   font-size: 12px;
-  color: var(--gray-11);
+  color: var(--bs-ink-soft);
 }
 
 .bs-divider-mark::before {
@@ -140,4 +191,14 @@ h5 {
   display: inline-block;
   margin-right: 8px;
   color: var(--bs-accent);
+}
+
+/* Highlight marker: lime block behind black text, like the hero headlines
+ * on the reference sites. Apply to an inline element. */
+.bs-highlight {
+  background-color: var(--bs-accent);
+  color: var(--bs-ink);
+  padding: 0 0.15em;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
 }

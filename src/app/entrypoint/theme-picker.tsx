@@ -46,7 +46,7 @@ export function ThemePicker({ appearance, accentColor, onChange }: ThemePickerPr
         onValueChange={(value) =>
           onChange({
             appearance,
-            accentColor: (value ?? "yellow") as ThemeProps["accentColor"],
+            accentColor: (value ?? "lime") as ThemeProps["accentColor"],
           })
         }
         value={accentColor}
