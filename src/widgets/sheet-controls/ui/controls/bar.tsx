@@ -1,6 +1,6 @@
 import { Cross1Icon } from "@radix-ui/react-icons";
 import { Button, Text } from "@radix-ui/themes";
-import "./bar.css";
+import styles from "./controls.module.scss";
 import { Bar as ScoreBar } from "~/shared/lib/score/score";
 import { Part } from "./part";
 import React, { ComponentProps } from "react";
@@ -33,14 +33,19 @@ export const Bar = React.memo(
     const onMouseLeave = onHoverBar ? () => onHoverBar(null) : undefined;
 
     return (
-      <div className="stave" {...props} onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave}>
-        <div className="stave-content">
+      <div
+        className={styles.stave}
+        {...props}
+        onMouseEnter={onMouseEnter}
+        onMouseLeave={onMouseLeave}
+      >
+        <div className={styles["stave-content"]}>
           <Text>{barIndex + 1}</Text>
           <Button onClick={() => removeBar(barIndex)} variant="ghost" aria-label="Remove bar">
             <Cross1Icon />
           </Button>
         </div>
-        <div className="stave-notes">{parts}</div>
+        <div className={styles["stave-notes"]}>{parts}</div>
       </div>
     );
   },

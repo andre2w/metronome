@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useInterval } from "usehooks-ts";
 import { useScoreStore } from "~/entities/score/model/state/score-store-provider";
+import styles from "./metronome.module.scss";
 
 export function Timer() {
   const started = useScoreStore((state) => state.metronome.started);
@@ -20,7 +21,7 @@ export function Timer() {
   const seconds = Math.ceil(elapsed > 60 ? elapsed % 60 : elapsed);
 
   return (
-    <div className="metronome-timer">
+    <div className={styles["metronome-timer"]}>
       {formatToDoubleDigits(minutes)}:{formatToDoubleDigits(seconds)}
     </div>
   );

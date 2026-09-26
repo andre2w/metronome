@@ -5,8 +5,8 @@ import { useLocalStorage } from "usehooks-ts";
 import { InputConfiguration } from "~/entities/midi-input/ui/input-configuration";
 import { InputConfigurationProvider } from "~/entities/midi-input/ui/input-configuration-context";
 import { ThemePicker } from "./theme-picker";
-import "./styles.css";
-import "./root.css";
+import "./styles.scss";
+import styles from "./root.module.scss";
 import { ConfigurationContextProvider } from "~/shared/lib/configuration/configuration-provider";
 import { mappings } from "~/entities/midi-input/config/mappings/roland-td07";
 import { KEYS } from "~/shared/lib/configuration/notes";
@@ -29,13 +29,13 @@ function RootLayout() {
       <ConfigurationContextProvider keyMap={KEYS} mappings={mappings}>
         <InputConfigurationProvider>
           <ScoreProvider>
-            <div className="app-shell">
-              <header className="navbar">
-                <div className="navbar-brand">
-                  <span className="navbar-wordmark">metronome</span>
-                  <span className="navbar-tagline">/ DRUM PRACTICE CONSOLE</span>
+            <div className={styles["app-shell"]}>
+              <header className={styles.navbar}>
+                <div className={styles["navbar-brand"]}>
+                  <span className={styles["navbar-wordmark"]}>metronome</span>
+                  <span className={styles["navbar-tagline"]}>/ DRUM PRACTICE CONSOLE</span>
                 </div>
-                <div className="navbar-section">
+                <div className={styles["navbar-section"]}>
                   <InputConfiguration />
                   <ThemePicker
                     appearance={appearance}
@@ -44,7 +44,7 @@ function RootLayout() {
                   />
                 </div>
               </header>
-              <main className="page">
+              <main className={styles.page}>
                 <Outlet />
               </main>
             </div>

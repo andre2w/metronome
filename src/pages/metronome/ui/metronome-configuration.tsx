@@ -1,6 +1,6 @@
 import { TextField } from "@radix-ui/themes";
 import { useScoreStore } from "../../../entities/score/model/state/score-store-provider";
-import "./metronome-configuration.css";
+import styles from "./metronome-configuration.module.scss";
 
 export function MetronomeConfiguration() {
   const metronome = useScoreStore((state) => state.metronome);
@@ -16,9 +16,9 @@ export function MetronomeConfiguration() {
   // }, [metronome]);
 
   return (
-    <div className="metronome-config">
-      <label className="metronome-config-field">
-        <span className="metronome-config-label">Name</span>
+    <div className={styles["metronome-config"]}>
+      <label className={styles["metronome-config-field"]}>
+        <span className={styles["metronome-config-label"]}>Name</span>
         <TextField.Root
           size="1"
           type="text"
@@ -47,8 +47,8 @@ export function MetronomeConfiguration() {
           </Select.Content>
         </Select.Root>*/}
       {/*</label>*/}
-      <label className="metronome-config-field">
-        <span className="metronome-config-label">BPM</span>
+      <label className={styles["metronome-config-field"]}>
+        <span className={styles["metronome-config-label"]}>BPM</span>
         <TextField.Root
           size="1"
           type="number"
@@ -62,8 +62,8 @@ export function MetronomeConfiguration() {
           step={1}
         />
       </label>
-      <label className="metronome-config-field">
-        <span className="metronome-config-label">Grace (ms)</span>
+      <label className={styles["metronome-config-field"]}>
+        <span className={styles["metronome-config-label"]}>Grace (ms)</span>
         <TextField.Root
           size="1"
           type="number"

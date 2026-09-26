@@ -1,5 +1,5 @@
 import { Text } from "@radix-ui/themes";
-import "./note.css";
+import styles from "./controls.module.scss";
 import { Key } from "./key";
 import { Tile } from "./tile";
 import { useScoreStore } from "~/entities/score/model/state/score-store-provider";
@@ -51,13 +51,12 @@ export function Note({ noteCount, className, index, onHover }: NoteProps) {
 
   return (
     <div
-      className={`stave-note ${className ?? ""}`}
+      className={`${styles["stave-note"]} ${className ?? ""}`}
       onMouseEnter={hoverEnver}
       onMouseLeave={hoverExit}
     >
       <Tile
-        className="sticking"
-
+        className={styles.sticking}
         onClick={() => {
           setSticking({
             ...index,

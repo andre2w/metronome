@@ -1,4 +1,4 @@
-import "./result.css";
+import styles from "./result.module.scss";
 
 export interface ResultProps {
   right: number;
@@ -7,16 +7,16 @@ export interface ResultProps {
 
 export function Result(result: ResultProps) {
   return (
-    <div className="result">
-      <div className="result-cell">
-        <span className="result-cell-label">Hit</span>
-        <span className="result-cell-value" data-tone="hit">
+    <div className={styles.result}>
+      <div className={styles["result-cell"]}>
+        <span className={styles["result-cell-label"]}>Hit</span>
+        <span className={styles["result-cell-value"]} data-tone="hit">
           {result.right}
         </span>
       </div>
-      <div className="result-cell">
-        <span className="result-cell-label">Missed</span>
-        <span className="result-cell-value" data-tone="miss">
+      <div className={styles["result-cell"]}>
+        <span className={styles["result-cell-label"]}>Missed</span>
+        <span className={styles["result-cell-value"]} data-tone="miss">
           {result.missed}
         </span>
       </div>

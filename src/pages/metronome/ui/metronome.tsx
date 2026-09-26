@@ -1,13 +1,14 @@
-import "./metronome.css";
 import { SheetRenderer } from "~/widgets/sheet-renderer";
 import { SheetControls } from "~/widgets/sheet-controls";
 import { MetronomeHeader } from "./header";
 import { useCallback, useRef } from "react";
 import { SheetRendererRef } from "~/widgets/sheet-renderer/ui/sheet-renderer";
 import { MetronomeCursor } from "~/shared/lib/metronome";
+import { useScoreStore } from "~/entities/score/model/state/score-store-provider";
 
 export function Metronome() {
   const sheetRendererRef = useRef<SheetRendererRef>(null);
+  const started = useScoreStore((store) => store.metronome.started);
 
   const onHoverNote = useCallback(
     (cursor: MetronomeCursor | null) => {
@@ -31,7 +32,7 @@ export function Metronome() {
     <>
       <MetronomeHeader />
       <SheetRenderer ref={sheetRendererRef} />
-      <SheetControls onHoverNote={onHoverNote} onHoverBar={onHoverBar} />
+      {!started && <SheetControls onHoverNote={onHoverNote} onHoverBar={onHoverBar} />}
     </>
   );
 }

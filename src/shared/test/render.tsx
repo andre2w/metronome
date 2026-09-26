@@ -25,8 +25,8 @@ import {
 } from "vitest-browser-react";
 import { userEvent as vitestUserEvent, type UserEvent } from "vitest/browser";
 import { Score } from "../lib/score/score";
-import "../../app/entrypoint/styles.css";
-import "../../app/entrypoint/root.css";
+import "../../app/entrypoint/styles.scss";
+import "../../app/entrypoint/root.module.scss";
 
 export interface ExtraRenderValues {
   store: TestStore;

@@ -1,6 +1,6 @@
 import { Box, BoxProps } from "@radix-ui/themes";
 import { ComponentRef, forwardRef, ReactNode } from "react";
-import "./tile.css";
+import styles from "./controls.module.scss";
 
 export interface TileProps extends Exclude<BoxProps, { as: "span" }> {
   children: ReactNode;
@@ -16,7 +16,7 @@ export const Tile = forwardRef<ComponentRef<"div">, TileProps>(
         ref={ref}
         height="35px"
         width="35px"
-        className={`tile ${variant === "selected" ? "selected" : "not-selected"} ${className ?? ""}`}
+        className={`${styles.tile} ${variant === "selected" ? styles.selected : styles["not-selected"]} ${className ?? ""}`}
         onClick={onClick}
       >
         {children}

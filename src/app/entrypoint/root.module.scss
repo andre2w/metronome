@@ -66,21 +66,3 @@
   background-color: var(--color-background);
   padding: 16px 20px;
 }
-
-.page-section-header {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-family: var(--code-font-family);
-  text-transform: uppercase;
-  letter-spacing: 0.16em;
-  font-size: 11px;
-  color: var(--gray-11);
-  margin-bottom: 12px;
-}
-
-.page-section-header::before {
-  content: "/ ";
-  color: var(--bs-accent);
-  font-weight: 600;
-}

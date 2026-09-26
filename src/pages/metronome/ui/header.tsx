@@ -11,6 +11,7 @@ import { useScoreInterval } from "./use-score-interval";
 import { start } from "tone";
 import { calculateResult } from "../model/result-calculator";
 import { Timer } from "./timer";
+import styles from "./metronome.module.scss";
 
 export function MetronomeHeader() {
   const { bpm, graceTime } = useScoreStoreShallow(({ metronome }) => ({
@@ -53,19 +54,19 @@ export function MetronomeHeader() {
   };
 
   return (
-    <section className={`metronome`}>
-      <div className="metronome-row">
-        <div className="metronome-panel metronome-panel-config">
-          <header className="page-section-header">Configuration</header>
+    <section className={styles.metronome}>
+      <div className={styles["metronome-row"]}>
+        <div className={styles["metronome-panel"]}>
+          <header className={styles["page-section-header"]}>Configuration</header>
           <MetronomeConfiguration />
         </div>
 
-        <div className="metronome-panel metronome-panel-transport">
-          <header className="page-section-header">Transport</header>
-          <div className="metronome-controls">
+        <div className={styles["metronome-panel"]}>
+          <header className={styles["page-section-header"]}>Transport</header>
+          <div className={styles["metronome-controls"]}>
             <button
               type="button"
-              className="metronome-cta"
+              className={styles["metronome-cta"]}
               data-state={isToggled ? "running" : "idle"}
               onClick={() => toggle()}
             >
@@ -75,8 +76,8 @@ export function MetronomeHeader() {
           </div>
         </div>
 
-        <div className="metronome-panel metronome-panel-result">
-          <header className="page-section-header">Result</header>
+        <div className={styles["metronome-panel"]}>
+          <header className={styles["page-section-header"]}>Result</header>
           <Result right={result?.right ?? 0} missed={result?.missed ?? 0} />
         </div>
       </div>

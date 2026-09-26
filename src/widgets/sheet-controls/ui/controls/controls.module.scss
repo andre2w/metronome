@@ -1,0 +1,180 @@
+/* Shared styles for the sheet-controls widget. All sibling control
+ * components (controls, bar, part, note, key, tile) import this single
+ * module so class names that flow between them resolve to one scope. */
+
+/* Global CSS custom properties used across the control tiles. Kept global
+ * via :global so they are not scoped/renamed by CSS modules. */
+:global(:root) {
+  --space-note-top: 1px;
+  --space-note-right: 1px;
+}
+
+.sheet-maker {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 16px 20px;
+  border: 1px solid var(--gray-a6);
+  background-color: var(--color-background);
+  overflow-y: hidden;
+  overflow-x: auto;
+}
+
+.sheet-maker-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--code-font-family);
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  font-size: 11px;
+  color: var(--gray-11);
+}
+
+.sheet-maker-header::before {
+  content: "/ ";
+  color: var(--bs-accent);
+  font-weight: 600;
+}
+
+.sheet {
+  display: flex;
+  flex-direction: row;
+}
+
+.parts {
+  align-self: flex-end;
+  position: sticky;
+  left: 0;
+  background-color: var(--color-background);
+  margin-right: 12px;
+  padding-right: 12px;
+  border-right: 1px solid var(--gray-a6);
+}
+
+.part-name {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  font-family: var(--code-font-family);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 11px;
+  color: var(--gray-11);
+  margin-right: var(--space-note-right);
+  margin-top: var(--space-note-top);
+}
+
+.add {
+  position: sticky;
+  left: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+/* Tempo cell (part.css) */
+.tempo:hover {
+  background-color: var(--gray-a3);
+}
+
+/* Bar (bar.css) */
+.stave {
+  padding-right: var(--space-7);
+}
+
+.stave-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid var(--gray-a6);
+  padding: 4px 6px;
+  margin-bottom: 6px;
+  font-family: var(--code-font-family);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 11px;
+  color: var(--gray-11);
+}
+
+.stave-content::before {
+  content: "■";
+  margin-right: 8px;
+  color: var(--bs-accent);
+}
+
+.stave-content > :first-of-type {
+  flex: 1;
+}
+
+.stave-notes {
+  display: flex;
+}
+
+.with-space-left {
+  margin-left: var(--space-2);
+}
+
+/* Note (note.css) */
+.stave-note {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Sticking tile: merges note.css (layout) + controls.css (border reset) */
+.sticking {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: var(--code-font-family);
+  font-size: 12px;
+  color: var(--gray-11);
+  border: unset;
+}
+
+/* Note/key tiles (shared by note.css and key.css) */
+.note {
+  border: 1px solid var(--gray-a8);
+  background-color: transparent;
+  cursor: pointer;
+  transition: background-color 80ms linear;
+}
+
+.note:hover {
+  background-color: var(--gray-a3);
+}
+
+.note-selected,
+.note-selected:hover {
+  background-color: var(--bs-accent);
+  border-color: var(--bs-accent);
+}
+
+/* Key tile (key.css) */
+.key {
+  margin-right: var(--space-note-right);
+  margin-top: var(--space-note-top);
+  border-color: var(--bs-accent);
+}
+
+/* Tile (tile.css) — base tile used by note/key/sticking */
+.tile {
+  border: 1px solid;
+  cursor: pointer;
+  transition: background-color 80ms linear;
+}
+
+.not-selected {
+  border-color: var(--gray-a8);
+  background-color: transparent;
+}
+
+.not-selected:hover {
+  background-color: var(--gray-a3);
+}
+
+.selected,
+.selected:hover {
+  background-color: var(--bs-accent);
+  border-color: var(--bs-accent);
+}

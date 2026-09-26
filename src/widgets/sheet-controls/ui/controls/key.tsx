@@ -1,6 +1,6 @@
 import { ContextMenu } from "@radix-ui/themes";
 import type { ReactNode } from "react";
-import "./key.css";
+import styles from "./controls.module.scss";
 import { useScoreStore } from "~/entities/score/model/state/score-store-provider";
 import { Tile } from "./tile";
 import { useConfiguration } from "~/shared/lib/configuration/configuration-provider";
@@ -49,7 +49,7 @@ export function Key({
   const noteBox = (
     <Tile
       key={`${index?.barIndex ?? 0}#${index?.partIndex ?? 0}#${note}`}
-      className="key"
+      className={styles.key}
       onClick={onClick}
       variant={isSelected ? "selected" : undefined}
       aria-label={note}

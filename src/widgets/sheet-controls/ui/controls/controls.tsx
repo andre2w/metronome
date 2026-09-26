@@ -1,6 +1,6 @@
 import { Box, Button, Text } from "@radix-ui/themes";
 import { Bar } from "./bar";
-import "./controls.css";
+import styles from "./controls.module.scss";
 import { ListScores } from "../list-scores";
 import { SaveScore } from "../save-score";
 import { useScoreStoreShallow } from "~/entities/score/model/state/score-store-provider";
@@ -25,9 +25,9 @@ export function Controls({ onHoverNote, onHoverBar }: ControlProps) {
   }, [configuration]);
 
   return (
-    <section className="sheet-maker">
-      <header className="sheet-maker-header">Score Editor</header>
-      <div className="add">
+    <section className={styles["sheet-maker"]}>
+      <header className={styles["sheet-maker-header"]}>Score Editor</header>
+      <div className={styles.add}>
         <Button onClick={addStave}>Add stave</Button>
         <SaveScore />
         <ListScores />
@@ -35,20 +35,20 @@ export function Controls({ onHoverNote, onHoverBar }: ControlProps) {
           New score
         </Button>
       </div>
-      <div className="sheet">
-        <div className="parts">
-          <Box height="35px" className="part-name">
+      <div className={styles.sheet}>
+        <div className={styles.parts}>
+          <Box height="35px" className={styles["part-name"]}>
             <Text as="p" wrap="nowrap" align="right">
               Tempo
             </Text>
           </Box>
-          <Box height="35px" className="part-name">
+          <Box height="35px" className={styles["part-name"]}>
             <Text as="p" wrap="nowrap" align="right">
               Stickings
             </Text>
           </Box>
           {instrumentKeys.map(([part, data]) => (
-            <Box height="35px" key={part} className="part-name">
+            <Box height="35px" key={part} className={styles["part-name"]}>
               <Text as="p" wrap="nowrap" align="right">
                 {`${data.label}${Object.hasOwn(data, "modifiers") ? " *" : ""}`}
               </Text>

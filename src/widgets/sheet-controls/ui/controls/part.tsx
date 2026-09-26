@@ -4,7 +4,7 @@ import { Note } from "./note";
 import { Box, Flex, Text } from "@radix-ui/themes";
 import { useScoreStore } from "~/entities/score/model/state/score-store-provider";
 import { nextValueInLoop } from "~/shared/lib/loop";
-import "./part.css";
+import styles from "./controls.module.scss";
 import { MetronomeCursor } from "~/shared/lib/metronome";
 
 export interface PartProps {
@@ -35,7 +35,7 @@ export function Part({ part, barIndex, className, partIndex, onHoverNote }: Part
         key={`${barIndex}#${partIndex}#${noteIndex}`}
         noteCount={noteCount}
         index={{ barIndex, partIndex, noteIndex }}
-        className={withSpace ? "with-space-left" : undefined}
+        className={withSpace ? styles["with-space-left"] : undefined}
         onHover={onHoverNote}
       />
     );
@@ -45,7 +45,7 @@ export function Part({ part, barIndex, className, partIndex, onHoverNote }: Part
     <Flex direction="column" className={className}>
       <Box
         height="35px"
-        className="part-name tempo"
+        className={`${styles["part-name"]} ${styles.tempo}`}
         style={{ justifyContent: "center" }}
         role="button"
         aria-label={part.tempo}
