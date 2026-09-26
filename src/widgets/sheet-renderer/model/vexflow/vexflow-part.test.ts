@@ -2,7 +2,7 @@ import { describe, expect, test } from "vitest";
 import { VexflowPart } from "./vexflow-part";
 import { ReducedStaveNote } from "./vexflow-wrapper";
 import { Configuration } from "~/shared/lib/configuration/configuration-provider";
-import { KEYS } from "~/entities/score/model/notes";
+import { KEYS } from "~/shared/lib/configuration/notes";
 
 const configuration = new Configuration(KEYS, {});
 describe("VexflowPart", () => {

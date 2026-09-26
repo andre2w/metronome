@@ -1,4 +1,4 @@
-import { BaseKeys } from "~/entities/score/model/notes";
+import { BaseKeys } from "~/shared/lib/configuration/notes";
 
 export const mappings: Record<number, { note: BaseKeys; modifier?: string }> = {
   36: { note: "KICK" },

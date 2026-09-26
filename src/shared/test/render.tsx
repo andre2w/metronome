@@ -1,6 +1,6 @@
 import { Theme } from "@radix-ui/themes";
 import { ConfigurationContextProvider } from "../lib/configuration/configuration-provider";
-import { KEYS } from "~/entities/score/model/notes";
+import { KEYS } from "~/shared/lib/configuration/notes";
 import { mappings } from "~/entities/midi-input/config/mappings/roland-td07";
 import { type ReactNode } from "react";
 import { TestableInputConfigurationProvider } from "./testable-input-configuration-provider";

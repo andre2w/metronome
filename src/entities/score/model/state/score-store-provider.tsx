@@ -9,7 +9,7 @@ import { createStore, StoreApi } from "zustand/vanilla";
 import { persist } from "zustand/middleware";
 import { immer } from "zustand/middleware/immer";
 import { createJSONStorage } from "zustand/middleware";
-import { createMetronomeSlice } from "~/entities/metronome/model/store";
+import { createMetronomeSlice } from "~/entities/metronome/@x/score";
 import { MetronomeValues } from "~/shared/lib/metronome";
 
 export type StoreContent = ScoreContextValue & MetronomeValues;

@@ -1,8 +1,8 @@
 import { StateCreator } from "zustand";
-import { ScoreContextValue } from "~/entities/score/model/state/score-state";
 import type { MetronomeValues, MetronomeCursor } from "~/shared/lib/metronome";
 import { calculateBeatTime } from "~/shared/lib/metronome/beat-time";
 import { Score } from "~/shared/lib/score/score";
+import { ScoreContextValue } from "~/entities/score/@x/metronome";
 
 export const createMetronomeSlice: StateCreator<
   MetronomeValues & ScoreContextValue,

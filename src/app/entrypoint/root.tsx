@@ -9,7 +9,7 @@ import "./styles.css";
 import "./root.css";
 import { ConfigurationContextProvider } from "~/shared/lib/configuration/configuration-provider";
 import { mappings } from "~/entities/midi-input/config/mappings/roland-td07";
-import { KEYS } from "~/entities/score/model/notes";
+import { KEYS } from "~/shared/lib/configuration/notes";
 import { ScoreProvider } from "~/entities/score/model/state/score-store-provider";
 
 function RootLayout() {
