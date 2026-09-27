@@ -87,9 +87,6 @@ importers:
       '@types/react-dom':
         specifier: ^19.3.0
         version: 19.3.0(@types/react@19.3.0)
-      '@typescript/native-preview':
-        specifier: 7.0.0-dev.20260606.1
-        version: 7.0.0-dev.20260606.1
       '@vitejs/devtools':
         specifier: ^0.4.12
         version: 0.4.12(crossws@0.4.12(srvx@1.0.5))(srvx@1.0.5)(typescript@7.0.2)(valibot@1.4.2(typescript@7.0.2))(vite@8.3.1)
@@ -1984,53 +1981,6 @@ packages:
 
   '@types/ws@8.18.1':
     resolution: {integrity: sha512-ThVF6DCVhA8kUGy+aazFQ4kXQ7E1Ty7A3ypFOe0IcJV8O/M511G99AW24irKrW56Wt44yG9+ij8FaqoBGkuBXg==}
-
-  '@typescript/native-preview-darwin-arm64@7.0.0-dev.20260606.1':
-    resolution: {integrity: sha512-B8/kwWjWURT3Q1abPbxvaj7bUZycghnCDUpp71n2TiQHLLFsVB/JKMEs4Eurj1Pg2sPf4Wt2wihOfspzV++1bw==}
-    engines: {node: '>=16.20.0'}
-    cpu: [arm64]
-    os: [darwin]
-
-  '@typescript/native-preview-darwin-x64@7.0.0-dev.20260606.1':
-    resolution: {integrity: sha512-i1iyGRQI/BHs0Fq4nA0+PewT76Y+HJBenZ8yVhkzVokbGjUezJtBtS2U0zIsGDC0lev/A4apMy8coWfBLdR3GA==}
-    engines: {node: '>=16.20.0'}
-    cpu: [x64]
-    os: [darwin]
-
-  '@typescript/native-preview-linux-arm64@7.0.0-dev.20260606.1':
-    resolution: {integrity: sha512-Fz42yz/se1xXSIIYlXnVn3kQ7GQbSusGLfL+piyuZyPipHUksfSSIqFZNBeMOMA+tXTZNFJaWuYuWzgV8Vc9YA==}
-    engines: {node: '>=16.20.0'}
-    cpu: [arm64]
-    os: [linux]
-
-  '@typescript/native-preview-linux-arm@7.0.0-dev.20260606.1':
-    resolution: {integrity: sha512-KeYD2DHkFgRmd4HZNaSYFirnxxA7msqoIBkAz6sPxpR/ClXZfBhfXhAyPZTHuQc81LI3FSr9jhVTtslQpJkwrw==}
-    engines: {node: '>=16.20.0'}
-    cpu: [arm]
-    os: [linux]
-
-  '@typescript/native-preview-linux-x64@7.0.0-dev.20260606.1':
-    resolution: {integrity: sha512-PtKQwWzzOhH7Kl6Y0ZIprV99Rh5aUSFHTeMdEfpTim4sw0YP2vrFV3oU9tvwUFpWd6ODhRtAABhOFqQHBB/NqQ==}
-    engines: {node: '>=16.20.0'}
-    cpu: [x64]
-    os: [linux]
-
-  '@typescript/native-preview-win32-arm64@7.0.0-dev.20260606.1':
-    resolution: {integrity: sha512-heI+rfQHIFHIJzNgfBzjLQfJ8BgIfZShUaSx1NjnNKEiyeFp1MdOPvgAgWLk2XmBpaQ81jUcewuET2rVKI86Ww==}
-    engines: {node: '>=16.20.0'}
-    cpu: [arm64]
-    os: [win32]
-
-  '@typescript/native-preview-win32-x64@7.0.0-dev.20260606.1':
-    resolution: {integrity: sha512-Kowa5tat165szQZnACPi/kbF9O+TdzohYKGby59djK42621KBn1c8oeFoO4eI+4CP+eFBN97SMzTIVOdXXQFWw==}
-    engines: {node: '>=16.20.0'}
-    cpu: [x64]
-    os: [win32]
-
-  '@typescript/native-preview@7.0.0-dev.20260606.1':
-    resolution: {integrity: sha512-9ag9Y2sj0yYwsWMKaBelVaHSOpX79eVo2quoWx9lCaUogq6HmqbaFa45AGQt54LNlwcYs5aBwODPyhHQglzZlA==}
-    engines: {node: '>=16.20.0'}
-    hasBin: true
 
   '@typescript/typescript-aix-ppc64@7.0.2':
     resolution: {integrity: sha512-MTKKkWB7p/0E9xi1d1tHtZ5PiLkGEMIq88pK2CubZjOsLtYTLqhgIgi6zepFa+9GHZ6h05NMCkQxGKiPXMxXtQ==}
@@ -5443,37 +5393,6 @@ snapshots:
   '@types/ws@8.18.1':
     dependencies:
       '@types/node': 24.13.6
-
-  '@typescript/native-preview-darwin-arm64@7.0.0-dev.20260606.1':
-    optional: true
-
-  '@typescript/native-preview-darwin-x64@7.0.0-dev.20260606.1':
-    optional: true
-
-  '@typescript/native-preview-linux-arm64@7.0.0-dev.20260606.1':
-    optional: true
-
-  '@typescript/native-preview-linux-arm@7.0.0-dev.20260606.1':
-    optional: true
-
-  '@typescript/native-preview-linux-x64@7.0.0-dev.20260606.1':
-    optional: true
-
-  '@typescript/native-preview-win32-arm64@7.0.0-dev.20260606.1':
-    optional: true
-
-  '@typescript/native-preview-win32-x64@7.0.0-dev.20260606.1':
-    optional: true
-
-  '@typescript/native-preview@7.0.0-dev.20260606.1':
-    optionalDependencies:
-      '@typescript/native-preview-darwin-arm64': 7.0.0-dev.20260606.1
-      '@typescript/native-preview-darwin-x64': 7.0.0-dev.20260606.1
-      '@typescript/native-preview-linux-arm': 7.0.0-dev.20260606.1
-      '@typescript/native-preview-linux-arm64': 7.0.0-dev.20260606.1
-      '@typescript/native-preview-linux-x64': 7.0.0-dev.20260606.1
-      '@typescript/native-preview-win32-arm64': 7.0.0-dev.20260606.1
-      '@typescript/native-preview-win32-x64': 7.0.0-dev.20260606.1
 
   '@typescript/typescript-aix-ppc64@7.0.2':
     optional: true

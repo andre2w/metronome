@@ -14,6 +14,68 @@
   box-sizing: border-box;
 }
 
+/* ---- Playing (fullscreen sheet) ---------------------------------------- *
+ * While the metronome runs, the sheet fills the whole viewport (great for
+ * hands-free practice, especially in landscape on a phone/tablet). The
+ * header collapses to a slim floating transport bar so Stop stays reachable.
+ */
+
+/* When playing, keep only the transport panel (Stop + timer) as a compact
+ * floating bar; hide the configuration and result panels. */
+.header-collapsed {
+  position: fixed;
+  top: 8px;
+  left: 8px;
+  right: 8px;
+  z-index: 1001;
+  pointer-events: none;
+}
+
+.header-collapsed .metronome-row {
+  display: block;
+}
+
+/* Hide config (1st) and result (3rd) panels; keep transport (2nd) compact */
+.header-collapsed .metronome-row > *:not(:nth-child(2)) {
+  display: none;
+}
+
+.header-collapsed .metronome-row > *:nth-child(2) {
+  pointer-events: auto;
+  padding: 8px 12px;
+  gap: 8px;
+  max-width: max-content;
+  margin-left: auto;
+  box-shadow: var(--bs-shadow-sm);
+}
+
+/* Hide the "Transport" header label in the collapsed bar */
+.header-collapsed .metronome-row > *:nth-child(2) .page-section-header {
+  display: none;
+}
+
+/* Sheet fills the entire viewport while playing */
+.sheet-fullscreen {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  width: 100vw;
+  width: 100dvw;
+  height: 100vh;
+  height: 100dvh;
+  margin: 0;
+  padding: 12px;
+  background-color: var(--bs-paper);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: auto;
+}
+
+.sheet-fullscreen > * {
+  width: 100%;
+}
+
 .metronome-row {
   display: grid;
   grid-template-columns: minmax(0, 2fr) minmax(0, 1fr) minmax(0, 1fr);
@@ -141,4 +203,46 @@
 .selected {
   background-color: var(--bs-accent);
   border-color: var(--bs-ink);
+}
+
+/* ---- Responsive: small screens ----------------------------------------- */
+@media (max-width: 640px) {
+  .full-bleed {
+    padding: 0 12px;
+  }
+
+  .metronome-panel {
+    padding: 14px 14px;
+  }
+
+  .metronome-controls {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+  }
+
+  .metronome-cta {
+    justify-content: center;
+    width: 100%;
+    padding: 0 18px;
+  }
+
+  .metronome-timer {
+    font-size: 26px;
+    text-align: center;
+  }
+}
+
+/* While playing on short landscape viewports (phones held sideways), use the
+ * full height for the sheet and keep the transport bar minimal. */
+@media (orientation: landscape) and (max-height: 520px) {
+  .sheet-fullscreen {
+    padding: 6px;
+  }
+
+  .header-collapsed {
+    top: 4px;
+    right: 4px;
+    left: auto;
+  }
 }
