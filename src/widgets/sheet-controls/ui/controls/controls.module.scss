@@ -194,3 +194,9 @@
   background-color: var(--bs-accent);
   border-color: var(--bs-ink);
 }
+
+.notes {
+    display: flex;
+    flex-direction: row;
+    overflow-y: scroll;
+}

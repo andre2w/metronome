@@ -55,7 +55,7 @@ export function Controls({ onHoverNote, onHoverBar }: ControlProps) {
             </Box>
           ))}
         </div>
-        <div style={{ display: "flex", flexDirection: "row" }} role="list">
+        <div className={styles.notes} role="list">
           {bars.map((bar, staveIndex) => {
             return (
               <Bar
