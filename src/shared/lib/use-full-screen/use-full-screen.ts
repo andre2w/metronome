@@ -1,16 +1,29 @@
-import { RefObject, useCallback } from "react";
+import { RefObject, useCallback, useRef } from "react";
 
 export function useFullScreenToggle(element: RefObject<HTMLElement | null>) {
+  // We keep track if we are the ones that set the full screen
+  const isFullScreen = useRef(false);
+
   const toggle = useCallback(() => {
-    if (document.fullscreenElement !== null) {
-      void document.exitFullscreen();
+    if (isFullScreen && document.fullscreenElement !== null) {
+      void document.exitFullscreen().then(() => {
+        isFullScreen.current = false;
+      });
     } else {
       if (!element.current) {
         return;
       }
-      void element.current.requestFullscreen({
-        navigationUI: "auto",
-      });
+
+      if (!element.current.requestFullscreen) {
+        return;
+      }
+      void element.current
+        .requestFullscreen({
+          navigationUI: "auto",
+        })
+        .then(() => {
+          isFullScreen.current = true;
+        });
     }
   }, [element]);
 
